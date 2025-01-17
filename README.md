@@ -60,7 +60,7 @@ To debug the Bus App on your development system, run `npm run devstart` using a 
 5. On the EC2 instance, [install](https://github.com/nodesource/distributions/blob/master/README.md) Node.js v17
 
 ```
-curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash -
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 ```
 
@@ -89,7 +89,8 @@ server {
 ```
 
 8. Restart the nginx server: `sudo service nginx reload`
-9. Install and configure [certbot](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx)
+9. Add CNAME record for DNS for nnhsse.org that includes the subdomain and refers to the public domain name of the EC2 instance. For example, host busapp.nnhsse.org points to ec2-3-134-81-54.us-east-2.compute.amazonaws.com. Give the DNS time to propagate.
+9. Install and configure [certbot](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
 10. Clone this repository from GitHub.
 11. Inside of the directory for this repository install the node dependencies: `npm install`
 12. Update Google Cloud Platform is allow connections from new domain (busapp.nnhsse.org)
@@ -97,7 +98,8 @@ server {
 
 ```
 sudo npm install pm2 -g
-sudo pm2 --name busapp start "npm run buildStart"
+sudo pm2 --name busapp start "npm run start"
+sudo pm2 save
 ```
 
 14. Verify that the node server is running: `sudo pm2 list`
@@ -108,7 +110,7 @@ sudo pm2 --name busapp start "npm run buildStart"
 */15 * * * * cd /home/ubuntu/BusApp-SE2122 && git pull
 ```
 
-17. Restart the node server: `sudo pm2 restart index`
+17. Restart the node server: `sudo pm2 restart busapp`
 
 ## Working with the Bus App
 
