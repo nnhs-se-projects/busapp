@@ -6,10 +6,6 @@ var countDownDate = new Date();
 var updatingCount = 0;
 
 adminSocket.on("update", (data) => {
-  // console.log("update received")
-
-  // console.log(data)
-
   // convert from time strings to dates to allow conversion to local time
   data.allBuses.forEach((bus) => {
     if (bus.time != "") bus.time = new Date(bus.time);
@@ -22,7 +18,7 @@ adminSocket.on("update", (data) => {
     document.getElementById("getRender")!.getAttribute("render")!,
     { data: data }
   );
-  // console.log(html)
+
   document.getElementById("content")!.innerHTML = html;
 
   // update the timer input to match the actual value
@@ -39,17 +35,12 @@ adminSocket.on("update", (data) => {
 });
 
 function update() {
-  // console.log("update called")
-
   adminSocket.emit("updateMain", {
     type: "update",
   });
 }
 
 async function lockWave() {
-  // await fetch('/lockWave', {
-  //     method: 'POST'
-  // })
   await fetchWithAlert("/lockWave", "POST", {}, {});
   update();
 }
@@ -60,13 +51,7 @@ async function updateTimer() {
   if (timerValue === null) {
     timerValue = { value: 1 };
   }
-  // const res = await fetch("/setTimer", {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({minutes: timerValue.value})
-  // });
+
   const res = await fetchWithAlert(
     "/setTimer",
     "POST",
@@ -77,10 +62,7 @@ async function updateTimer() {
   );
   if (!res.ok) {
     console.log(`Response status: ${res.status}`);
-  } else {
-    console.log(await res.text());
   }
-  
 }
 
 async function updateStatus(button, status) {
@@ -93,13 +75,6 @@ async function updateStatus(button, status) {
     status: status,
   };
 
-  // await fetch('/updateBusStatus', {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(data)
-  // })
   await fetchWithAlert(
     "/updateBusStatus",
     "POST",
@@ -110,43 +85,23 @@ async function updateStatus(button, status) {
   );
 
   update();
-
-  // rerender the page
-  // location.reload
 }
 
 async function sendWave() {
-  // alert("Update sent to server");
-  // var response = await fetch('/sendWave', {
-  //     method: 'POST'
-  // })
-  // if (response.ok) {
-  //     alert("Update applied");
-  // } else {
-  //     alert("Update failed");
-  // }
   await fetchWithAlert("/sendWave", "POST", {}, {});
   update();
-
-  // location.reload
 }
 
 async function addToWave(button) {
   await updateStatus(button, "Loading");
-  // let number = button.parentElement.parentElement.children[0].children[0].value
-  // alert(number + " added to wave");
 }
 
 async function removeFromWave(button) {
   await updateStatus(button, "");
-  // let number = button.parentElement.parentElement.children[0].children[0].value
-  // alert(number + "removed from wave");
 }
 
 async function addToNextWave(button) {
   await updateStatus(button, "Next Wave");
-  // let number = button.parentElement.parentElement.children[0].children[0].value
-  // alert(number + " added to next wave");
 }
 
 async function reset(button) {
@@ -154,11 +109,7 @@ async function reset(button) {
 }
 
 async function resetAllBusses(button) {
-  // await fetch('/resetAllBusses', {
-  //     method: 'POST'
-  // })
   await fetchWithAlert("/resetAllBusses", "POST", {}, {});
-  // location.reload
   update();
 }
 
@@ -173,13 +124,7 @@ async function updateBusChange(button) {
     change: change,
     time: time,
   };
-  // await fetch('/updateBusChange', {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify(data)
-  // })
+
   await fetchWithAlert(
     "/updateBusChange",
     "POST",
@@ -188,7 +133,7 @@ async function updateBusChange(button) {
     },
     data
   );
-  // location.reload
+
   update();
 }
 
@@ -235,6 +180,9 @@ var x = setInterval(async function () {
   }
 }, 1000);
 
+
+// requires global variable updatingcount
+// functions like the fetch command, but shows the loading alert message to show if the app is actually working on it
 async function fetchWithAlert(
   endpoint: string,
   method: string,
@@ -242,7 +190,7 @@ async function fetchWithAlert(
   data: object
 ) {
   updatingCount++;
-  setHidden(false);
+  setLoadingState(true);
   var response;
   try {
     response = await fetch(endpoint, {
@@ -250,29 +198,33 @@ async function fetchWithAlert(
       headers: header,
       body: JSON.stringify(data),
     });
+    if(await response.text() !== "success") {
+      throw(new Error("Non-success response recieved. You were most likely logged out and need to log back in."));
+    }
   } catch (error) {
     console.error("Error:", error);
-  }finally {
+    alert("There was an error when processing the request. Please try reloading, and contact Bus App devs if the issue persists.\n\n" + error);
+  } finally {
     updatingCount--;
     if (updatingCount == 0) {
-      setHidden(false);
+      setLoadingState(false);
     } else {
-      setHidden(true);
+      setLoadingState(true);
     }
     return response;
   }
 
 }
 
-async function setHidden(option: boolean) {
+// sets the loading state for the "Loading" popup
+async function setLoadingState(option: boolean) {
   var div = document.getElementsByClassName("popup")[0] as HTMLElement;
   if (div) {
     if (option) {
-      div.style.animationPlayState = "running";
-      div.style.animationDelay = "0s";
+      div.style.animationName = "slide";
+      div.style.animationPlayState = "paused";
     } else {
-      div.style.top = "10px";
-      div.style.animationDelay = "0s";
+      div.style.animationPlayState = "running";
     }
   }
 }

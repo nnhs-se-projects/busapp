@@ -16,6 +16,7 @@ const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleuser
 const oAuth2 = new OAuth2Client(CLIENT_ID);
 
 dotenv.config({ path: ".env" });
+
 // Remember to set vapid keys in .env - run ```npx web-push generate-vapid-keys``` to generate
 const vapidPrivateKey = process.env.VAPID_PRIVATE;
 const vapidPublicKey = process.env.VAPID_PUBLIC;
@@ -118,7 +119,7 @@ router.get("/admin", async (req: Request, res: Response) => {
     }
 });
 
-
+// this needs to be served from the root of the server to work properly
 router.get("/serviceWorker.js", async (req: Request, res: Response) => {
     res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/ts/') });
 })
@@ -266,11 +267,12 @@ router.get("/beans", async (req: Request, res: Response) => {
 });
 
 // old manifest, leaving it because im not sure if anything still uses it?
-router.get("/manifest.webmanifest", (req: Request, res: Response) => {
+// EDIT: commenting this out because I cannot find anything that uses it and having 2 manifest files is cause for confusion
+/*router.get("/manifest.webmanifest", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../data/manifest.webmanifest"))
-});
+});*/
 
-// new manifest
+// new manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
 router.get("/manifest.json", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
 });
@@ -415,8 +417,9 @@ router.post("/updateBusList", async (req: Request, res: Response) => {
 });
 
 router.get('/help',(req: Request, res: Response)=>{
-res.render('help');
-})
+    res.render('help');
+});
+
 router.post("/whitelistFile",(req:Request,res: Response) => {
     if (!req.session.userEmail) {
         res.redirect("/login");

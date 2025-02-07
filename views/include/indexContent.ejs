@@ -113,6 +113,44 @@
     </video>
 </div></div>
 
+<!-- Update the value of <% version = 1 %> when updating the what's new popup to make it appear again on launch -->
+<input type="hidden" id="whatsNewVersion" value="<%=version%>"/>
+<div id="whatsNewPopup"><div> <i class="fa-regular fa-circle-xmark" onclick="hideWhatsNew(<%=version%>)" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
+    <h2>What's New</h2>
+    <ul>
+        <li><p>Push notifications</p>
+            <ul>
+                <li>Push notifications are here! 🎉</li>
+                <li>Press the &quot;Enable Notifications&quot; button to enable. ✅</li>
+                <li>You will get <b>notified</b> when any of your <b>pinned buses</b> arrive and depart. 🔔</li>
+                <li>To use on IPhones, the Bus App must be re-added to the home screen first. 📲</li>
+                <li>on IPhones, the notification will be silent - this is a limitation of IOS and sadly we cannot change this. 🔇</li>
+                <li>⚠️ <b>do not rely on push notifications as your only indicator</b>, they may be delayed or even not arrive at all depending on network conditions. Keep an eye on the Bus App just in case. ⚠️</li>
+            </ul>
+        </li>
+        <!--li><p>More responsive announcements</p>
+            <ul>
+                <li>The announcement now updates without reloading the page. 📡</li>
+            </ul>
+        </li-->
+        <li><p>Better system integration</p>
+            <ul>
+                <li>Adding the Bus App to your home screen now makes it behave like a proper app rather than a shortcut to the website. 💯</li>
+                <li>Facilitates future features in the works. 🧰</li>
+            </ul>
+        </li>
+        <li><p>Backend Improvements</p>
+            <ul>
+                <li>Improvements to the admin page make it easier for staff to get you to your bus on time 🕞</li>
+                <li>Improvements to the server make the Bus App more secure and fixes bugs for everybody 💪</li>
+            </ul>
+        </li>
+        <li>More to come in the future! 🛠️</li>
+    </ul>
+    <br/><p> - 🚍 The Bus App Team</p>
+    <br/><a class="generic-button" onclick="hideWhatsNew(<%=version%>)">Got It!</a>
+</div></div>
+
 <!-- <p id="contactInfo">
     If you have feedback, feature requests or bugs to report please contact busappnnhsse@gmail.com. 
     Please include the topic of the email in the subject.

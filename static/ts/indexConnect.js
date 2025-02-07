@@ -29,9 +29,18 @@ indexSocket.on("update", (data) => {
     document.getElementById("content").innerHTML = html;
     updateTables();
 });
+function hideWhatsNew(version) {
+    document.getElementById('whatsNewPopup').style.display = 'none';
+    localStorage.setItem("whatsNewVersion", String(version));
+}
+window.onload = () => {
+    var version = +document.getElementById("whatsNewVersion").value;
+    if (!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
+        document.getElementById('whatsNewPopup').style.display = 'block';
+    }
+};
 function updateTables() {
     updatePins();
-    console.log("updateTables");
     let tablePins = document.getElementById("pin-bus-table");
     let pinRows = tablePins.rows;
     let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
@@ -60,7 +69,10 @@ function updateTables() {
             button.style.backgroundColor = "#327fa8";
         }
     }
-    removeNotifButton();
+    try {
+        removeNotifButton();
+    } // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
+    catch (e) { }
 }
 function updatePins() {
     const pinString = localStorage.getItem("pins"); // retrieves "pins" item

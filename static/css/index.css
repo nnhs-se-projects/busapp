@@ -7,6 +7,10 @@ body {
     background-color: #a1b5be;
 }
 
+li {
+    margin-left: min(max(0.5em, 2vw), 2em);
+}
+
 /* Weather/Notification/Login */
 .header {
     display: grid;
@@ -16,21 +20,21 @@ body {
     height: 7%;
 }
 
-#IOSnotifpopup > div {
+#IOSnotifpopup > div, #whatsNewPopup > div {
     box-sizing: border-box;
     position: fixed; 
     top: 50%; 
     left: 50%; 
     transform: translateX(-50%) translateY(-50%); 
     width: calc(100% - min(10%, 50px)); 
-    height: calc(100% - min(10%, 50px));
+    max-height: calc(100% - min(10%, 50px));
     background-color: lightgray;
     border: 5px solid #327fa8;
     border-radius: 10px;
     padding: 1em;
     overflow: auto;
 }
-#IOSnotifpopup {
+#IOSnotifpopup, #whatsNewPopup {
     position: fixed;
     display: none;
     width: 100%;
@@ -106,7 +110,7 @@ body {
     height: 80%;
 }
 
-.help-button, #notif-button, #login-button {
+.help-button, #notif-button, #login-button, .generic-button {
     border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
     text-decoration: none;
@@ -270,7 +274,7 @@ body {
     background-color: #ffffff;
 }
 
-.timer-box{
+.timer-box {
     display: flex;
     justify-content: center;
     align-items: center;
