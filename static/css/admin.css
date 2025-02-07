@@ -232,27 +232,26 @@ body {
 .popup {
     position: fixed;
     left: 50%;
+    translate: -50%;
     font-family: 'Montserrat', sans-serif;
-    transform: translateX(-50%);
-    width: 50%;
-    height: 100px;
+    padding: 10px;
     border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: lightgray;
-    border: 5px sole #327fa8;
-    animation: slide ease-in;
-    animation-duration: 0.5s;
-    /* z-index: 1000; */
+    color: white;
+    background-color: #327fa8;
+    border: 5px solid #05a1f5;
+    top: 0;
+    transform: translateY(-100%);
+    animation: 0.3s ease-in 0s normal forwards;
 }
 
 @keyframes slide {
     0% {
         top: 10px;
+        transform: translateY(0%);
     }
     100% {
-        top: -100px;
+        top: 0px;
+        transform: translateY(-100%);
     }
 }
 

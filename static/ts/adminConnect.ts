@@ -77,10 +77,7 @@ async function updateTimer() {
   );
   if (!res.ok) {
     console.log(`Response status: ${res.status}`);
-  } else {
-    console.log(await res.text());
   }
-  
 }
 
 async function updateStatus(button, status) {
@@ -235,6 +232,9 @@ var x = setInterval(async function () {
   }
 }, 1000);
 
+
+// requires global variable updatingcount
+// functions like the fetch command, but shows the loading alert message to show if the app is actually working on it
 async function fetchWithAlert(
   endpoint: string,
   method: string,
@@ -242,7 +242,7 @@ async function fetchWithAlert(
   data: object
 ) {
   updatingCount++;
-  setHidden(false);
+  setLoadingState(true);
   var response;
   try {
     response = await fetch(endpoint, {
@@ -250,29 +250,33 @@ async function fetchWithAlert(
       headers: header,
       body: JSON.stringify(data),
     });
+    if(await response.text() !== "success") {
+      throw(new Error("Non-success responce recieved. You were most likely logged out and need to log back in."));
+    }
   } catch (error) {
     console.error("Error:", error);
-  }finally {
+    alert("There was an error when processing the request. Please try reloading, and contact Bus App devs if the issue persists.\n\n" + error);
+  } finally {
     updatingCount--;
     if (updatingCount == 0) {
-      setHidden(false);
+      setLoadingState(false);
     } else {
-      setHidden(true);
+      setLoadingState(true);
     }
     return response;
   }
 
 }
 
-async function setHidden(option: boolean) {
+// sets the loading state for the "Loading" popup
+async function setLoadingState(option: boolean) {
   var div = document.getElementsByClassName("popup")[0] as HTMLElement;
   if (div) {
     if (option) {
-      div.style.animationPlayState = "running";
-      div.style.animationDelay = "0s";
+      div.style.animationName = "slide";
+      div.style.animationPlayState = "paused";
     } else {
-      div.style.top = "10px";
-      div.style.animationDelay = "0s";
+      div.style.animationPlayState = "running";
     }
   }
 }

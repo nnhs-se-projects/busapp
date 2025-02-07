@@ -65,6 +65,7 @@ function enablePushNotifications(publicKey) {
         }
     });
 }
+// checks if notifications are working via a couple of methods and if they are, removes the notification button
 function removeNotifButton() {
     var areServiceWorkersWorking = navigator.serviceWorker.getRegistrations().then(e => {
         if (e.length !== 0) {
@@ -83,7 +84,6 @@ function removeNotifButton() {
     areServiceWorkersWorking.then(condition => {
         var _a;
         if (Notification.permission === "granted" && condition) {
-            console.log(areServiceWorkersWorking);
             (_a = document.getElementById("notif-container")) === null || _a === void 0 ? void 0 : _a.remove();
         }
     });

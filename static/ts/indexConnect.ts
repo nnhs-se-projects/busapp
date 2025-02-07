@@ -58,7 +58,7 @@ function updateTables() { // updates what rows show on the pinned list and what 
             button!.style.backgroundColor = "#327fa8";
         }
     }
-    removeNotifButton(); // comes from pushNotifs.ts, which is loaded before this in the html
+    removeNotifButton(); // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
 }
 
 function updatePins() { // guess what

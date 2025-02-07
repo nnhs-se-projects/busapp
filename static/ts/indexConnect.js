@@ -31,7 +31,6 @@ indexSocket.on("update", (data) => {
 });
 function updateTables() {
     updatePins();
-    console.log("updateTables");
     let tablePins = document.getElementById("pin-bus-table");
     let pinRows = tablePins.rows;
     let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
@@ -60,7 +59,7 @@ function updateTables() {
             button.style.backgroundColor = "#327fa8";
         }
     }
-    removeNotifButton();
+    removeNotifButton(); // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
 }
 function updatePins() {
     const pinString = localStorage.getItem("pins"); // retrieves "pins" item
