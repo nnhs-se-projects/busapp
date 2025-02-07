@@ -29,6 +29,19 @@ indexSocket.on("update", (data) => {
     document.getElementById("content").innerHTML = html;
     updateTables();
 });
+function hideWhatsNew(version) {
+    document.getElementById('whatsNewPopup').style.display = 'none';
+    localStorage.setItem("whatsNewVersion", String(version));
+}
+window.onload = () => {
+    var version = +document.getElementById("whatsNewVersion").value;
+    console.log(+localStorage.getItem("whatsNewVersion") < version);
+    console.log(version);
+    console.log(+localStorage.getItem("whatsNewVersion"));
+    if (!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
+        document.getElementById('whatsNewPopup').style.display = 'block';
+    }
+};
 function updateTables() {
     updatePins();
     let tablePins = document.getElementById("pin-bus-table");

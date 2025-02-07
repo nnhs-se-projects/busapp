@@ -29,6 +29,21 @@ indexSocket.on("update", (data) => {
 
 });
 
+function hideWhatsNew(version: number) {
+    document.getElementById('whatsNewPopup')!.style.display='none'
+    localStorage.setItem("whatsNewVersion", String(version));
+}
+
+window.onload = () => {
+    var version = +(<HTMLInputElement>document.getElementById("whatsNewVersion")).value;
+    console.log(+localStorage.getItem("whatsNewVersion")! < version);
+    console.log(version);
+    console.log(+localStorage.getItem("whatsNewVersion")!);
+    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion")! < version) {
+        document.getElementById('whatsNewPopup')!.style.display='block';
+    }
+};
+
 function updateTables() { // updates what rows show on the pinned list and what buttons show Unpin or Pin on the full list.
     updatePins();
     let tablePins = <HTMLTableElement> document.getElementById("pin-bus-table");
