@@ -35,9 +35,6 @@ function hideWhatsNew(version) {
 }
 window.onload = () => {
     var version = +document.getElementById("whatsNewVersion").value;
-    console.log(+localStorage.getItem("whatsNewVersion") < version);
-    console.log(version);
-    console.log(+localStorage.getItem("whatsNewVersion"));
     if (!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
         document.getElementById('whatsNewPopup').style.display = 'block';
     }
@@ -72,7 +69,10 @@ function updateTables() {
             button.style.backgroundColor = "#327fa8";
         }
     }
-    removeNotifButton(); // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
+    try {
+        removeNotifButton();
+    } // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
+    catch (e) { }
 }
 function updatePins() {
     const pinString = localStorage.getItem("pins"); // retrieves "pins" item

@@ -36,9 +36,6 @@ function hideWhatsNew(version: number) {
 
 window.onload = () => {
     var version = +(<HTMLInputElement>document.getElementById("whatsNewVersion")).value;
-    console.log(+localStorage.getItem("whatsNewVersion")! < version);
-    console.log(version);
-    console.log(+localStorage.getItem("whatsNewVersion")!);
     if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion")! < version) {
         document.getElementById('whatsNewPopup')!.style.display='block';
     }
@@ -73,7 +70,9 @@ function updateTables() { // updates what rows show on the pinned list and what 
             button!.style.backgroundColor = "#327fa8";
         }
     }
-    removeNotifButton(); // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
+
+    try { removeNotifButton(); }// comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
+    catch(e) {}
 }
 
 function updatePins() { // guess what

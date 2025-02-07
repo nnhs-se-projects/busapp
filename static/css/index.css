@@ -7,10 +7,8 @@ body {
     background-color: #a1b5be;
 }
 
-li > ul {
-    padding-left: 2.5em;
-} li {
-    margin-left: 1em;
+li {
+    margin-left: min(max(0.5em, 2vw), 2em);
 }
 
 /* Weather/Notification/Login */
