@@ -1,4 +1,5 @@
 "use strict";
+// npx web-push generate-vapid-keys
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// npx web-push generate-vapid-keys
+// this was part of some example code
 const urlBase64ToUint8Array = (base64String) => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding)
@@ -21,19 +22,25 @@ const urlBase64ToUint8Array = (base64String) => {
     }
     return outputArray;
 };
+// Enables push notifications by requesting permission, registering a serviceworker, and iterating over every pin to subscribe to that bus
+// Takes in the VAPID public key as an argument. This can be set in .env and is passed to the function from the ejs file
 function enablePushNotifications(publicKey) {
     var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         if ('Notification' in window && 'serviceWorker' in navigator) {
             let permission = yield Notification.requestPermission();
             if (permission === "granted") {
+                // Register the serviceworker and wait until it's ready before continuing
                 navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
                 var registration = yield navigator.serviceWorker.ready;
+                // subscribe the service worker to the push API
                 const subscription = yield registration.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array(publicKey),
                 });
+                // save the push object so we can use it when subscribing in the future
                 localStorage.setItem("pushObject", JSON.stringify(subscription));
+                // iterate over pins and subscribe to them
                 const pins = ((_a = localStorage.getItem("pins")) !== null && _a !== void 0 ? _a : "").split(", ");
                 for (var i = 0; i < pins.length; i++) {
                     const response = yield fetch("/subscribe", {
@@ -51,6 +58,7 @@ function enablePushNotifications(publicKey) {
                         alert("Something went wrong while subscribing to your pinned buses. Please unpin and repin them.");
                     }
                 }
+                // all is well - remove the button
                 (_b = document.getElementById("notif-container")) === null || _b === void 0 ? void 0 : _b.remove();
             }
             else {
@@ -67,6 +75,7 @@ function enablePushNotifications(publicKey) {
 }
 // checks if notifications are working via a couple of methods and if they are, removes the notification button
 function removeNotifButton() {
+    // check if the serviceworker is present and functional/"active"
     var areServiceWorkersWorking = navigator.serviceWorker.getRegistrations().then(e => {
         if (e.length !== 0) {
             e.forEach(i => {

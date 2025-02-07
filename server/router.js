@@ -135,6 +135,7 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.render("unauthorized");
     }
 }));
+// this needs to be served from the root of the server to work properly
 exports.router.get("/serviceWorker.js", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.sendFile("serviceWorker.js", { root: path_1.default.join(__dirname, '../static/ts/') });
 }));
@@ -263,10 +264,11 @@ exports.router.get("/beans", (req, res) => __awaiter(void 0, void 0, void 0, fun
     res.sendFile(path_1.default.resolve(__dirname, "../static/img/beans.jpg"));
 }));
 // old manifest, leaving it because im not sure if anything still uses it?
-exports.router.get("/manifest.webmanifest", (req, res) => {
-    res.sendFile(path_1.default.resolve(__dirname, "../data/manifest.webmanifest"));
-});
-// new manifest
+// EDIT: commenting this out because I cannot find anything that uses it and having 2 manifest files is cause for confusion
+/*router.get("/manifest.webmanifest", (req: Request, res: Response) => {
+    res.sendFile(path.resolve(__dirname, "../data/manifest.webmanifest"))
+});*/
+// new manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
 exports.router.get("/manifest.json", (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, "../data/manifest.json"));
 });
