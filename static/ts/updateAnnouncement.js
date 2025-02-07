@@ -12,9 +12,9 @@ let announcementList;
 fetch("/announcementList").then((res) => res.json()).then((data) => announcementList = data).then(() => console.log(announcementList));
 let newAnnouncement;
 fetch("/updateAnnouncement").then((res) => res.text()).then((data) => newAnnouncement = data);
-function saveAnnouncement() {
+function save_() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!confirm("Are you sure you would like to update the announcements?"))
+        if (!confirm("Are you sure you would like to update the bus list and reset all live pages?"))
             return;
         yield fetch("/updateAnnouncement", {
             method: 'POST',
@@ -23,13 +23,11 @@ function saveAnnouncement() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                busList: busList
+                announcementList: announcementList
             })
         });
-        updateAnnouncement();
+        updateBusList();
         window.location.assign("/admin");
     });
 }
-updateAnnouncement();
-window.location.assign("/admin");
 //# sourceMappingURL=updateAnnouncement.js.map
