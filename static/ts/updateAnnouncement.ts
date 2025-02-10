@@ -1,8 +1,11 @@
-let announcementList: string[];
-fetch("/announcementList").then((res) => res.json()).then((data) => announcementList = data).then(() => console.log(announcementList));
+// let announcementList: string[];
+// fetch("/announcementList").then((res) => res.json()).then((data) => announcementList = data).then(() => console.log(announcementList));
 
-let newAnnouncement: string;
-fetch("/updateAnnouncement").then((res) => res.text()).then((data) => newAnnouncement = data);
+// let newAnnouncement: string;
+// fetch("/updateAnnouncement").then((res) => res.text()).then((data) => newAnnouncement = data);
+
+let announcement: string;
+fetch("/announcement").then((res) => res.text()).then((data) => announcement = data);
 
 async function save_() {
     if (!confirm("Are you sure you would like to update the bus list and reset all live pages?")) return;
@@ -15,11 +18,9 @@ async function save_() {
         },
         body: 
         JSON.stringify({
-            announcementList: announcementList
+            announcement: announcement
         })
     });
 
     updateBusList();
-
-    window.location.assign("/admin");
 }
