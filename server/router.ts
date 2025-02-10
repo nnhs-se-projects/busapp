@@ -120,9 +120,9 @@ router.get("/admin", async (req: Request, res: Response) => {
 });
 
 // https://save418.com/ 
-router.get("/teapot", (req, res) => { res.send(418); });
+router.get("/teapot", (req, res) => { res.sendStatus(418); });
 
-// this needs to be served from the root of the server to work properly
+// this needs to be served from the root of the server to work properly - used for push notifications
 router.get("/serviceWorker.js", async (req: Request, res: Response) => {
     res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/ts/') });
 })

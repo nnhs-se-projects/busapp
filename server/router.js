@@ -136,7 +136,7 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 // https://save418.com/ 
-exports.router.get("/teapot", (req, res) => { res.send(418); });
+exports.router.get("/teapot", (req, res) => { res.sendStatus(418); });
 // this needs to be served from the root of the server to work properly
 exports.router.get("/serviceWorker.js", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.sendFile("serviceWorker.js", { root: path_1.default.join(__dirname, '../static/ts/') });
