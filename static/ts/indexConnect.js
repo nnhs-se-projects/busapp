@@ -29,6 +29,16 @@ indexSocket.on("update", (data) => {
     document.getElementById("content").innerHTML = html;
     updateTables();
 });
+function hideWhatsNew(version) {
+    document.getElementById('whatsNewPopup').style.display = 'none';
+    localStorage.setItem("whatsNewVersion", String(version));
+}
+window.onload = () => {
+    var version = +document.getElementById("whatsNewVersion").value;
+    if (!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
+        document.getElementById('whatsNewPopup').style.display = 'block';
+    }
+};
 function updateTables() {
     updatePins();
     let tablePins = document.getElementById("pin-bus-table");
@@ -59,6 +69,10 @@ function updateTables() {
             button.style.backgroundColor = "#327fa8";
         }
     }
+    try {
+        removeNotifButton();
+    } // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
+    catch (e) { }
 }
 function updatePins() {
     const pinString = localStorage.getItem("pins"); // retrieves "pins" item
@@ -77,6 +91,7 @@ function pinBus(button) {
     updatePins();
     const busRow = button.parentElement.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = busRow.firstElementChild.innerHTML; // this is the stringification of the number of the bus
+    var removing = false;
     const num = parseInt(busNumber); // this is the number of the bus
     if (pins.includes(num) == false) {
         pins.push(num);
@@ -85,6 +100,7 @@ function pinBus(button) {
         localStorage.setItem("pins", newPinString);
     }
     else {
+        removing = true;
         pins = pins.filter(function notNum(n) { return n != num; }); // this is how you remove elements in js arrays. pain
         pins.sort();
         if (pins.length == 0) {
@@ -96,6 +112,15 @@ function pinBus(button) {
         }
     }
     updateTables();
+    if (localStorage.getItem("pushObject")) {
+        fetch("/subscribe", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({ busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing }),
+        });
+    }
 }
 function getRow(n) {
     let tableFull = document.getElementById("all-bus-table");
