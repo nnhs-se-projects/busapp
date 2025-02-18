@@ -1,7 +1,7 @@
 import express, {Application, Request, Response} from "express";
 import {router} from "./server/router";
 import path from "path";
-import fs from "fs";
+import fs, { read } from "fs";
 import bodyParser from "body-parser";
 import {createServer} from "http";
 import {Server} from "socket.io";
@@ -13,6 +13,7 @@ const connectDB = require("./server/database/connection");
 const Bus = require("./server/model/bus");
 const Wave = require("./server/model/wave");
 const Weather = require("./server/model/weather");
+const Announcement = require("./server/model/announcement");
 
 const app: Application = express();
 const httpServer = createServer(app);
@@ -45,10 +46,11 @@ io.of("/admin").on("connection", async (socket) => {
 
         let data ={
             allBuses: (await readData()).buses,
+            announcement: await Announcement.findOne({}),
             nextWave: await Bus.find({status: "Next Wave"}),
             loading: await Bus.find({status: "Loading"}),
             isLocked: false, 
-            leavingAt: new Date()
+            leavingAt: new Date(),
         };
         data.isLocked = (await Wave.findOne({})).locked;
         data.leavingAt = (await Wave.findOne({})).leavingAt;
@@ -57,6 +59,7 @@ io.of("/admin").on("connection", async (socket) => {
 
         let indexData = {
             buses: (await readData()).buses,
+            announcement: (await readData()).announcement,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: await Weather.findOne({})

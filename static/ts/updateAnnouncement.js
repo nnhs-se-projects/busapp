@@ -1,4 +1,6 @@
 "use strict";
+// let announcementList: string[];
+// fetch("/announcementList").then((res) => res.json()).then((data) => announcementList = data).then(() => console.log(announcementList));
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,10 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let announcementList;
-fetch("/announcementList").then((res) => res.json()).then((data) => announcementList = data).then(() => console.log(announcementList));
-let newAnnouncement;
-fetch("/updateAnnouncement").then((res) => res.text()).then((data) => newAnnouncement = data);
+// let newAnnouncement: string;
+// fetch("/updateAnnouncement").then((res) => res.text()).then((data) => newAnnouncement = data);
+let announcement;
+fetch("/announcement").then((res) => res.text()).then((data) => announcement = data);
 function save_() {
     return __awaiter(this, void 0, void 0, function* () {
         if (!confirm("Are you sure you would like to update the bus list and reset all live pages?"))
@@ -23,11 +25,10 @@ function save_() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                announcementList: announcementList
+                announcement: announcement
             })
         });
         updateBusList();
-        window.location.assign("/admin");
     });
 }
 //# sourceMappingURL=updateAnnouncement.js.map

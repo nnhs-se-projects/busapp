@@ -26,25 +26,24 @@
     }
 </script>
 <script>
+    announcement = document.getElementsByName("announcement")[0].value;
+    tvAnnouncement = document.getElementsByName("tvAnnouncement")[0].value;
+
     async function save_() {
-    // if (!confirm("Are you sure you would like to update the bus list and reset all live pages?")) return;
-    
-    await fetch("/updateAnnouncement", {
-        method: 'POST',
-        headers: {
-            accept: 'application.json',
-            'Content-Type': 'application/json'
-        },
-        body: 
-        JSON.stringify({
-            announcement: document.getElementsByName("announcement")[0].value,
-            tvAnnouncement: document.getElementsByName("tvAnnouncement")[0].value
-        })
-    });
+        await fetch("/updateAnnouncement", {
+            method: 'POST',
+            headers: {
+                accept: 'application.json',
+                'Content-Type': 'application/json'
+            },
+            body:
+            JSON.stringify({
+                announcement: document.getElementsByName("announcement")[0].value,
+                tvAnnouncement: document.getElementsByName("tvAnnouncement")[0].value
+            })
+        });
 
-    updateAnnouncement();
-
-    // window.location.assign("/admin");
+        updateAnnouncement();
 }
 </script>
 <script src="js/updateAnnouncementConnect.js"></script>
