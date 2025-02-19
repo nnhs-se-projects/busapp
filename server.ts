@@ -13,7 +13,6 @@ const connectDB = require("./server/database/connection");
 const Bus = require("./server/model/bus");
 const Wave = require("./server/model/wave");
 const Weather = require("./server/model/weather");
-const Announcement = require("./server/model/announcement");
 
 const app: Application = express();
 const httpServer = createServer(app);
@@ -46,7 +45,6 @@ io.of("/admin").on("connection", async (socket) => {
 
         let data ={
             allBuses: (await readData()).buses,
-            announcement: await Announcement.findOne({}),
             nextWave: await Bus.find({status: "Next Wave"}),
             loading: await Bus.find({status: "Loading"}),
             isLocked: false, 
@@ -59,7 +57,6 @@ io.of("/admin").on("connection", async (socket) => {
 
         let indexData = {
             buses: (await readData()).buses,
-            announcement: (await readData()).announcement,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: await Weather.findOne({})
