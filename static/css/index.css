@@ -11,6 +11,36 @@ li {
     margin-left: min(max(0.5em, 2vw), 2em);
 }
 
+.panel {
+    position: absolute;
+    width: 80%;
+    transform: translateX(12.5%);
+    background-color: red;
+    display: flex;
+}
+
+#top-bus-table {
+    width: 100%;
+    background-color: white;
+    color: black;
+}
+
+#top-bus-table.expanded .row {
+    display: table-cell;
+}
+
+#top-bus-table .row {
+    display: none;
+}
+
+#top-bus-table.expanded tr:not(.banner) {
+    display: table-row;
+}
+
+#top-bus-table tr:not(.banner) {
+    display: none;
+}
+
 /* Weather/Notification/Login */
 .header {
     display: grid;

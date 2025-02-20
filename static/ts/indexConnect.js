@@ -111,6 +111,9 @@ function pinBus(button) {
             localStorage.setItem("pins", newPinString);
         }
     }
+    const banner = document.getElementById("pBusBanner");
+    pins.sort();
+    banner.textContent = "Pinned bus " + busNumber;
     updateTables();
     if (localStorage.getItem("pushObject")) {
         fetch("/subscribe", {

@@ -91,7 +91,6 @@ function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks
     updatePins();
     const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = busRow!.firstElementChild!.innerHTML; // this is the stringification of the number of the bus
-
     var removing = false;
     
     const num = parseInt(busNumber); // this is the number of the bus
@@ -111,6 +110,9 @@ function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks
             localStorage.setItem("pins", newPinString);
         }
     }
+    const banner = document.getElementById("pBusBanner");
+    pins.sort();
+    banner!.textContent = "Pinned bus " + busNumber;
     updateTables();
 
     if(localStorage.getItem("pushObject")) {
