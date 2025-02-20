@@ -9,11 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var adminSocket = window.io('/admin');
+var adminSocket = window.io("/admin");
 var countDownDate = new Date();
+var updatingCount = 0;
 adminSocket.on("update", (data) => {
-    // console.log("update received")
-    // console.log(data)
     // convert from time strings to dates to allow conversion to local time
     data.allBuses.forEach((bus) => {
         if (bus.time != "")
@@ -22,21 +21,42 @@ adminSocket.on("update", (data) => {
     countDownDate = new Date(data.leavingAt);
     // rerender the page
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data });
-    // console.log(html)
     document.getElementById("content").innerHTML = html;
+    // update the timer input to match the actual value
+    var timerValue = document.getElementById("timerDurationSelector");
+    if (timerValue === null) {
+        timerValue = { value: 1 };
+    }
+    fetch("/getTimer", { method: "GET" })
+        .then((response) => response.json())
+        .then((json) => {
+        timerValue.value = json.minutes;
+        console.log(json);
+    });
 });
 function update() {
-    // console.log("update called")
     adminSocket.emit("updateMain", {
         type: "update",
     });
 }
 function lockWave() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield fetch('/lockWave', {
-            method: 'POST'
-        });
+        yield fetchWithAlert("/lockWave", "POST", {}, {});
         update();
+    });
+}
+function updateTimer() {
+    return __awaiter(this, void 0, void 0, function* () {
+        var timerValue = document.getElementById("timerDurationSelector");
+        if (timerValue === null) {
+            timerValue = { value: 1 };
+        }
+        const res = yield fetchWithAlert("/setTimer", "POST", {
+            "Content-Type": "application/json",
+        }, { minutes: timerValue.value });
+        if (!res.ok) {
+            console.log(`Response status: ${res.status}`);
+        }
     });
 }
 function updateStatus(button, status) {
@@ -46,27 +66,18 @@ function updateStatus(button, status) {
         let data = {
             number: number,
             time: time,
-            status: status
+            status: status,
         };
-        yield fetch('/updateBusStatus', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
+        yield fetchWithAlert("/updateBusStatus", "POST", {
+            "Content-Type": "application/json",
+        }, data);
         update();
-        // rerender the page
-        // location.reload
     });
 }
 function sendWave() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield fetch('/sendWave', {
-            method: 'POST'
-        });
+        yield fetchWithAlert("/sendWave", "POST", {}, {});
         update();
-        // location.reload
     });
 }
 function addToWave(button) {
@@ -91,10 +102,7 @@ function reset(button) {
 }
 function resetAllBusses(button) {
     return __awaiter(this, void 0, void 0, function* () {
-        yield fetch('/resetAllBusses', {
-            method: 'POST'
-        });
-        // location.reload
+        yield fetchWithAlert("/resetAllBusses", "POST", {}, {});
         update();
     });
 }
@@ -109,28 +117,23 @@ function updateBusChange(button) {
             change: change,
             time: time,
         };
-        yield fetch('/updateBusChange', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        // location.reload
+        yield fetchWithAlert("/updateBusChange", "POST", {
+            "Content-Type": "application/json",
+        }, data);
         update();
     });
 }
 // Set the date we're counting down to
-fetch('/leavingAt')
-    .then(response => response.json())
-    .then(data => {
+fetch("/leavingAt")
+    .then((response) => response.json())
+    .then((data) => {
     // convert the data string to a date object
     const leavingAt = new Date(data);
     countDownDate = leavingAt; // Assign the value to countDownDate
     console.log(leavingAt);
 })
-    .catch(error => {
-    console.error('Error:', error);
+    .catch((error) => {
+    console.error("Error:", error);
 });
 // Update the count down every 1 second
 var x = setInterval(function () {
@@ -147,9 +150,10 @@ var x = setInterval(function () {
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
         // Output the result in an element with id="demo"
         document.querySelectorAll("[id=timer]").forEach((element) => {
-            element.innerHTML = "The current wave will leave in " + minutes + "min " + seconds + "sec ";
+            element.innerHTML =
+                "The current wave will leave in " + minutes + "min " + seconds + "sec ";
         });
-        // If the count down is over, write some text 
+        // If the count down is over, write some text
         if (distance < 0) {
             document.querySelectorAll("[id=timer]").forEach((element) => {
                 element.innerHTML = "The current wave is about to leave!";
@@ -157,4 +161,52 @@ var x = setInterval(function () {
         }
     });
 }, 1000);
+// requires global variable updatingcount
+// functions like the fetch command, but shows the loading alert message to show if the app is actually working on it
+function fetchWithAlert(endpoint, method, header, data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        updatingCount++;
+        setLoadingState(true);
+        var response;
+        try {
+            response = yield fetch(endpoint, {
+                method: method,
+                headers: header,
+                body: JSON.stringify(data),
+            });
+            if ((yield response.text()) !== "success") {
+                throw (new Error("Non-success response recieved. You were most likely logged out and need to log back in."));
+            }
+        }
+        catch (error) {
+            console.error("Error:", error);
+            alert("There was an error when processing the request. Please try reloading, and contact Bus App devs if the issue persists.\n\n" + error);
+        }
+        finally {
+            updatingCount--;
+            if (updatingCount == 0) {
+                setLoadingState(false);
+            }
+            else {
+                setLoadingState(true);
+            }
+            return response;
+        }
+    });
+}
+// sets the loading state for the "Loading" popup
+function setLoadingState(option) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var div = document.getElementsByClassName("popup")[0];
+        if (div) {
+            if (option) {
+                div.style.animationName = "slide";
+                div.style.animationPlayState = "paused";
+            }
+            else {
+                div.style.animationPlayState = "running";
+            }
+        }
+    });
+}
 //# sourceMappingURL=adminConnect.js.map

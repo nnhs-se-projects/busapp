@@ -51,7 +51,6 @@ async function save() {
     });
 
     updateBusList();
-
     window.location.assign("/admin");
 }
 

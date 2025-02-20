@@ -229,6 +229,33 @@ body {
 
 }
 
+.popup {
+    position: fixed;
+    left: 50%;
+    translate: -50%;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    background-color: #327fa8;
+    border: 5px solid #05a1f5;
+    top: 0;
+    transform: translateY(-100%);
+    animation: 0.3s ease-in 0s normal forwards;
+}
+
+@keyframes slide {
+    0% {
+        top: 10px;
+        transform: translateY(0%);
+    }
+    100% {
+        top: 0px;
+        transform: translateY(-100%);
+    }
+}
+
+
 /* Style for the select element */
 select[name="minutes"] {
     padding: 12px; /* Increase padding */
