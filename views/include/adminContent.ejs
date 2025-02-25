@@ -43,7 +43,7 @@
             <% if (data.allBuses[i].status === 'Loading') { %>
                 <tr>
                     <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
-                    <td><input class="tableInput changeInput" type="number" oninput="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
+                    <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
                     <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value= "<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
                     <td>
                         <p onclick="removeFromWave(this)" class="button-text">Remove</p>
@@ -71,7 +71,7 @@
             <% if (data.allBuses[i].status === 'Next Wave') { %>
                 <tr>
                     <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
-                    <td><input class="tableInput changeInput" type="number" oninput="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
+                    <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
                     <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
                     <td>
                         <p onclick="removeFromWave(this)" class="button-text">Remove</p>
@@ -94,7 +94,7 @@
         <% for(let i = 0; i < data.allBuses.length; i++) { %> 
             <tr class="<%= data.allBuses[i].status === 'Gone' ? 'grayed-out' : '' %>">
                 <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
-                <td><input class="tableInput changeInput" type="number" oninput="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
+                <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
                 
                 <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
 
