@@ -5,6 +5,8 @@ var countDownDate = new Date();
 
 var updatingCount = 0;
 
+var TIMER = (<any>document.getElementById("timerDurationSelector")).value;
+
 adminSocket.on("update", (data) => {
   // convert from time strings to dates to allow conversion to local time
   data.allBuses.forEach((bus) => {
@@ -12,20 +14,19 @@ adminSocket.on("update", (data) => {
   });
 
   countDownDate = new Date(data.leavingAt);
-
   // rerender the page
   const html = ejs.render(
     document.getElementById("getRender")!.getAttribute("render")!,
     { data: data }
   );
-
   document.getElementById("content")!.innerHTML = html;
 
   // update the timer input to match the actual value
   var timerValue: any = document.getElementById("timerDurationSelector");
-  if (timerValue === null) {
-    timerValue = { value: 1 };
+  if (timerValue !== null) {
+    timerValue.value = TIMER;
   }
+
   fetch("/getTimer", { method: "GET" })
     .then((response) => response.json())
     .then((json) => {
@@ -34,6 +35,7 @@ adminSocket.on("update", (data) => {
     });
 
   setIndicatorStatus(lastStatus);
+
 });
 
 function update() {
@@ -65,6 +67,9 @@ async function updateTimer() {
   if (!res.ok) {
     console.log(`Response status: ${res.status}`);
   }
+
+  TIMER = timerValue.value;
+  update();
 }
 
 async function updateStatus(button, status) {
