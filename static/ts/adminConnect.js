@@ -33,6 +33,7 @@ adminSocket.on("update", (data) => {
         timerValue.value = json.minutes;
         console.log(json);
     });
+    setIndicatorStatus(lastStatus);
 });
 function update() {
     adminSocket.emit("updateMain", {
