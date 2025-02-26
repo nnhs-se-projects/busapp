@@ -6,7 +6,6 @@ var countDownDate = new Date();
 var updatingCount = 0;
 
 var TIMER = (<any>document.getElementById("timerDurationSelector")).value;
-console.log(TIMER);
 
 adminSocket.on("update", (data) => {
   // convert from time strings to dates to allow conversion to local time
