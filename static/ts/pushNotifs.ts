@@ -38,16 +38,22 @@ async function enablePushNotifications(publicKey) {
                 // iterate over pins and subscribe to them
                 const pins = (localStorage.getItem("pins") ?? "").split(", ");
                 for(var i = 0; i < pins.length; i++) {
-                    const response = await fetch("/subscribe", {
+                    if (Number.isNaN(Number(pins[i]))) { continue }
+                    fetch("/subscribe", {
                         headers: {
                             "Content-Type": "application/json",
                         },
                         method: "POST",
                         body: JSON.stringify({busNumber: Number(pins[i]) , pushObject: localStorage.getItem("pushObject"), remove: false}),
+                    }).then(async response => {
+                        if(response.ok) { 
+                            console.log(await response.text()) 
+                        } 
+                        else {
+                            console.log("error!" + response.status); 
+                            alert("Something went wrong while subscribing to your pinned buses. Please unpin and repin them.")
+                        }
                     });
-
-                    if(response.ok) { console.log(await response.text()) }
-                    else {console.log("error!" + response.status); alert("Something went wrong while subscribing to your pinned buses. Please unpin and repin them.")}
                 }
                 
                 // all is well - remove the button
