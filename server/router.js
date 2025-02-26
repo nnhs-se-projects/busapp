@@ -185,23 +185,25 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
         res.redirect("/login");
         return;
     }
-    if (!(null === (yield Wave.findOne({ locked: true }))))
+    // find the wave
+    if (!(null === (yield Wave.findOne({ locked: true })))) {
+        // find the buses and iterate over them
         (yield Bus.find({ status: "Loading" })).forEach((bus) => __awaiter(void 0, void 0, void 0, function* () {
-            (yield Subscription.find({ bus: bus.busNumber })).forEach((sub) => __awaiter(void 0, void 0, void 0, function* () {
-                try {
-                    yield web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
-                        title: 'Your Bus Just Left!',
-                        body: `Bus number ${bus.busNumber} just left.`,
-                        icon: "/img/busAppIcon.png"
-                    }));
-                }
-                catch (e) {
-                    if (typeof (e) == web_push_1.default.WebPushError && e.statusCode === 410) {
-                        yield Subscription.findByIdAndDelete(sub._id);
+            // get every subscription for that bus and iterate over them
+            (yield Subscription.find({ bus: bus.busNumber })).forEach((sub) => {
+                web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
+                    title: 'Your Bus Just Left!',
+                    body: `Bus number ${bus.busNumber} just left.`,
+                    icon: "/img/busAppIcon.png"
+                })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
+                    // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
+                    if ([410, 400, 403, 401].includes(e.statusCode)) {
+                        return Subscription.findByIdAndDelete(sub._id);
                     }
-                }
-            }));
+                }));
+            });
         }));
+    }
     yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
     yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
     yield Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
@@ -216,23 +218,24 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
     const leavingAt = new Date();
     leavingAt.setSeconds(leavingAt.getSeconds() + timer);
     yield Wave.findOneAndUpdate({}, { leavingAt: leavingAt }, { upsert: true });
-    if (!(null === (yield Wave.findOne({ locked: true }))))
+    if (!(null === (yield Wave.findOne({ locked: true })))) {
+        // find the buses and iterate over them
         (yield Bus.find({ status: "Loading" })).forEach((bus) => __awaiter(void 0, void 0, void 0, function* () {
-            (yield Subscription.find({ bus: bus.busNumber })).forEach((sub) => __awaiter(void 0, void 0, void 0, function* () {
-                try {
-                    yield web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
-                        title: 'Your Bus is Here!',
-                        body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds`,
-                        icon: "/img/busAppIcon.png"
-                    }));
-                }
-                catch (e) {
-                    if (typeof (e) == web_push_1.default.WebPushError && e.statusCode === 410) {
-                        yield Subscription.findByIdAndDelete(sub._id);
+            // get every subscription for that bus and iterate over them
+            (yield Subscription.find({ bus: bus.busNumber })).forEach((sub) => {
+                web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
+                    title: 'Your Bus is Here!',
+                    body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds`,
+                    icon: "/img/busAppIcon.png"
+                })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
+                    // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
+                    if ([410, 400, 403, 401].includes(e.statusCode)) {
+                        return Subscription.findByIdAndDelete(sub._id);
                     }
-                }
-            }));
+                }));
+            });
         }));
+    }
     res.send("success");
 }));
 exports.router.post("/setTimer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

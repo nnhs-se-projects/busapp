@@ -25,7 +25,6 @@ const connectDB = require("./server/database/connection");
 const Bus = require("./server/model/bus");
 const Wave = require("./server/model/wave");
 const Weather = require("./server/model/weather");
-const Announcement = require("./server/model/announcement");
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(httpServer);
@@ -45,7 +44,6 @@ io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, f
     socket.on("updateMain", (command) => __awaiter(void 0, void 0, void 0, function* () {
         let data = {
             allBuses: (yield (0, jsonHandler_1.readData)()).buses,
-            announcement: yield Announcement.findOne({}),
             nextWave: yield Bus.find({ status: "Next Wave" }),
             loading: yield Bus.find({ status: "Loading" }),
             isLocked: false,
@@ -56,7 +54,6 @@ io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, f
         // console.log("updateMain called")
         let indexData = {
             buses: (yield (0, jsonHandler_1.readData)()).buses,
-            announcement: (yield (0, jsonHandler_1.readData)()).announcement,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: yield Weather.findOne({})
