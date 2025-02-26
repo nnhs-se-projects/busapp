@@ -29,6 +29,8 @@ adminSocket.on("update", (data) => {
     if (timerValue !== null) {
         timerValue.value = TIMER;
     }
+
+    setIndicatorStatus(lastStatus);
 });
 function update() {
     adminSocket.emit("updateMain", {

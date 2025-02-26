@@ -26,6 +26,16 @@ adminSocket.on("update", (data) => {
   if (timerValue !== null) {
     timerValue.value = TIMER;
   }
+
+  fetch("/getTimer", { method: "GET" })
+    .then((response) => response.json())
+    .then((json) => {
+      timerValue.value = json.minutes;
+      console.log(json);
+    });
+
+  setIndicatorStatus(lastStatus);
+
 });
 
 function update() {

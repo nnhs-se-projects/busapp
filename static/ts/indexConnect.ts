@@ -26,7 +26,7 @@ indexSocket.on("update", (data) => {
     const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
     document.getElementById("content")!.innerHTML = html;
     updateTables();
-
+    setIndicatorStatus(lastStatus);
 });
 
 function hideWhatsNew(version: number) {
