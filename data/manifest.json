@@ -6,17 +6,22 @@
     "scope": "/",
     "icons": [
       {
-        "src": "/img/busAppIcon.png",
+        "src": "/img/Icon-New.png",
+        "sizes": "128x128",
+        "type": "image/png"
+      },
+      {
+        "src": "/img/Icon-New-192.png",
         "sizes": "192x192",
         "type": "image/png"
       },
       {
-        "src": "/img/busAppIcon.png",
+        "src": "/img/Icon-New-512.png",
         "sizes": "512x512",
         "type": "image/png"
       },
       {
-        "src": "/img/busAppIcon.png",
+        "src": "/img/Icon-New-256.png",
         "sizes": "256x256",
         "type": "image/png"
       }
