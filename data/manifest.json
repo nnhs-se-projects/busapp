@@ -4,7 +4,14 @@
     "description": "App for displaying bus information",
     "start_url": "/",
     "scope": "/",
+    "categories": ["utilities", "travel", "navigation"],
     "icons": [
+      {
+        "src": "/img/Icon-New-anyuse-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      },
       {
         "src": "/img/Icon-New-128.png",
         "sizes": "128x128",
@@ -57,6 +64,7 @@
 
     "theme_color": "#a1b5be",
     "background_color": "#a1b5be",
+    "display_override": ["standalone", "fullscreen", "minimal-ui"],
     "display": "standalone",
     "shortcuts": [
       {
@@ -69,11 +77,15 @@
       {
         "src": "/img/screenshotHome.png",
         "form_factor": "narrow",
+        "sizes": "796x1289",
+        "type": "image/png",
         "label": "Home screen on mobile"
       },
       {
         "src": "/img/screenshotDesktop.png",
         "form_factor": "wide",
+        "sizes": "1026x625",
+        "type": "image/png",
         "label": "Home screen on desktop"
       }
     ]
