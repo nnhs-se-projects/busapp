@@ -6,29 +6,57 @@
     "scope": "/",
     "icons": [
       {
-        "src": "/img/Icon-New.png",
+        "src": "/img/Icon-New-128.png",
         "sizes": "128x128",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "maskable"
       },
       {
         "src": "/img/Icon-New-192.png",
         "sizes": "192x192",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "maskable"
       },
       {
         "src": "/img/Icon-New-512.png",
         "sizes": "512x512",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "maskable"
       },
       {
         "src": "/img/Icon-New-256.png",
         "sizes": "256x256",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "maskable"
+      },
+      {
+        "src": "/img/busapp-128-mono.png",
+        "sizes": "128x128",
+        "type": "image/png",
+        "purpose": "monochrome maskable"
+      },
+      {
+        "src": "/img/busapp-192-mono.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "monochrome maskable"
+      },
+      {
+        "src": "/img/busapp-512-mono.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "monochrome maskable"
+      },
+      {
+        "src": "/img/busapp-256-mono.png",
+        "sizes": "256x256",
+        "type": "image/png",
+        "purpose": "monochrome maskable"
       }
     ],
 
-    "theme_color": "#0099ff",
-    "background_color": "#0099ff",
+    "theme_color": "#a1b5be",
+    "background_color": "#a1b5be",
     "display": "standalone",
     "shortcuts": [
       {
