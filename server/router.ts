@@ -467,3 +467,9 @@ router.post("/clearAnnouncement", async (req: Request, res: Response) => {
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
+router.get("/busMap", async (req: Request, res: Response) => {
+    res.render("busMap", {
+        data: await readData(),
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
+    });
+});
