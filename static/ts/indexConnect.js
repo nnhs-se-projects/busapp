@@ -16,6 +16,7 @@ var pins = [];
 var notifStatus = {};
 updatePins();
 updateTables();
+var panelExpanded = false;
 // end of initializing stuff
 indexSocket.on("update", (data) => {
     // console.log("update received")
@@ -42,33 +43,31 @@ window.onload = () => {
 function updateTables() {
     updatePins();
     let tablePins = document.getElementById("pin-bus-table");
-    let pinRows = tablePins.rows;
+    // let pinRows = tablePins.rows;
     let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
-    for (let i = 2; i < pinRows.length - 1; i++) { // hides rows that aren't in the pins
-        let number = parseInt(pinRows[i].firstElementChild.innerHTML);
-        if (pins.includes(number)) {
-            pinRows[i].hidden = false;
-            lastHide = true;
-        }
-        else {
-            pinRows[i].hidden = true;
-        }
-    }
-    pinRows[pinRows.length - 1].hidden = lastHide;
+    // for (let i = 2; i < pinRows.length - 1; i++) { // hides rows that aren't in the pins
+    //     let number = parseInt(pinRows[i]!.firstElementChild!.innerHTML);
+    //     if (pins.includes(number)) {
+    //         pinRows[i].hidden = false;
+    //         lastHide = true;
+    //     } else {
+    //         pinRows[i].hidden = true;
+    //     }
+    // }
+    // pinRows[pinRows.length - 1].hidden = lastHide;
     let tableFull = document.getElementById("all-bus-table");
-    let fullRows = tableFull.rows;
-    for (let i = 2; i < fullRows.length; i++) { // first two rows are the table header and the column headers
-        let number = parseInt(fullRows[i].firstElementChild.innerHTML);
-        let button = fullRows[i].lastElementChild.firstElementChild;
-        if (pins.includes(number)) { // lol, lmao even
-            button.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Unpin";
-            button.style.backgroundColor = "#ab0808";
-        }
-        else {
-            button.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Pin";
-            button.style.backgroundColor = "#327fa8";
-        }
-    }
+    // let fullRows = tableFull.rows;
+    // for (let i = 2; i < fullRows.length; i++) { // first two rows are the table header and the column headers
+    //     let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
+    //     let button = <HTMLElement> fullRows[i].lastElementChild!.firstElementChild
+    //     if (pins.includes(number)){ // lol, lmao even
+    //         button!.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Unpin"
+    //         button!.style.backgroundColor = "#ab0808";
+    //     } else {
+    //         button!.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Pin"
+    //         button!.style.backgroundColor = "#327fa8";
+    //     }
+    // }
     try {
         removeNotifButton();
     } // comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
@@ -172,4 +171,14 @@ var x = setInterval(function () {
         }
     });
 }, 1000);
+function togglePanelExpanded() {
+    const panel = document.getElementById("panel");
+    panelExpanded = !panelExpanded;
+    if (panelExpanded) {
+        panel === null || panel === void 0 ? void 0 : panel.classList.add("expanded");
+    }
+    else {
+        panel === null || panel === void 0 ? void 0 : panel.classList.remove("expanded");
+    }
+}
 //# sourceMappingURL=indexConnect.js.map

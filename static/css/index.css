@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+    scrollbar-width: none;
 }
 
 body {
@@ -11,43 +12,81 @@ li {
     margin-left: min(max(0.5em, 2vw), 2em);
 }
 
-.panel {
+#panel-header {
+    height: 10vh;
+    background-color: white;
+    width: 80vw;
+    border-radius: 10px;
+    transform: translate(10vw, 1vh);
+}
+
+#pBusBanner {
+    text-align: center;
+}
+
+#panel {
     position: absolute;
-    width: 80%;
-    transform: translateX(12.5%);
-    background-color: red;
+    transform: translate(10vw, 1.5vh);
+    width: 80vw;
+    background-color: white;
     display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: scroll;
+}
+#panel.expanded{
+    height: 80vh;
+}
+
+#panel.expanded table tbody {
+    display: table-row-group;
+}
+#panel table tbody {
+    overflow: auto;
+    background-color: yellow;
+    display: none;
 }
 
 #top-bus-table {
-    width: 100%;
-    background-color: white;
+    width: 80vw;
+    background-color: red;
     color: black;
+    border-radius: 10px;
 }
 
-#top-bus-table.expanded .row {
-    display: table-cell;
+th, td {
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
-#top-bus-table .row {
-    display: none;
+.num-col {
+    font-size: 5vw;
+    text-align: center;
 }
 
-#top-bus-table.expanded tr:not(.banner) {
-    display: table-row;
+.status-col {
+    font-size: 5vw;
+    text-align: center;
 }
 
-#top-bus-table tr:not(.banner) {
-    display: none;
+.pin-col {
+    text-align: center;
+    width: 22%;
 }
 
-/* Weather/Notification/Login */
-.header {
-    display: grid;
-    grid-template-columns: 7fr 5fr 3fr 3fr;
-    grid-template-rows: 1fr 1fr;
-    padding: 3% 5%;
-    height: 7%;
+.fa-chevron-down {
+    position: relative;
+}
+
+.pin-button {
+    font-family: 'Montserrat', sans-serif;
+    width: 70%;
+    text-decoration: none;
+    font-size: 0.8em;
+    background-color: #327fa8;
+    color: #ffffff;
+    padding: 4%;
+    transition: 0.2s;
 }
 
 #IOSnotifpopup > div, #whatsNewPopup > div {
@@ -127,42 +166,6 @@ li {
     height: 100%;
 }
 
-.buttons-container {
-    grid-column: 3/4;
-    grid-row: 1/3;
-    align-items: right;
-    display: flex;
-    gap: 2%;
-}
-
-.buttons-container > * {
-    text-align: right;
-    height: 80%;
-}
-
-.help-button, #notif-button, #login-button, .generic-button {
-    border-radius: 10px;
-    font-family: 'Montserrat', sans-serif;
-    text-decoration: none;
-    font-size: 3.5vw;
-    background-color: #327fa8;
-    color: #ffffff;
-    padding: 5px;
-    text-wrap: nowrap;
-}
-
-.button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-}
-
 .button2 {
     background-color: #008CBA; 
     color: #ffffff;
@@ -191,28 +194,7 @@ li {
     padding: 2%;
 }
 
-/* Tables */
-.bus-table {
-    margin: 0 auto 3%;
-    width: 90%;
-    border-collapse: collapse;
-    font-size: 3.1vw;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.bus-table thead tr {
-    background-color: #327fa8;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-.bus-table tbody tr {
-    border-bottom: 2px solid #dddddd;
-    height: 5vh;
-}
-
-#all-bus-table tbody tr:nth-of-type(even) {
+/* #all-bus-table tbody tr:nth-of-type(even) {
     background-color: #e7e6e6;
 }
 
@@ -222,49 +204,8 @@ li {
 
 #pin-bus-table tbody tr {
     background-color: #ffffff;
-}
+} */
 
-.bus-table tbody tr:last-of-type {
-    border-bottom: 4px solid #327fa8;
-}
-
-.bus-table th,
-.bus-table td {
-    padding: 0.6% 2%;
-}
-
-.num-col {
-    width: 28%;
-}
-
-.num-col:not(th) {
-    font-size: 5vw;
-    padding: 0.6% 2% 0.6% 4%;
-}
-
-.status-col {
-    width: 21%;
-}
-
-.time-col {
-    width: 14%;
-}
-
-.pin-col {
-    text-align: center;
-    width: 22%;
-}
-
-.pin-button {
-    font-family: 'Montserrat', sans-serif;
-    width: 70%;
-    text-decoration: none;
-    font-size: 0.8em;
-    background-color: #327fa8;
-    color: #ffffff;
-    padding: 4%;
-    transition: 0.2s;
-}
 
 .announcement {
     font-family: 'Montserrat', sans-serif;

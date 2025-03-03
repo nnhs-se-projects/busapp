@@ -1,123 +1,46 @@
-<div id = "panel" class = "panel">
-    <div class="header">
-        <table id = "top-bus-table">
-            <thead >
-                <tr class = "banner">
-                    <td colspan="2">Weather: <%= data.weather.temperature %>°F</td>
-                    <td id = "pBusBanner" colspan="2">Pinned Bus: </td>
-                </tr>
-            </thead>
-            <tbody>
-                <% for(let i = 0; i < data.buses.length; i++) { %> 
-                    <tr class = "bus-row">
-                        <td class="num-col"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></td>
-                        <td class="status-col"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %></td>
-                        <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>
-                        <td class="pin-col"><button class="pin-button" onclick="pinBus(this)"><i class="fa-solid fa-thumbtack"></i> Pin</button></td>
-                    </tr>
-                <% } %> 
-            </tbody>
-        </table>
-        <!-- <div class="weather-container">    
-            <div class="weather-temperature">
-                <p><%= data.weather.temperature %>°F</p>
-            </div>
-            <div class="weather-status">
-                <p><%= data.weather.status %> </p>
-            </div>
-            <div class="weather-img">
-                <img src=<%= data.weather.icon %>>
-            </div>
-        </div> -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">NNHS Bus App</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
+        <ul class="navbar-nav mb-auto">
+          <li class="nav-item">
+            <a class="nav-link active button" aria-current="page"href="/admin">Admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link button" href="/help">Help</a>
+            <!-- <a class="nav-link" href="#">Help</a> -->
+          </li>
+        </ul>
+      <!-- </div> -->
     </div>
-    <!-- <div class="tables-container"> -->
-        <!-- <% if(announcement != "") { %>
-            <table class="announcement-table" id="announcement-table">
-                <thead>
-                    <tr>
-                        <th class="announcement-table"><i class="fa-solid fa-bullhorn fa-fw"></i> Announcement</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <td class="announcement"><%= announcement %></td>
+  </nav>
+<div>
+    <div id = "panel-header" class = "panel-header" onclick = "togglePanelExpanded()">
+        <h1 id = "pBusBanner">Pinned Bus: </h1>
+    </div>
+    <div id = "panel" class = "panel">
+            <table id = "top-bus-table" class = "">
+                <tbody id = "top-bus-table-body">
+                    <% for(let i = 0; i < data.buses.length; i++) { %> 
+                        <tr class = "bus-row">
+                            <td class="num-col" colspan="1"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></td>
+                            <td class="status-col" colspan="5"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>
+                            <!-- <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td> -->
+                            <td class="pin-col" onclick="pinBus(this)">Pin</td>
+                        </tr>
+                    <% } %> 
                 </tbody>
             </table>
-        <% } %> -->
-        <!-- <div id="buses"> -->
-            <!-- pins -->
-            <!-- <table class="bus-table" id="pin-bus-table"> -->
-                <!-- <thead>
-                    <tr>
-                        <th colspan="4" style="background-color: #bf2214; font-size: 160%;"><i class="fa-solid fa-thumbtack fa-fw"></i> Pinned Buses</th>
-                    </tr>
-                    <tr>
-                        <th class="num-col">Bus # &rarr; Change</th>
-                        <th class="status-col">Status</th>
-                        <th class="time-col">Time</th>
-                        <th class="pin-col">Pin?</th>
-                    </tr>
-                </thead> -->
-                <!-- <tbody id="pin-bus-rows">
-                <% for(let i = 0; i < data.buses.length; i++) { %>
-                    <tr>
-                        <td class="num-col"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></td>
-                        <td class="status-col"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %></td>
-                        <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>
-                        <td class="pin-col"><button class="pin-button" style="background-color: #bf2214" onclick="pinBus(this)"><i class="fa-solid fa-thumbtack"></i> Unpin</button></td>             
-                    </tr>
-                <% } %> 
-                    <tr>
-                        <td colspan="4" style="text-align:center">No buses pinned.</td>
-                    </tr>
-                </tbody> -->
-            <!-- </table> -->
+    </div>   
 
-            <!-- <% if (data.isLocked === true) { %>
-                <div class="timer-box">
-                    <p id="timer" class="timer-text"></p>
-                </div>
-            <% } %> -->
-
-            <!-- all buses -->
-            <!-- <table class="bus-table" id="all-bus-table"> -->
-                <!-- <thead> -->
-                    <!-- <tr>
-                        <th colspan="4" style="background-color: #05a1f5; font-size: 160%;"><i class="fa fa-star fa-fw"></i> All Buses</th>
-                    </tr> -->
-                    <!-- <tr>
-                        <th class="num-col">Bus # &rarr; Change</th>
-                        <th class="status-col">Status</th>
-                        <th class="time-col">Time</th>
-                        <th class="pin-col">Pin?</th>
-                    </tr>
-                </thead> -->
-                <!-- <tbody id="all-bus-rows"> -->
-                <!-- <% for(let i = 0; i < data.buses.length; i++) { %> 
-                    <tr>
-                        <td class="num-col"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></td>
-                        <td class="status-col"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %></td>
-                        <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>
-                        <td class="pin-col"><button class="pin-button" onclick="pinBus(this)"><i class="fa-solid fa-thumbtack"></i> Pin</button></td>
-                    </tr>
-                <% } %>  -->
-                <!-- </tbody> -->
-            <!-- </table> -->
-        <!-- </div> -->
-        
-    <!-- </div> -->
-
-
+    <i class="fa-solid fa-chevron-down"></i>
 </div>
-
 <div class="buttons-container">
     <div id="notif-container">
         <a id="notif-button" onclick="enablePushNotifications('<%= data.vapidPublicKey %>')">Enable Notifications</a>
-    </div>
-    <div class="login-container">
-        <a id="login-button" href="/admin">Admin</a>
-    </div>
-    <div class="help-container">
-        <a class="help-button" href="/help">Help</a>
     </div>
 </div>
 
