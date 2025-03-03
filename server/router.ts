@@ -18,8 +18,13 @@ const oAuth2 = new OAuth2Client(CLIENT_ID);
 dotenv.config({ path: ".env" });
 
 // Remember to set vapid keys in .env - run ```npx web-push generate-vapid-keys``` to generate
-const vapidPrivateKey = process.env.VAPID_PRIVATE;
-const vapidPublicKey = process.env.VAPID_PUBLIC;
+const vapidPrivateKey = process.env.VAPID_PRIVATE!;
+const vapidPublicKey = process.env.VAPID_PUBLIC!;
+
+// CHECK BEFORE MERGING
+if (!vapidPrivateKey || !vapidPublicKey) {
+    throw new Error("VAPID keys are not set in the environment variables.");
+}
 
 webpush.setVapidDetails(
     'mailto:test@test.com',

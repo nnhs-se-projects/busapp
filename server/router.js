@@ -55,6 +55,10 @@ dotenv.config({ path: ".env" });
 // Remember to set vapid keys in .env - run ```npx web-push generate-vapid-keys``` to generate
 const vapidPrivateKey = process.env.VAPID_PRIVATE;
 const vapidPublicKey = process.env.VAPID_PUBLIC;
+// CHECK BEFORE MERGING
+if (!vapidPrivateKey || !vapidPublicKey) {
+    throw new Error("VAPID keys are not set in the environment variables.");
+}
 web_push_1.default.setVapidDetails('mailto:test@test.com', vapidPublicKey, vapidPrivateKey);
 const bodyParser = require('body-parser');
 exports.router.use(bodyParser.urlencoded({ extended: true }));
@@ -137,10 +141,8 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
 }));
 // https://save418.com/ 
 exports.router.get("/teapot", (req, res) => { res.sendStatus(418); });
-
 // used for networkIndicator
 exports.router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
-
 // this needs to be served from the root of the server to work properly - used for push notifications
 exports.router.get("/serviceWorker.js", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.sendFile("serviceWorker.js", { root: path_1.default.join(__dirname, '../static/ts/') });
