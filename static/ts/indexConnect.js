@@ -9,6 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const Buttons = document.querySelectorAll(".button");
+Buttons.forEach((b) => {
+    b.addEventListener("mouseover", () => {
+        b.classList.add("active");
+    });
+    b.addEventListener("mouseout", () => {
+        b.classList.remove("active");
+    });
+});
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
 var countDownDate = new Date();

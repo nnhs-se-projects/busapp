@@ -1,6 +1,17 @@
 /// <reference path="./socket-io-client.d.ts"/>
 
-const Buttons = document.querySelectorAll(".button");
+const Buttons = document.querySelectorAll(".button") as NodeListOf<HTMLElement>;
+
+Buttons.forEach((b : HTMLElement) => {
+    b.addEventListener("mouseover", () => {
+        b.classList.add("active");
+    });
+
+    b.addEventListener("mouseout", () => {
+        b.classList.remove("active");
+    });
+    
+});
 
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
