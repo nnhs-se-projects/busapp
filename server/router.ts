@@ -11,6 +11,7 @@ const Bus = require("./model/bus");
 const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
+const Admin = require("./model/admin");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
