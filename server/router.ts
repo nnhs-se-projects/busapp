@@ -91,7 +91,7 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
 
 // Checks if the user's email is in the whitelist and authorizes accordingly
 async function authorize(req: Request) {
-    req.session.isAdmin = Boolean(await Admin.find({Email: req.session.userEmail?.toLowerCase()})); 
+    req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()})); 
 }
 
 

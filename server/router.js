@@ -89,7 +89,7 @@ exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, v
 function authorize(req) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        req.session.isAdmin = Boolean(yield Admin.find({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
+        req.session.isAdmin = Boolean(yield Admin.findOne({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
     });
 }
 /* Admin page. This is where bus information can be updated from
