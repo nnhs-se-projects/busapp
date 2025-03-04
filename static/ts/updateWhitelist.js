@@ -16,7 +16,7 @@ function addAdmin_admins(e) {
     console.log(e);
     let row = e.parentElement.parentElement;
     let admin = row.children[0].children[0].value;
-    if (admin.includes('@') && admin.includes('naperville203.org') && (admin.indexOf('@') < admin.indexOf('naperville203.org')) && (!admins.includes(admin))) {
+    if (admin.includes('@') && admin.includes('naperville203.org') && (admin.indexOf('@') < admin.indexOf('naperville203.org'))) {
         if (admins.includes(admin)) {
             alert("Duplicate admins are not allowed");
             return;
@@ -27,6 +27,7 @@ function addAdmin_admins(e) {
         admins.splice(0, 0, admin);
         let gleepGlorp = document.getElementById("gleepGlorp");
         gleepGlorp.value = "";
+        save2(admin);
     }
     else {
         alert("Invalid address entered. Please enter a D203 email address.");
@@ -39,17 +40,10 @@ function removeAdmin_admins(secondChild) {
     let admin = row.children[0].innerHTML;
     admins.splice(admins.indexOf(admin), 1);
     row.remove();
+    save2(admin);
 }
-function save2(reset) {
+function save2(admin) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (reset) {
-            if (!confirm("Are you sure you would like to update the admin list?"))
-                return;
-        }
-        else {
-            if (!confirm("Are you sure you would like to update the admin list?"))
-                return;
-        }
         fetch("/whitelistFile", {
             method: 'POST',
             headers: {
@@ -57,7 +51,7 @@ function save2(reset) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                admins: admins
+                admin: admin
             })
         });
     });

@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const google_auth_library_1 = require("google-auth-library");
 const jsonHandler_1 = require("./jsonHandler");
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importStar(require("fs"));
+const fs_1 = __importDefault(require("fs"));
 exports.router = express_1.default.Router();
 const web_push_1 = __importDefault(require("web-push"));
 const dotenv = require("dotenv");
@@ -325,7 +302,7 @@ exports.router.get('/whitelist', (req, res) => __awaiter(void 0, void 0, void 0,
     authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: yield Admin.find({}).exec()
+            whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email) }
         });
     }
     else {
@@ -364,9 +341,9 @@ exports.router.get("/busList", (req, res) => __awaiter(void 0, void 0, void 0, f
     res.type("json").send(yield Bus.find().distinct("busNumber"));
 }));
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
-exports.router.get("/whitelistFile", (req, res) => {
-    res.type("json").send((0, fs_1.readFileSync)(path_1.default.resolve(__dirname, "../data/whitelist.json")));
-});
+exports.router.get("/whitelistFile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.type("json").send((yield Admin.find({}).exec()).map((e) => e.Email));
+}));
 exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
@@ -406,12 +383,13 @@ exports.router.post("/whitelistFile", (req, res) => __awaiter(void 0, void 0, vo
         res.redirect("/login");
         return;
     }
-    const adminExists = yield Admin.findOne({ eMail: req.body.admins }).exec();
+    const adminExists = yield Admin.findOne({ Email: req.body.admin }).exec();
+    console.log(adminExists);
     if (adminExists) {
-        Admin.findByIdAndDelete(adminExists._id);
+        yield Admin.findByIdAndDelete(adminExists._id);
     }
     else {
-        (new Admin({ eMail: req.body.admins })).save();
+        yield (new Admin({ Email: req.body.admin })).save();
     }
 }));
 exports.router.post("/submitAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

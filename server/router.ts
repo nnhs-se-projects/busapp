@@ -340,9 +340,10 @@ router.get('/whitelist', async (req: Request,res: Response)=>{
     
     // Authorizes user, then either displays admin page or unauthorized page
     authorize(req);
+
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: await Admin.find({}).exec()
+            whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email)}
         });
     }
     else {
@@ -388,8 +389,8 @@ router.get("/busList", async (req: Request, res: Response) => {
 });
 
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
-router.get("/whitelistFile", (req: Request, res: Response) => {
-    res.type("json").send(readFileSync(path.resolve(__dirname, "../data/whitelist.json")));
+router.get("/whitelistFile", async (req: Request, res: Response) => {
+    res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email));
 });
 
 router.post("/updateBusList", async (req: Request, res: Response) => {
@@ -434,11 +435,12 @@ router.post("/whitelistFile", async (req:Request,res: Response) => {
         res.redirect("/login");
         return;
     }
-    const adminExists = await Admin.findOne({eMail: req.body.admins}).exec();
+    const adminExists = await Admin.findOne({Email: req.body.admin}).exec();
+    console.log(adminExists);
     if(adminExists){
-        Admin.findByIdAndDelete(adminExists._id);
+        await Admin.findByIdAndDelete(adminExists._id);
     } else {
-        (new Admin({eMail: req.body.admins})).save();
+        await (new Admin({Email: req.body.admin})).save();
     }
 });
 

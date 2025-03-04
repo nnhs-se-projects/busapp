@@ -9,7 +9,7 @@ function addAdmin_admins(e: HTMLElement) {
     console.log(e)
     let row = e.parentElement!.parentElement! as HTMLTableRowElement;
     let admin = (row.children[0]!.children[0] as HTMLInputElement).value;
-    if(admin.includes('@') && admin.includes('naperville203.org') && (admin.indexOf('@') < admin.indexOf('naperville203.org')) && (!admins.includes(admin))){
+    if(admin.includes('@') && admin.includes('naperville203.org') && (admin.indexOf('@') < admin.indexOf('naperville203.org'))){
         if (admins.includes(admin)) {
             alert("Duplicate admins are not allowed");
             return;
@@ -20,6 +20,7 @@ function addAdmin_admins(e: HTMLElement) {
         admins.splice(0,0, admin);
         let gleepGlorp = <HTMLInputElement> document.getElementById("gleepGlorp");
         gleepGlorp.value = ""
+        save2(admin);
 
     }
     else {
@@ -35,18 +36,12 @@ function removeAdmin_admins(secondChild: HTMLElement) {
     let admin = row.children[0]!.innerHTML;
     admins.splice(admins.indexOf(admin), 1);
     row.remove();
+    save2(admin);
 }
 
 
 
-async function  save2(reset: boolean) {
-    if (reset) {
-        if (!confirm("Are you sure you would like to update the admin list?")) return;
-    }
-    else {
-        if(!confirm("Are you sure you would like to update the admin list?")) return;
-    }
-
+async function  save2(admin: string) {
     fetch("/whitelistFile", {
         method: 'POST',
         headers: {
@@ -55,11 +50,7 @@ async function  save2(reset: boolean) {
         },
         body: 
         JSON.stringify({
-           admins: admins
+           admin: admin
         })
     });
-}
-
-function discardChanges2() {
-    if (confirm("Are you sure you would like to discard changes?")) location.reload();
 }
