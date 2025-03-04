@@ -1,24 +1,15 @@
-<!-- <table style="width:100%">
-    <th colspan="100%">Next Wave
-        <tr id="input">
-            <script>
-                for (let i = 0; i < 4; i++) {
-                    document.write("<td><input type='text'></td>");
-                }
-            </script>
-        </tr>
-    </th>
-</table>
-
-<br> -->
 <div>
 
+<br>
+
 <table style="width:100%">
-    <th colspan="3">Bus Lots
-        <tr style="height: 200px">
-            <td>avacado</td>
-            <td>lksdjf</td>
-            <td>vegtetables</td>
+    <th colspan="100%">Next Wave
+        <tr style="height: 100px">
+            <script>
+                for (let i = 0; i < 8; i++) {
+                    document.write("<td><input placeholder=enter></td>");
+                }
+            </script>
         </tr>
     </th>
 </table>
@@ -26,11 +17,37 @@
 <br>
 
 <table style="width:100%">
-    <th colspan="3">Current Wave
+    <th colspan="100%">Bus Lots
+        <tr style="height: 200px">
+            <script>
+                let busList = [];
+                fetch("/busList").then((res) => res.json()).then((data) => busList = data).then(() => console.log(busList));
+
+                for (let i = 0; i < 12; i++) {
+                    document.write("<td>", busList[i], "</td>");
+                }
+            </script>
+        </tr>
+        <tr style="height: 200px">
+            <script>
+                for (let i = 0; i < 12; i++) {
+                    document.write("<td></td>");
+                }
+            </script>
+        </tr>
+    </th>
+</table>
+
+<br>
+
+<table style="width:100%">
+    <th colspan="100%">Current Wave
         <tr style="height: 100px">
-            <td>avacado</td>
-            <td>lksdjf</td>
-            <td>vegtetables</td>
+            <script>
+                for (let i = 0; i < 8; i++) {
+                    document.write("<td></td>");
+                }
+            </script>
         </tr>
     </th>
 </table>

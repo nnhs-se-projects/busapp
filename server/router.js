@@ -428,4 +428,10 @@ exports.router.post("/clearAnnouncement", (req, res) => __awaiter(void 0, void 0
     }
     yield Announcement.findOneAndUpdate({}, { announcement: "" }, { upsert: true });
 }));
+exports.router.get("/busMap", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.render("busMap", {
+        data: yield (0, jsonHandler_1.readData)(),
+        render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/busMap.ejs")),
+    });
+}));
 //# sourceMappingURL=router.js.map

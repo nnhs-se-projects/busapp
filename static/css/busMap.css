@@ -30,3 +30,8 @@ th {
     color: azure;
     background-image: linear-gradient(to right, #4a4948, #24211f);
 }
+
+input {
+    border: transparent;
+    background-color: transparent;
+}
