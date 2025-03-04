@@ -13,7 +13,6 @@ var adminSocket = window.io("/admin");
 var countDownDate = new Date();
 var updatingCount = 0;
 var TIMER = document.getElementById("timerDurationSelector").value;
-console.log(TIMER);
 adminSocket.on("update", (data) => {
     // convert from time strings to dates to allow conversion to local time
     data.allBuses.forEach((bus) => {
@@ -29,7 +28,12 @@ adminSocket.on("update", (data) => {
     if (timerValue !== null) {
         timerValue.value = TIMER;
     }
-
+    fetch("/getTimer", { method: "GET" })
+        .then((response) => response.json())
+        .then((json) => {
+        timerValue.value = json.minutes;
+        console.log(json);
+    });
     setIndicatorStatus(lastStatus);
 });
 function update() {
