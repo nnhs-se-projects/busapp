@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const Buttons = document.querySelectorAll(".button");
-Buttons.forEach((b) => {
+const buttonsList = document.querySelectorAll(".button");
+buttonsList.forEach((b) => {
     b.addEventListener("mouseover", () => {
         b.classList.add("active");
     });

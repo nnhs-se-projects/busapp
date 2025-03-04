@@ -3,13 +3,67 @@
     margin: 0;
     scrollbar-width: none;
 }
+:root {
+    --crimson: #d7263dff;
+    --giants-orange: #f46036ff;
+    --space-cadet: #2e294eff;
+    --dark-cyan: #509191ff;
+    --night: #141415ff;
+    --bs-navbar-brand-color: var(--dark-cyan) !important;
+}
 
 body {
-    background-color: #a1b5be;
+    background-color: var(--space-cadet); /* Doesn't work */
 }
 
 li {
     margin-left: min(max(0.5em, 2vw), 2em);
+}
+
+.navbar {
+    transform: translate(1%, 1vh);
+    width: 98%;
+    background-color: var(--space-cadet);
+    background-image: url(https://pbs.twimg.com/profile_images/1816821720176820229/aHlOOQr7_400x400.jpg);
+    background-position: 0% 35%;
+    border-radius: 5px;
+    color: var(--dark-cyan);
+    border: solid var(--giants-orange);
+}
+
+.navbar-brand {
+    background-color: var(--giants-orange);
+    border-radius: 5px;
+    border-bottom: solid var(--crimson); 
+    padding-left: 5px;
+    padding-right: 5px;
+    color: var(--space-cadet);
+    margin: 5px;
+}
+
+.navbar-brand:active {
+    transform: translateY(1px);
+    border-bottom: none; 
+}
+
+.nav-item {
+    border-radius: 5px;
+    background-color: var(--giants-orange);
+    border-bottom: solid var(--crimson); 
+    margin: 5px;
+}
+
+.nav-item:active {
+    transform: translateY(1px);
+    border-bottom: none; 
+}
+
+.button {
+    color: var(--space-cadet);
+}
+
+.dropdown {
+    
 }
 
 #panel-header {
@@ -265,9 +319,10 @@ th, td {
 .credits-dropdown {
     font-family: 'Montserrat', sans-serif;
     overflow: hidden;
-    position: absolute;
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    transform: translateY(0);
+    /* transform: translateY(0); */
+    position: absolute;
+    bottom: 0;
     max-height: 0px;
     transition: clip-path 1s, transform 1s, max-height 1s;
     background-color: lightgray;
@@ -276,24 +331,38 @@ th, td {
 }
 #credits-dropdown:checked ~ .credits-dropdown {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-    transform: translateY(-100%);
+    position: absolute;
+    bottom: 0;
     max-height: 9999999999999px;
     transition: clip-path 1s, transform 1s;
 }
 #credits-dropdown {
     display: none;
+    position: absolute;
+    bottom: 0;
+    position: absolute;
+    bottom: 0;
 }
 
 .credits-dropdown-label::before {
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    position: relative;
     content: "\f062";
     padding: 5px;
     z-index: 1;
+    position: absolute;
+    bottom: 0;
 }
 #credits-dropdown:checked ~ .credits-dropdown-label::before {
-    content: "\f063";
+    /* content: "\f063"; */
+    position: absolute;
+    bottom: 0;
+}
+
+.credits-dropdown-label {
+    position: absolute;
+    left: 1vw;
+    bottom: 0;
 }
 
 

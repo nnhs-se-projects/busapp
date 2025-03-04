@@ -1,8 +1,8 @@
 /// <reference path="./socket-io-client.d.ts"/>
 
-const Buttons = document.querySelectorAll(".button") as NodeListOf<HTMLElement>;
+const buttonsList = document.querySelectorAll(".button") as NodeListOf<HTMLElement>;
 
-Buttons.forEach((b : HTMLElement) => {
+buttonsList.forEach((b : HTMLElement) => {
     b.addEventListener("mouseover", () => {
         b.classList.add("active");
     });
