@@ -39,6 +39,12 @@ exports.router.use(bodyParser.urlencoded({ extended: true }));
 Announcement.findOneAndUpdate({}, { announcement: "" }, { upsert: true });
 Announcement.findOneAndUpdate({}, { tvAnnouncement: "" }, { upsert: true });
 let timer = 30;
+exports.router.get("/migrateAdminsDotJsonToDB", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    (0, jsonHandler_1.readWhitelist)().admins.forEach((e) => __awaiter(void 0, void 0, void 0, function* () {
+        yield (new Admin({ Email: e.toLowerCase() })).save();
+    }));
+    res.send("all done!");
+}));
 // Homepage. This is where students will view bus information from. 
 exports.router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Reads from data file and displays data
@@ -81,8 +87,9 @@ exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, v
 }));
 // Checks if the user's email is in the whitelist and authorizes accordingly
 function authorize(req) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
-        req.session.isAdmin = Boolean(yield Admin.find({ Email: req.session.userEmail }));
+        req.session.isAdmin = Boolean(yield Admin.find({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
     });
 }
 /* Admin page. This is where bus information can be updated from
