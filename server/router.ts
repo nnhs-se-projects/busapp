@@ -315,7 +315,7 @@ router.get("/makeAnnouncement", async (req: Request, res: Response) => {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
-    }+
+    }
     
     // Authorizes user, then either displays admin page or unauthorized page
     authorize(req);
@@ -331,7 +331,7 @@ router.get("/makeAnnouncement", async (req: Request, res: Response) => {
     }
 });
 
-router.get('/whitelist', (req: Request,res: Response)=>{
+router.get('/whitelist', async (req: Request,res: Response)=>{
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
         res.redirect("/login");
@@ -342,7 +342,7 @@ router.get('/whitelist', (req: Request,res: Response)=>{
     authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: readWhitelist()
+            whitelist: await Admin.find({}).exec()
         });
     }
     else {
@@ -350,6 +350,9 @@ router.get('/whitelist', (req: Request,res: Response)=>{
     }
 })
 
+
+// TODO: remove this, I think it's no longer used for anything and it just straight up crashes the server
+/*
 router.get('/updateWhitelist', (req: Request,res: Response)=>{
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
@@ -366,6 +369,8 @@ router.get('/updateWhitelist', (req: Request,res: Response)=>{
         res.render("unauthorized");
     }
 })
+*/
+
 router.get("/updateBusListEmptyRow", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
 });
@@ -424,13 +429,17 @@ router.get('/help',(req: Request, res: Response)=>{
     res.render('help');
 });
 
-router.post("/whitelistFile",(req:Request,res: Response) => {
+router.post("/whitelistFile", async (req:Request,res: Response) => {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
-
-    fs.writeFileSync(path.resolve(__dirname, "../data/whitelist.json"), JSON.stringify(req.body.admins));
+    const adminExists = await Admin.findOne({eMail: req.body.admins}).exec();
+    if(adminExists){
+        Admin.findByIdAndDelete(adminExists._id);
+    } else {
+        (new Admin({eMail: req.body.admins})).save();
+    }
 });
 
 router.post("/submitAnnouncement", async (req: Request, res: Response) => {    //overwrites the announcement in the database

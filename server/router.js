@@ -49,6 +49,7 @@ const Bus = require("./model/bus");
 const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
+const Admin = require("./model/admin");
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com";
 const oAuth2 = new google_auth_library_1.OAuth2Client(CLIENT_ID);
 dotenv.config({ path: ".env" });
@@ -137,7 +138,7 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
 }));
 // https://save418.com/ 
 exports.router.get("/teapot", (req, res) => { res.sendStatus(418); });
-// this needs to be served from the root of the server to work properly
+// this needs to be served from the root of the server to work properly - used for push notifications
 exports.router.get("/serviceWorker.js", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.sendFile("serviceWorker.js", { root: path_1.default.join(__dirname, '../static/ts/') });
 }));
@@ -302,7 +303,6 @@ exports.router.get("/makeAnnouncement", (req, res) => __awaiter(void 0, void 0, 
         res.redirect("/login");
         return;
     }
-    +
     // Authorizes user, then either displays admin page or unauthorized page
     authorize(req);
     if (req.session.isAdmin) {
@@ -315,7 +315,7 @@ exports.router.get("/makeAnnouncement", (req, res) => __awaiter(void 0, void 0, 
         res.render("unauthorized");
     }
 }));
-exports.router.get('/whitelist', (req, res) => {
+exports.router.get('/whitelist', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
         res.redirect("/login");
@@ -325,19 +325,22 @@ exports.router.get('/whitelist', (req, res) => {
     authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: (0, jsonHandler_1.readWhitelist)()
+            whitelist: yield Admin.find({}).exec()
         });
     }
     else {
         res.render("unauthorized");
     }
-});
-exports.router.get('/updateWhitelist', (req, res) => {
+}));
+// TODO: remove this, I think it's no longer used for anything and it just straight up crashes the server
+/*
+router.get('/updateWhitelist', (req: Request,res: Response)=>{
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
+    
     // Authorizes user, then either displays admin page or unauthorized page
     authorize(req);
     if (req.session.isAdmin) {
@@ -346,7 +349,8 @@ exports.router.get('/updateWhitelist', (req, res) => {
     else {
         res.render("unauthorized");
     }
-});
+})
+*/
 exports.router.get("/updateBusListEmptyRow", (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
 });
@@ -397,13 +401,19 @@ exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, vo
 exports.router.get('/help', (req, res) => {
     res.render('help');
 });
-exports.router.post("/whitelistFile", (req, res) => {
+exports.router.post("/whitelistFile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
-    fs_1.default.writeFileSync(path_1.default.resolve(__dirname, "../data/whitelist.json"), JSON.stringify(req.body.admins));
-});
+    const adminExists = yield Admin.findOne({ eMail: req.body.admins }).exec();
+    if (adminExists) {
+        Admin.findByIdAndDelete(adminExists._id);
+    }
+    else {
+        (new Admin({ eMail: req.body.admins })).save();
+    }
+}));
 exports.router.post("/submitAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
