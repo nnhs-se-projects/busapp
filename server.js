@@ -47,7 +47,7 @@ io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, f
             nextWave: yield Bus.find({ status: "Next Wave" }),
             loading: yield Bus.find({ status: "Loading" }),
             isLocked: false,
-            leavingAt: new Date()
+            leavingAt: new Date(),
         };
         data.isLocked = (yield Wave.findOne({})).locked;
         data.leavingAt = (yield Wave.findOne({})).leavingAt;
