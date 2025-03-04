@@ -82,8 +82,6 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
 
 // Checks if the user's email is in the whitelist and authorizes accordingly
 async function authorize(req: Request) {
-    console.log(await Admin.findOne({Email: req.session.userEmail}));
-    console.log(Boolean(await Admin.find({Email: req.session.userEmail})));
     req.session.isAdmin = Boolean(await Admin.find({Email: req.session.userEmail})); 
 }
 
@@ -447,12 +445,11 @@ router.post("/updateWhitelist", async (req:Request,res: Response) => {
         res.redirect("/login");
         return;
     }
-    const adminExists = await Admin.findOne({Email: req.body.admin}).exec();
-    console.log(adminExists);
+    const adminExists = await Admin.findOne({Email: req.body.admin.toLowerCase()}).exec();
     if(adminExists){
         await Admin.findByIdAndDelete(adminExists._id);
     } else {
-        await (new Admin({Email: req.body.admin})).save();
+        await (new Admin({Email: req.body.admin.toLowerCase()})).save();
     }
 });
 

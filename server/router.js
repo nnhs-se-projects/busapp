@@ -82,8 +82,6 @@ exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, v
 // Checks if the user's email is in the whitelist and authorizes accordingly
 function authorize(req) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(yield Admin.findOne({ Email: req.session.userEmail }));
-        console.log(Boolean(yield Admin.find({ Email: req.session.userEmail })));
         req.session.isAdmin = Boolean(yield Admin.find({ Email: req.session.userEmail }));
     });
 }
@@ -392,13 +390,12 @@ exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, 
         res.redirect("/login");
         return;
     }
-    const adminExists = yield Admin.findOne({ Email: req.body.admin }).exec();
-    console.log(adminExists);
+    const adminExists = yield Admin.findOne({ Email: req.body.admin.toLowerCase() }).exec();
     if (adminExists) {
         yield Admin.findByIdAndDelete(adminExists._id);
     }
     else {
-        yield (new Admin({ Email: req.body.admin })).save();
+        yield (new Admin({ Email: req.body.admin.toLowerCase() })).save();
     }
 }));
 exports.router.post("/submitAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

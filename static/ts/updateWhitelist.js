@@ -15,7 +15,7 @@ fetch("/adminEmptyRow").then((res) => res.text()).then((data) => newAdminEmptyRo
 function addAdmin_admins(e) {
     console.log(e);
     let row = e.parentElement.parentElement;
-    let admin = row.children[0].children[0].value;
+    let admin = row.children[0].children[0].value.toLowerCase();
     if (admin.includes('@') && admin.includes('naperville203.org') && (admin.indexOf('@') < admin.indexOf('naperville203.org'))) {
         if (admins.includes(admin)) {
             alert("Duplicate admins are not allowed");
