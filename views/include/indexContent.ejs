@@ -27,13 +27,17 @@
 
 <div class="dropdown container-fluid d-flex align-items-center justify-content-center mt-5">
   <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Open Dropdown
+  Pinned Bus: 
   </button>
   <ul class="dropdown-menu">
     <li><span class="dropdown-item-text">Dropdown item text</span></li>
-    <li><a class="dropdown-item" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Another action</a></li>
-    <li><a class="dropdown-item" href="#">Something else here</a></li>
+    <% for(let i = 0; i < data.buses.length; i++) { %> 
+        <li class = "bus-row">
+            <div class="num-col" colspan="1"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></div>
+            <div class="status-col" colspan="5"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></div>
+            <a class="pin-col" onclick="pinBus(this)">Pin</a>
+        </li>
+    <% } %> 
   </ul>
 </div>
 
