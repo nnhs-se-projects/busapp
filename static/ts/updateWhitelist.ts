@@ -1,5 +1,5 @@
 var admins: string[];   
-fetch("/whitelistFile").then((data)=>data.json()).then((data) => admins = data);
+fetch("/getWhitelist").then((data)=>data.json()).then((data) => admins = data);
 
 var newAdminEmptyRow: string;
 fetch("/adminEmptyRow").then((res) => res.text()).then((data) => newAdminEmptyRow = data);
@@ -42,15 +42,12 @@ function removeAdmin_admins(secondChild: HTMLElement) {
 
 
 async function  save2(admin: string) {
-    fetch("/whitelistFile", {
+    fetch("/updateWhitelist", {
         method: 'POST',
         headers: {
         accept: 'application.json',
         'Content-Type': 'application/json'
         },
-        body: 
-        JSON.stringify({
-           admin: admin
-        })
+        body: JSON.stringify({ admin: admin })
     });
 }

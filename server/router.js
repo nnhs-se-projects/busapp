@@ -81,7 +81,11 @@ exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, v
 }));
 // Checks if the user's email is in the whitelist and authorizes accordingly
 function authorize(req) {
-    req.session.isAdmin = (0, jsonHandler_1.readWhitelist)().admins.includes(req.session.userEmail);
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(yield Admin.findOne({ Email: req.session.userEmail }));
+        console.log(Boolean(yield Admin.find({ Email: req.session.userEmail })));
+        req.session.isAdmin = Boolean(yield Admin.find({ Email: req.session.userEmail }));
+    });
 }
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
@@ -102,7 +106,7 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
     };
     data.isLocked = (yield Wave.findOne({})).locked;
     data.leavingAt = (yield Wave.findOne({})).leavingAt;
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("admin", {
             data: data,
@@ -264,7 +268,7 @@ exports.router.get("/updateBusList", (req, res) => __awaiter(void 0, void 0, voi
     // get all the bus numbers of all the buses from the database and make a list of them
     const busList = yield Bus.find().distinct("busNumber");
     let data = { busList: busList };
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("updateBusList", {
             data: data
@@ -281,7 +285,7 @@ exports.router.get("/makeAnnouncement", (req, res) => __awaiter(void 0, void 0, 
         return;
     }
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("makeAnnouncement", {
             currentAnnouncement: (yield Announcement.findOne({})).announcement,
@@ -299,7 +303,7 @@ exports.router.get('/whitelist', (req, res) => __awaiter(void 0, void 0, void 0,
         return;
     }
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
             whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email) }
@@ -319,7 +323,7 @@ router.get('/updateWhitelist', (req: Request,res: Response)=>{
     }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist");
     }
@@ -341,7 +345,7 @@ exports.router.get("/busList", (req, res) => __awaiter(void 0, void 0, void 0, f
     res.type("json").send(yield Bus.find().distinct("busNumber"));
 }));
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
-exports.router.get("/whitelistFile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.router.get("/getWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.type("json").send((yield Admin.find({}).exec()).map((e) => e.Email));
 }));
 exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -378,7 +382,7 @@ exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, vo
 exports.router.get('/help', (req, res) => {
     res.render('help');
 });
-exports.router.post("/whitelistFile", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;

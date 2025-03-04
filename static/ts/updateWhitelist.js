@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var admins;
-fetch("/whitelistFile").then((data) => data.json()).then((data) => admins = data);
+fetch("/getWhitelist").then((data) => data.json()).then((data) => admins = data);
 var newAdminEmptyRow;
 fetch("/adminEmptyRow").then((res) => res.text()).then((data) => newAdminEmptyRow = data);
 function addAdmin_admins(e) {
@@ -44,20 +44,14 @@ function removeAdmin_admins(secondChild) {
 }
 function save2(admin) {
     return __awaiter(this, void 0, void 0, function* () {
-        fetch("/whitelistFile", {
+        fetch("/updateWhitelist", {
             method: 'POST',
             headers: {
                 accept: 'application.json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                admin: admin
-            })
+            body: JSON.stringify({ admin: admin })
         });
     });
-}
-function discardChanges2() {
-    if (confirm("Are you sure you would like to discard changes?"))
-        location.reload();
 }
 //# sourceMappingURL=updateWhitelist.js.map

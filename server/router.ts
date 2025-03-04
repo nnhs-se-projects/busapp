@@ -81,8 +81,10 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
 });
 
 // Checks if the user's email is in the whitelist and authorizes accordingly
-function authorize(req: Request) {
-    req.session.isAdmin = readWhitelist().admins.includes(<string> req.session.userEmail); 
+async function authorize(req: Request) {
+    console.log(await Admin.findOne({Email: req.session.userEmail}));
+    console.log(Boolean(await Admin.find({Email: req.session.userEmail})));
+    req.session.isAdmin = Boolean(await Admin.find({Email: req.session.userEmail})); 
 }
 
 
@@ -108,7 +110,7 @@ router.get("/admin", async (req: Request, res: Response) => {
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("admin", {
             data: data,
@@ -298,7 +300,7 @@ router.get("/updateBusList", async (req: Request, res: Response) => {
 
     let data = { busList: busList };
 
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("updateBusList",
         {
@@ -318,7 +320,7 @@ router.get("/makeAnnouncement", async (req: Request, res: Response) => {
     }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("makeAnnouncement",
         {
@@ -339,7 +341,7 @@ router.get('/whitelist', async (req: Request,res: Response)=>{
     }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
 
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
@@ -362,7 +364,7 @@ router.get('/updateWhitelist', (req: Request,res: Response)=>{
     }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist");
     }
@@ -389,7 +391,7 @@ router.get("/busList", async (req: Request, res: Response) => {
 });
 
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
-router.get("/whitelistFile", async (req: Request, res: Response) => {
+router.get("/getWhitelist", async (req: Request, res: Response) => {
     res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email));
 });
 
@@ -430,7 +432,7 @@ router.get('/help',(req: Request, res: Response)=>{
     res.render('help');
 });
 
-router.post("/whitelistFile", async (req:Request,res: Response) => {
+router.post("/updateWhitelist", async (req:Request,res: Response) => {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
