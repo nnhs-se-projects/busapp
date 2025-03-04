@@ -35,6 +35,15 @@ Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
 let timer = 30;
 
+
+router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
+    readWhitelist().admins.forEach(async e => {
+        await (new Admin({Email: e.toLowerCase()})).save();
+    });
+    res.send("all done!");
+});
+
+
 // Homepage. This is where students will view bus information from. 
 router.get("/", async (req: Request, res: Response) => {
     // Reads from data file and displays data
@@ -82,7 +91,7 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
 
 // Checks if the user's email is in the whitelist and authorizes accordingly
 async function authorize(req: Request) {
-    req.session.isAdmin = Boolean(await Admin.find({Email: req.session.userEmail})); 
+    req.session.isAdmin = Boolean(await Admin.find({Email: req.session.userEmail?.toLowerCase()})); 
 }
 
 
