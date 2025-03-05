@@ -122,6 +122,9 @@ router.get("/admin", async (req: Request, res: Response) => {
 // https://save418.com/ 
 router.get("/teapot", (req, res) => { res.sendStatus(418); });
 
+// used for networkIndicator
+router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
+
 // this needs to be served from the root of the server to work properly - used for push notifications
 router.get("/serviceWorker.js", async (req: Request, res: Response) => {
     res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/ts/') });
@@ -178,21 +181,25 @@ router.post("/sendWave", async (req: Request, res: Response) => {
         return;
     }
 
-    if(!(null === await Wave.findOne({locked: true})))(await Bus.find({status: "Loading"})).forEach(async (bus) => {
-        (await Subscription.find({bus: bus.busNumber})).forEach(async (sub) => {
-            try {
-                await webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
+    // find the wave
+    if( !(null === await Wave.findOne({locked: true})) ) { 
+        // find the buses and iterate over them
+        (await Bus.find({status: "Loading"})).forEach(async (bus) => {
+            // get every subscription for that bus and iterate over them
+            (await Subscription.find({bus: bus.busNumber})).forEach((sub) => {
+                webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus Just Left!',
                     body: `Bus number ${bus.busNumber} just left.`,
                     icon: "/img/busAppIcon.png"
-                }));
-            } catch(e) {
-                if(typeof(e) == webpush.WebPushError && (<webpush.WebPushError>e).statusCode === 410) {
-                    await Subscription.findByIdAndDelete(sub._id);
-                }
-            }
+                })).catch(async (e) => { // if fail, delete endpoint
+                    // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
+                    if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
+                        return Subscription.findByIdAndDelete(sub._id);
+                    }
+                });
+            });
         });
-    })
+    }
 
     await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
     await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
@@ -212,21 +219,24 @@ router.post("/lockWave", async (req: Request, res: Response) => {
     leavingAt.setSeconds(leavingAt.getSeconds() + timer);
     await Wave.findOneAndUpdate({}, { leavingAt: leavingAt }, { upsert: true });
 
-    if(!(null === await Wave.findOne({locked: true})))(await Bus.find({status: "Loading"})).forEach(async (bus) => {
-        (await Subscription.find({bus: bus.busNumber})).forEach(async (sub) => {
-            try {
-                await webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
+    if( !(null === await Wave.findOne({locked: true})) ) { 
+        // find the buses and iterate over them
+        (await Bus.find({status: "Loading"})).forEach(async (bus) => {
+            // get every subscription for that bus and iterate over them
+            (await Subscription.find({bus: bus.busNumber})).forEach((sub) => {
+                webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus is Here!',
                     body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer/60)} minutes and ${timer % 60} seconds`,
                     icon: "/img/busAppIcon.png"
-                }));
-            } catch(e) {
-                if(typeof(e) == webpush.WebPushError && (<webpush.WebPushError>e).statusCode === 410) {
-                    await Subscription.findByIdAndDelete(sub._id);
-                }
-            }
+                })).catch(async (e) => { // if fail, delete endpoint
+                    // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
+                    if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
+                        return Subscription.findByIdAndDelete(sub._id);
+                    }
+                });
+            });
         });
-    })
+    }
     res.send("success");
 });
 

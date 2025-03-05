@@ -369,6 +369,46 @@ th, td {
     bottom: 0;
 }
 
+#networkIndicator {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    width: 20px;
+    aspect-ratio: 1 / 1;
+    background-color: green;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: background-color 0.5s;
+}
+#networkIndicator > i {
+    background: inherit;
+    background-clip: text;
+    color: transparent;
+    filter: invert(1) grayscale(1) contrast(9);
+}
+
+#networkBlocker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    transition: height 0.5s;
+    color: rgba(200, 200, 200, 0.6);
+    backdrop-filter: grayscale(1) blur(1px) brightness(0.4);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+#networkBlocker:is(.shown){
+    height: 100% !important;
+    transition: height 0.5s;
+}
 
 @media (orientation: landscape) {
     .header {
