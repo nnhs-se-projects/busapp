@@ -6,11 +6,11 @@
 }
 
 input {
-    border: transparent;
-    background-color: transparent;
     text-align: center;
     font-family: Verdana, sans-serif;
     font-size: 15px;
+    border: transparent;
+    width: auto;
 }
 
 tr, td {
@@ -21,6 +21,7 @@ tr, td {
 
 td:hover {
     background-color: #32a89e; /*#facb48;*/
+    transition: .5s;
     color: azure;
     cursor: pointer;
 }

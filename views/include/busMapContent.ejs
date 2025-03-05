@@ -1,53 +1,11 @@
 <div>
 
-<br>
-
 <table style="width:100%">
     <th colspan="100%">Next Wave
         <tr style="height: 100px">
-            <script>
-                for (let i = 0; i < 8; i++) {
-                    document.write("<td><input placeholder=enter></td>");
-                }
-            </script>
-        </tr>
-    </th>
-</table>
-
-<br>
-
-<table style="width:100%">
-    <th colspan="100%">Bus Lots
-        <tr style="height: 200px">
-            <script>
-                let busList = [];
-                fetch("/busList").then((res) => res.json()).then((data) => busList = data).then(() => console.log(busList));
-
-                for (let i = 0; i < 12; i++) {
-                    document.write("<td>", busList[i], "</td>");
-                }
-            </script>
-        </tr>
-        <tr style="height: 200px">
-            <script>
-                for (let i = 0; i < 12; i++) {
-                    document.write("<td></td>");
-                }
-            </script>
-        </tr>
-    </th>
-</table>
-
-<br>
-
-<table style="width:100%">
-    <th colspan="100%">Current Wave
-        <tr style="height: 100px">
-            <script>
-                for (let i = 0; i < 8; i++) {
-                    document.write("<td></td>");
-                }
-            </script>
+            <% for (let i = 0; i < 8; i++) { %>
+                <td><data>hello</data></td>
+            <% } %>
         </tr>
     </th>
 </table>
