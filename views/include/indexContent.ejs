@@ -23,23 +23,40 @@
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>
-</nav>
+</nav>  
 
-<div class="dropdown container-fluid d-flex align-items-center justify-content-center mt-5">
-  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-  Pinned Bus: 
-  </button>
-  <ul class="dropdown-menu">
-    <li><span class="dropdown-item-text">Dropdown item text</span></li>
-    <% for(let i = 0; i < data.buses.length; i++) { %> 
-        <li class = "bus-row">
-            <div class="num-col" colspan="1"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></div>
-            <div class="status-col" colspan="5"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></div>
-            <a class="pin-col" onclick="pinBus(this)">Pin</a>
-        </li>
-    <% } %> 
-  </ul>
-</div>
+<spa
+
+<ul class="nav bus-nav">
+  <li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="#">Active</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+  </li>
+  <div class="nav-item dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Pinned Bus: 
+    </button>
+    <ul class="dropdown-menu">
+      <li><span class="dropdown-item-text">Dropdown item text</span></li>
+      <% for(let i = 0; i < data.buses.length; i++) { %> 
+          <li class = "bus-row">
+              <div class="num-col" colspan="1"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></div>
+              <div class="status-col" colspan="5"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></div>
+              <a class="pin-col" onclick="pinBus(this)">Pin</a>
+          </li>
+      <% } %> 
+    </ul>
+  </div>
+</ul>
+
 
 <!-- <div id = "panel-header" class = "panel-header" onclick = "togglePanelExpanded()">
     <h1 id = "pBusBanner">Pinned Bus: </h1>

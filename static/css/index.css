@@ -14,13 +14,17 @@
 
 body {
     background-color: var(--space-cadet); /* Doesn't work */
+    /* background-image: url(https://www.naperville203.org/cms/lib/IL01904881/Centricity/Domain/28/MainBanner2022c.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; */
 }
 
 li {
     margin-left: min(max(0.5em, 2vw), 2em);
 }
 
-.navbar {
+.navbar, .nav {
     transform: translate(1%, 1vh);
     width: 98%;
     background-color: var(--space-cadet);
