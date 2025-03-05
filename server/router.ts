@@ -38,7 +38,7 @@ let timer = 30;
 
 router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
     readWhitelist().admins.forEach(async e => {
-        await (new Admin({Email: e.toLowerCase()})).save();
+        if(!(await Admin.findOne({Email: e.toLowerCase()}))) await (new Admin({Email: e.toLowerCase()})).save();
     });
     res.send("all done!");
 });
@@ -460,6 +460,7 @@ router.post("/updateWhitelist", async (req:Request,res: Response) => {
     } else {
         await (new Admin({Email: req.body.admin.toLowerCase()})).save();
     }
+    res.send("success!");
 });
 
 router.post("/submitAnnouncement", async (req: Request, res: Response) => {    //overwrites the announcement in the database

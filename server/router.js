@@ -41,7 +41,8 @@ Announcement.findOneAndUpdate({}, { tvAnnouncement: "" }, { upsert: true });
 let timer = 30;
 exports.router.get("/migrateAdminsDotJsonToDB", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     (0, jsonHandler_1.readWhitelist)().admins.forEach((e) => __awaiter(void 0, void 0, void 0, function* () {
-        yield (new Admin({ Email: e.toLowerCase() })).save();
+        if (!(yield Admin.findOne({ Email: e.toLowerCase() })))
+            yield (new Admin({ Email: e.toLowerCase() })).save();
     }));
     res.send("all done!");
 }));
@@ -404,6 +405,7 @@ exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, 
     else {
         yield (new Admin({ Email: req.body.admin.toLowerCase() })).save();
     }
+    res.send("success!");
 }));
 exports.router.post("/submitAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
