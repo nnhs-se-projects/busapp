@@ -11,6 +11,7 @@ const Bus = require("./model/bus");
 const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
+const Admin = require("./model/admin");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -33,6 +34,17 @@ router.use(bodyParser.urlencoded({ extended: true }));
 Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
 let timer = 30;
+
+// this was to migrate the admins from the file to the database when on the production server
+// no longer neeeded but keeping it commented for the time being in case something went wrong with the migration
+/*
+router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
+    readWhitelist().admins.forEach(async e => {
+        if(!(await Admin.findOne({Email: e.toLowerCase()}))) await (new Admin({Email: e.toLowerCase()})).save();
+    });
+    res.send("all done!");
+});
+*/
 
 // Homepage. This is where students will view bus information from. 
 router.get("/", async (req: Request, res: Response) => {
@@ -80,8 +92,8 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
 });
 
 // Checks if the user's email is in the whitelist and authorizes accordingly
-function authorize(req: Request) {
-    req.session.isAdmin = readWhitelist().admins.includes(<string> req.session.userEmail); 
+async function authorize(req: Request) {
+    req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()})); 
 }
 
 
@@ -107,7 +119,7 @@ router.get("/admin", async (req: Request, res: Response) => {
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("admin", {
             data: data,
@@ -307,7 +319,7 @@ router.get("/updateBusList", async (req: Request, res: Response) => {
 
     let data = { busList: busList };
 
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("updateBusList",
         {
@@ -324,10 +336,10 @@ router.get("/makeAnnouncement", async (req: Request, res: Response) => {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
-    }+
+    }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("makeAnnouncement",
         {
@@ -340,7 +352,7 @@ router.get("/makeAnnouncement", async (req: Request, res: Response) => {
     }
 });
 
-router.get('/whitelist', (req: Request,res: Response)=>{
+router.get('/whitelist', async (req: Request,res: Response)=>{
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
         res.redirect("/login");
@@ -348,10 +360,11 @@ router.get('/whitelist', (req: Request,res: Response)=>{
     }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
+
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: readWhitelist()
+            whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email).reverse()}
         });
     }
     else {
@@ -359,6 +372,9 @@ router.get('/whitelist', (req: Request,res: Response)=>{
     }
 })
 
+
+// TODO: remove this, I think it's no longer used for anything and it just straight up crashes the server
+/*
 router.get('/updateWhitelist', (req: Request,res: Response)=>{
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
@@ -367,7 +383,7 @@ router.get('/updateWhitelist', (req: Request,res: Response)=>{
     }
     
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist");
     }
@@ -375,6 +391,8 @@ router.get('/updateWhitelist', (req: Request,res: Response)=>{
         res.render("unauthorized");
     }
 })
+*/
+
 router.get("/updateBusListEmptyRow", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
 });
@@ -392,8 +410,8 @@ router.get("/busList", async (req: Request, res: Response) => {
 });
 
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
-router.get("/whitelistFile", (req: Request, res: Response) => {
-    res.type("json").send(readFileSync(path.resolve(__dirname, "../data/whitelist.json")));
+router.get("/getWhitelist", async (req: Request, res: Response) => {
+    res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email).reverse());
 });
 
 router.post("/updateBusList", async (req: Request, res: Response) => {
@@ -433,13 +451,18 @@ router.get('/help',(req: Request, res: Response)=>{
     res.render('help');
 });
 
-router.post("/whitelistFile",(req:Request,res: Response) => {
+router.post("/updateWhitelist", async (req:Request,res: Response) => {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
-
-    fs.writeFileSync(path.resolve(__dirname, "../data/whitelist.json"), JSON.stringify(req.body.admins));
+    const adminExists = await Admin.findOne({Email: req.body.admin.toLowerCase()}).exec();
+    if(adminExists){
+        await Admin.findByIdAndDelete(adminExists._id);
+    } else {
+        await (new Admin({Email: req.body.admin.toLowerCase()})).save();
+    }
+    res.send("success!");
 });
 
 router.post("/submitAnnouncement", async (req: Request, res: Response) => {    //overwrites the announcement in the database
