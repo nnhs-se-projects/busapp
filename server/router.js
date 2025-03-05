@@ -39,13 +39,16 @@ exports.router.use(bodyParser.urlencoded({ extended: true }));
 Announcement.findOneAndUpdate({}, { announcement: "" }, { upsert: true });
 Announcement.findOneAndUpdate({}, { tvAnnouncement: "" }, { upsert: true });
 let timer = 30;
-exports.router.get("/migrateAdminsDotJsonToDB", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    (0, jsonHandler_1.readWhitelist)().admins.forEach((e) => __awaiter(void 0, void 0, void 0, function* () {
-        if (!(yield Admin.findOne({ Email: e.toLowerCase() })))
-            yield (new Admin({ Email: e.toLowerCase() })).save();
-    }));
+// this was to migrate the admins from the file to the database when on the production server
+// no longer neeeded but keeping it commented for the time being in case something went wrong with the migration
+/*
+router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
+    readWhitelist().admins.forEach(async e => {
+        if(!(await Admin.findOne({Email: e.toLowerCase()}))) await (new Admin({Email: e.toLowerCase()})).save();
+    });
     res.send("all done!");
-}));
+});
+*/
 // Homepage. This is where students will view bus information from. 
 exports.router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Reads from data file and displays data
