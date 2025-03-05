@@ -38,6 +38,7 @@ indexSocket.on("update", (data) => {
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data, announcement: data.announcement });
     document.getElementById("content").innerHTML = html;
     updateTables();
+    setIndicatorStatus(lastStatus);
 });
 function hideWhatsNew(version) {
     document.getElementById('whatsNewPopup').style.display = 'none';
@@ -96,25 +97,56 @@ function updatePins() {
     }
 }
 function pinBus(button) {
-    updatePins();
-    const busRow = button.parentElement.parentElement; // this is the overarching <tr> element of the bus row
-    const busNumber = busRow.firstElementChild.innerHTML; // this is the stringification of the number of the bus
-    var removing = false;
-    const num = parseInt(busNumber); // this is the number of the bus
-    if (pins.includes(num) == false) {
-        pins.push(num);
-        pins.sort();
-        let newPinString = pins.join(", "); // representation of the pins list as a string
-        localStorage.setItem("pins", newPinString);
-    }
-    else {
-        removing = true;
-        pins = pins.filter(function notNum(n) { return n != num; }); // this is how you remove elements in js arrays. pain
-        pins.sort();
-        if (pins.length == 0) {
-            localStorage.removeItem("pins");
+    return __awaiter(this, void 0, void 0, function* () {
+        updatePins();
+        const busRow = button.parentElement.parentElement; // this is the overarching <tr> element of the bus row
+        const busNumber = busRow.firstElementChild.innerHTML; // this is the stringification of the number of the bus
+        var removing = false;
+        const num = parseInt(busNumber); // this is the number of the bus
+        // subscribe to the bus
+        if (localStorage.getItem("pushObject") && Notification.permission === "granted") {
+            // change pin icon to loading
+            button.querySelector("i").classList.add("fa-spinner", "fa-spin");
+            button.querySelector("i").classList.remove("fa-thumbtack");
+            // temporary function to do recursion 'n such
+            function temp(wait) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    try {
+                        const res = yield fetch("/subscribe", {
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            method: "POST",
+                            body: JSON.stringify({ busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing }),
+                        });
+                    }
+                    catch (_a) {
+                        // retry with exponential backoff and recursion
+                        if (wait > 5000) {
+                            throw new Error("failed to contact server");
+                        }
+                        yield new Promise(r => setTimeout(r, wait));
+                        yield temp(wait * 1.2);
+                    }
+                    ;
+                    return "success";
+                });
+            }
+            try {
+                console.log(yield temp(256));
+            }
+            catch (_a) {
+                alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
+                return;
+            }
+            finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
+                button.querySelector("i").classList.remove("fa-spinner", "fa-spin");
+                button.querySelector("i").classList.add("fa-thumbtack");
+            }
         }
-        else {
+        if (pins.includes(num) == false) {
+            pins.push(num);
+            pins.sort();
             let newPinString = pins.join(", "); // representation of the pins list as a string
             localStorage.setItem("pins", newPinString);
         }
@@ -132,6 +164,7 @@ function pinBus(button) {
             body: JSON.stringify({ busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing }),
         });
     }
+
 }
 function getRow(n) {
     let tableFull = document.getElementById("all-bus-table");
