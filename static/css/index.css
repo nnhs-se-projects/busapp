@@ -16,8 +16,10 @@ body {
     background-color: var(--space-cadet); /* Doesn't work */
     /* background-image: url(https://www.naperville203.org/cms/lib/IL01904881/Centricity/Domain/28/MainBanner2022c.png);
     background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover; */
+    background-position-x: center;
+    background-position-y: calc(50% - 25px);
+    background-size: cover;
+    backdrop-filter: blur(10px); */
 }
 
 li {
@@ -28,8 +30,6 @@ li {
     transform: translate(1%, 1vh);
     width: 98%;
     background-color: var(--space-cadet);
-    background-image: url(https://pbs.twimg.com/profile_images/1816821720176820229/aHlOOQr7_400x400.jpg);
-    background-position: 0% 35%;
     border-radius: 5px;
     color: var(--dark-cyan);
     border: solid var(--giants-orange);
@@ -50,14 +50,14 @@ li {
     border-bottom: none; 
 }
 
-.nav-item {
+.nav-item a {
     border-radius: 5px;
     background-color: var(--giants-orange);
     border-bottom: solid var(--crimson); 
     margin: 5px;
 }
 
-.nav-item:active {
+.nav-item:active a {
     transform: translateY(1px);
     border-bottom: none; 
 }
@@ -66,7 +66,7 @@ li {
     color: var(--space-cadet);
 }
 
-.dropdown {
+.bus-nav {
     
 }
 
@@ -325,7 +325,7 @@ th, td {
     overflow: hidden;
     clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
     /* transform: translateY(0); */
-    position: absolute;
+    position: fixed;
     bottom: 0;
     max-height: 0px;
     transition: clip-path 1s, transform 1s, max-height 1s;
@@ -335,16 +335,14 @@ th, td {
 }
 #credits-dropdown:checked ~ .credits-dropdown {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-    position: absolute;
+    position: fixed;
     bottom: 0;
     max-height: 9999999999999px;
     transition: clip-path 1s, transform 1s;
 }
 #credits-dropdown {
     display: none;
-    position: absolute;
-    bottom: 0;
-    position: absolute;
+    position: fixed;
     bottom: 0;
 }
 
@@ -354,7 +352,7 @@ th, td {
     content: "\f062";
     padding: 5px;
     z-index: 1;
-    position: absolute;
+    position: fixed;
     bottom: 0;
 }
 #credits-dropdown:checked ~ .credits-dropdown-label::before {

@@ -150,21 +150,24 @@ function pinBus(button) {
             let newPinString = pins.join(", "); // representation of the pins list as a string
             localStorage.setItem("pins", newPinString);
         }
-    }
-    const banner = document.getElementById("pBusBanner");
-    pins.sort();
-    banner.textContent = "Pinned bus " + busNumber;
-    updateTables();
-    if (localStorage.getItem("pushObject")) {
-        fetch("/subscribe", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({ busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing }),
-        });
-    }
-
+        else {
+            removing = true;
+            pins = pins.filter(function notNum(n) { return n != num; }); // this is how you remove elements in js arrays. pain
+            pins.sort();
+            if (pins.length == 0) {
+                localStorage.removeItem("pins");
+            }
+            else {
+                let newPinString = pins.join(", "); // representation of the pins list as a string
+                localStorage.setItem("pins", newPinString);
+            }
+        }
+        const banner = document.getElementById("pBusBanner");
+        pins.sort();
+        banner.textContent = "Pinned bus " + busNumber;
+        updateTables();
+        updateTables();
+    });
 }
 function getRow(n) {
     let tableFull = document.getElementById("all-bus-table");

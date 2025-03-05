@@ -139,7 +139,6 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.router.get("/teapot", (req, res) => { res.sendStatus(418); });
 // used for networkIndicator
 exports.router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
-
 // this needs to be served from the root of the server to work properly - used for push notifications
 exports.router.get("/serviceWorker.js", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.sendFile("serviceWorker.js", { root: path_1.default.join(__dirname, '../static/ts/') });
