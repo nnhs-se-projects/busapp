@@ -317,7 +317,7 @@ exports.router.get('/whitelist', (req, res) => __awaiter(void 0, void 0, void 0,
     yield authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email) }
+            whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email).reverse() }
         });
     }
     else {
@@ -357,7 +357,7 @@ exports.router.get("/busList", (req, res) => __awaiter(void 0, void 0, void 0, f
 }));
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
 exports.router.get("/getWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.type("json").send((yield Admin.find({}).exec()).map((e) => e.Email));
+    res.type("json").send((yield Admin.find({}).exec()).map((e) => e.Email).reverse());
 }));
 exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {

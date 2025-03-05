@@ -362,7 +362,7 @@ router.get('/whitelist', async (req: Request,res: Response)=>{
 
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email)}
+            whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email).reverse()}
         });
     }
     else {
@@ -409,7 +409,7 @@ router.get("/busList", async (req: Request, res: Response) => {
 
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
 router.get("/getWhitelist", async (req: Request, res: Response) => {
-    res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email));
+    res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email).reverse());
 });
 
 router.post("/updateBusList", async (req: Request, res: Response) => {
