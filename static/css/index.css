@@ -9,21 +9,17 @@
     --space-cadet: #2e294eff;
     --dark-cyan: #509191ff;
     --night: #141415ff;
-    --bs-navbar-brand-color: var(--dark-cyan) !important;
+    --gray: #ebebeb
+    /* --bs-navbar-brand-color: var(--dark-cyan) !important; */
 }
 
 body {
-    background-color: var(--space-cadet); /* Doesn't work */
-    /* background-image: url(https://www.naperville203.org/cms/lib/IL01904881/Centricity/Domain/28/MainBanner2022c.png);
+    background-color: var(--gray); /* Doesn't work */
+    background-image: url(../img/HuskieBubble.png);
     background-repeat: no-repeat;
     background-position-x: center;
-    background-position-y: calc(50% - 25px);
-    background-size: cover;
-    backdrop-filter: blur(10px); */
-}
-
-li {
-    margin-left: min(max(0.5em, 2vw), 2em);
+    background-position-y: center;
+    /* backdrop-filter: blur(10px); */
 }
 
 .navbar, .nav {
@@ -35,7 +31,8 @@ li {
     border: solid var(--giants-orange);
 }
 
-.navbar-brand {
+
+.navbar-brand, .navbar-toggler {
     background-color: var(--giants-orange);
     border-radius: 5px;
     border-bottom: solid var(--crimson); 
@@ -45,7 +42,7 @@ li {
     margin: 5px;
 }
 
-.navbar-brand:active {
+.navbar-brand:hover, .navbar-toggler:hover {
     transform: translateY(1px);
     border-bottom: none; 
 }
@@ -62,12 +59,29 @@ li {
     border-bottom: none; 
 }
 
-.button {
-    color: var(--space-cadet);
+button {
+    border-radius: 5px;
+    background-color: var(--giants-orange);
+    border: none;
+    padding: 5%;
+    padding-left: 30%;
+    padding-right: 30%;
+    border-bottom: solid var(--crimson); 
+    margin: 5px;
 }
 
-.bus-nav {
-    
+button:active, button.show {
+    transform: translateY(1px);
+    border-bottom: none; 
+}
+
+.dropdown-menu {
+    height: 50vh;
+    scrollbar-width: auto;
+    overflow: scroll;
+    background-color: var(--space-cadet);
+    border: solid var(--giants-orange);
+    border-radius: 5px;
 }
 
 #panel-header {
@@ -134,17 +148,6 @@ th, td {
 
 .fa-chevron-down {
     position: relative;
-}
-
-.pin-button {
-    font-family: 'Montserrat', sans-serif;
-    width: 70%;
-    text-decoration: none;
-    font-size: 0.8em;
-    background-color: #327fa8;
-    color: #ffffff;
-    padding: 4%;
-    transition: 0.2s;
 }
 
 #IOSnotifpopup > div, #whatsNewPopup > div {
@@ -447,10 +450,6 @@ th, td {
 
     .pin-col {
         width: 5%;
-    }
-
-    .pin-button:hover {
-        cursor: pointer;
     }
 
     #notif-notice:hover {

@@ -1,18 +1,6 @@
 /// <reference path="./socket-io-client.d.ts"/>
 
-const buttonsList = document.querySelectorAll(".button") as NodeListOf<HTMLElement>;
-
-buttonsList.forEach((b : HTMLElement) => {
-    b.addEventListener("mouseover", () => {
-        b.classList.add("active");
-    });
-
-    b.addEventListener("mouseout", () => {
-        b.classList.remove("active");
-    });
-    
-});
-
+var pinButtons = document.getElementsByClassName("pin-button");
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
 
@@ -102,10 +90,10 @@ function updatePins() { // guess what
     }
 }
 
-async function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks the button
+async function pinBus(button: HTMLButtonElement) { // pins the bus when the user clicks the button
     updatePins();
-    const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
-    const busNumber = busRow!.firstElementChild!.innerHTML; // this is the stringification of the number of the bus
+    // const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
+    const busNumber = button.innerText; // this is the stringification of the number of the bus
     var removing = false;
 
     const num = parseInt(busNumber); // this is the number of the bus
@@ -113,8 +101,8 @@ async function pinBus(button: HTMLInputElement) { // pins the bus when the user 
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // change pin icon to loading
-        button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
-        button.querySelector("i")!.classList.remove("fa-thumbtack");
+        // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
+        // button.querySelector("i")!.classList.remove("fa-thumbtack");
 
         // temporary function to do recursion 'n such
         async function temp(wait) {
@@ -143,8 +131,8 @@ async function pinBus(button: HTMLInputElement) { // pins the bus when the user 
             alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
-            button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
-            button.querySelector("i")!.classList.add("fa-thumbtack");
+            // button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
+            // button.querySelector("i")!.classList.add("fa-thumbtack");
         }
     }
 
@@ -164,12 +152,12 @@ async function pinBus(button: HTMLInputElement) { // pins the bus when the user 
             localStorage.setItem("pins", newPinString);
         }
     }
-    const banner = document.getElementById("pBusBanner");
+    const pinBusHolder = document.getElementById("pin-bus-holder");
     pins.sort();
-    banner!.textContent = "Pinned bus " + busNumber;
+    pinBusHolder!.textContent = ": " + busNumber;
     updateTables();
 
-    updateTables();
+    // updateTables();
 }
 
 
