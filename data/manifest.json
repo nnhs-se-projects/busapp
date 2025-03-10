@@ -7,32 +7,44 @@
     "categories": ["utilities", "travel", "navigation"],
     "icons": [
       {
-        "src": "/img/Icon-New-anyuse-512.png",
-        "sizes": "512x512",
+        "src": "/img/Icon-New-96.png",
+        "sizes": "96x96",
         "type": "image/png",
-        "purpose": "any"
+        "purpose": "maskable any"
       },
       {
         "src": "/img/Icon-New-128.png",
         "sizes": "128x128",
         "type": "image/png",
-        "purpose": "maskable"
+        "purpose": "maskable any"
       },
       {
-        "src": "/img/Icon-New-512.png",
-        "sizes": "512x512",
+        "src": "/img/Icon-New-192.png",
+        "sizes": "192x192",
         "type": "image/png",
-        "purpose": "maskable"
+        "purpose": "maskable any"
       },
       {
         "src": "/img/Icon-New-256.png",
         "sizes": "256x256",
         "type": "image/png",
-        "purpose": "maskable"
+        "purpose": "maskable any"
+      },
+      {
+        "src": "/img/Icon-New-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable any"
       },
       {
         "src": "/img/busapp-128-mono.png",
         "sizes": "128x128",
+        "type": "image/png",
+        "purpose": "monochrome maskable"
+      },
+      {
+        "src": "/img/busapp-256-mono.png",
+        "sizes": "256x256",
         "type": "image/png",
         "purpose": "monochrome maskable"
       },
@@ -43,10 +55,9 @@
         "purpose": "monochrome maskable"
       },
       {
-        "src": "/img/busapp-256-mono.png",
-        "sizes": "256x256",
-        "type": "image/png",
-        "purpose": "monochrome maskable"
+        "src": "/img/busapp-optimisedsvg.svg",
+        "type": "image/svg",
+        "purpose": "any"
       }
     ],
 

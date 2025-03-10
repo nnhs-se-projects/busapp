@@ -190,7 +190,7 @@ router.post("/sendWave", async (req: Request, res: Response) => {
                 webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus Just Left!',
                     body: `Bus number ${bus.busNumber} just left.`,
-                    icon: "/img/busAppIcon.png"
+                    icon: "/img/Icon-New-512.png"
                 })).catch(async (e) => { // if fail, delete endpoint
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
@@ -227,7 +227,7 @@ router.post("/lockWave", async (req: Request, res: Response) => {
                 webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus is Here!',
                     body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer/60)} minutes and ${timer % 60} seconds`,
-                    icon: "/img/busAppIcon.png"
+                    icon: "/img/Icon-New-512.png"
                 })).catch(async (e) => { // if fail, delete endpoint
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
