@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -40,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const google_auth_library_1 = require("google-auth-library");
 const jsonHandler_1 = require("./jsonHandler");
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importStar(require("fs"));
+const fs_1 = __importDefault(require("fs"));
 exports.router = express_1.default.Router();
 const web_push_1 = __importDefault(require("web-push"));
 const dotenv = require("dotenv");
@@ -49,6 +26,7 @@ const Bus = require("./model/bus");
 const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
+const Admin = require("./model/admin");
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com";
 const oAuth2 = new google_auth_library_1.OAuth2Client(CLIENT_ID);
 dotenv.config({ path: ".env" });
@@ -61,6 +39,16 @@ exports.router.use(bodyParser.urlencoded({ extended: true }));
 Announcement.findOneAndUpdate({}, { announcement: "" }, { upsert: true });
 Announcement.findOneAndUpdate({}, { tvAnnouncement: "" }, { upsert: true });
 let timer = 30;
+// this was to migrate the admins from the file to the database when on the production server
+// no longer neeeded but keeping it commented for the time being in case something went wrong with the migration
+/*
+router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
+    readWhitelist().admins.forEach(async e => {
+        if(!(await Admin.findOne({Email: e.toLowerCase()}))) await (new Admin({Email: e.toLowerCase()})).save();
+    });
+    res.send("all done!");
+});
+*/
 // Homepage. This is where students will view bus information from. 
 exports.router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Reads from data file and displays data
@@ -103,7 +91,10 @@ exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, v
 }));
 // Checks if the user's email is in the whitelist and authorizes accordingly
 function authorize(req) {
-    req.session.isAdmin = (0, jsonHandler_1.readWhitelist)().admins.includes(req.session.userEmail);
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        req.session.isAdmin = Boolean(yield Admin.findOne({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
+    });
 }
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
@@ -124,7 +115,7 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
     };
     data.isLocked = (yield Wave.findOne({})).locked;
     data.leavingAt = (yield Wave.findOne({})).leavingAt;
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("admin", {
             data: data,
@@ -196,13 +187,13 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
                 web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus Just Left!',
                     body: `Bus number ${bus.busNumber} just left.`,
-                    icon: "/img/busAppIcon.png"
+                    icon: "/img/Icon-New-512.png"
                 })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
-                }));
+                })).then(() => { });
             });
         }));
     }
@@ -228,13 +219,13 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
                 web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus is Here!',
                     body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds`,
-                    icon: "/img/busAppIcon.png"
+                    icon: "/img/Icon-New-512.png"
                 })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
-                }));
+                })).then(() => { });
             });
         }));
     }
@@ -291,7 +282,7 @@ exports.router.get("/updateBusList", (req, res) => __awaiter(void 0, void 0, voi
     // get all the bus numbers of all the buses from the database and make a list of them
     const busList = yield Bus.find().distinct("busNumber");
     let data = { busList: busList };
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("updateBusList", {
             data: data
@@ -307,9 +298,8 @@ exports.router.get("/makeAnnouncement", (req, res) => __awaiter(void 0, void 0, 
         res.redirect("/login");
         return;
     }
-    +
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("makeAnnouncement", {
             currentAnnouncement: (yield Announcement.findOne({})).announcement,
@@ -320,38 +310,42 @@ exports.router.get("/makeAnnouncement", (req, res) => __awaiter(void 0, void 0, 
         res.render("unauthorized");
     }
 }));
-exports.router.get('/whitelist', (req, res) => {
+exports.router.get('/whitelist', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    yield authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist", {
-            whitelist: (0, jsonHandler_1.readWhitelist)()
+            whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email).reverse() }
         });
     }
     else {
         res.render("unauthorized");
     }
-});
-exports.router.get('/updateWhitelist', (req, res) => {
+}));
+// TODO: remove this, I think it's no longer used for anything and it just straight up crashes the server
+/*
+router.get('/updateWhitelist', (req: Request,res: Response)=>{
     // If user is not authenticated (email is not is session) redirects to login page
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
+    
     // Authorizes user, then either displays admin page or unauthorized page
-    authorize(req);
+    await authorize(req);
     if (req.session.isAdmin) {
         res.render("updateWhitelist");
     }
     else {
         res.render("unauthorized");
     }
-});
+})
+*/
 exports.router.get("/updateBusListEmptyRow", (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
 });
@@ -365,9 +359,9 @@ exports.router.get("/busList", (req, res) => __awaiter(void 0, void 0, void 0, f
     res.type("json").send(yield Bus.find().distinct("busNumber"));
 }));
 //TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
-exports.router.get("/whitelistFile", (req, res) => {
-    res.type("json").send((0, fs_1.readFileSync)(path_1.default.resolve(__dirname, "../data/whitelist.json")));
-});
+exports.router.get("/getWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.type("json").send((yield Admin.find({}).exec()).map((e) => e.Email).reverse());
+}));
 exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
@@ -402,13 +396,20 @@ exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, vo
 exports.router.get('/help', (req, res) => {
     res.render('help');
 });
-exports.router.post("/whitelistFile", (req, res) => {
+exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
         return;
     }
-    fs_1.default.writeFileSync(path_1.default.resolve(__dirname, "../data/whitelist.json"), JSON.stringify(req.body.admins));
-});
+    const adminExists = yield Admin.findOne({ Email: req.body.admin.toLowerCase() }).exec();
+    if (adminExists) {
+        yield Admin.findByIdAndDelete(adminExists._id);
+    }
+    else {
+        yield (new Admin({ Email: req.body.admin.toLowerCase() })).save();
+    }
+    res.send("success!");
+}));
 exports.router.post("/submitAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.session.userEmail) {
         res.redirect("/login");
