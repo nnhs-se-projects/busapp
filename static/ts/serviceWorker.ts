@@ -8,6 +8,8 @@ self.addEventListener('push', async (e: any) => {
     const promiseChain = tmp.registration.showNotification(data.title, {
         body: data.body,
         icon: data.icon,
+        click_action: "/",
+        badge: "/img/busapp-badge.png"
     });
     
     await e.waitUntil(promiseChain);
