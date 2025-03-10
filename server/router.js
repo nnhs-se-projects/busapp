@@ -434,4 +434,12 @@ exports.router.get("/busMap", (req, res) => __awaiter(void 0, void 0, void 0, fu
         render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/busMap.ejs")),
     });
 }));
+exports.router.post("/updateBusMap", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.session.userEmail) {
+        res.redirect("/login");
+        return;
+    }
+    // await Bus.findOneAndUpdate({}, {beans: req.body.beans}, {upsert: true});
+    res.redirect("/");
+}));
 //# sourceMappingURL=router.js.map

@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 function saveMap() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!confirm("Are you sure you would like to update the bus list and reset all live pages?"))
-            return;
+        // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
+        let beans = document.getElementsByClassName("test");
         yield fetch("/updateBusMap", {
             method: 'POST',
             headers: {
@@ -19,7 +19,7 @@ function saveMap() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                busList: busList
+                beans: beans
             })
         });
         updateBusMap();
