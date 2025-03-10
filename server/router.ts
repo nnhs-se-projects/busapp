@@ -208,7 +208,7 @@ router.post("/sendWave", async (req: Request, res: Response) => {
                     if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
-                });
+                }).then(() => {});
             });
         });
     }
@@ -245,7 +245,7 @@ router.post("/lockWave", async (req: Request, res: Response) => {
                     if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
-                });
+                }).then(() => {});
             });
         });
     }
@@ -484,4 +484,3 @@ router.post("/clearAnnouncement", async (req: Request, res: Response) => {
     
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
-
