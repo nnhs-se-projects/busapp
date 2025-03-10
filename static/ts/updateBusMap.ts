@@ -1,6 +1,8 @@
 async function saveMap() {
-    if (!confirm("Are you sure you would like to update the bus list and reset all live pages?")) return;
+    // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
     
+    let beans = document.getElementsByClassName("test");
+
     await fetch("/updateBusMap", {
         method: 'POST',
         headers: {
@@ -9,7 +11,7 @@ async function saveMap() {
         },
         body: 
         JSON.stringify({
-            busList: busList
+            beans: beans
         })
     });
 

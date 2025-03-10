@@ -473,3 +473,13 @@ router.get("/busMap", async (req: Request, res: Response) => {
         render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
     });
 });
+
+router.post("/updateBusMap", async (req: Request, res: Response) => {
+    if (!req.session.userEmail) {
+        res.redirect("/login");
+        return;
+    }
+
+    // await Bus.findOneAndUpdate({}, {beans: req.body.beans}, {upsert: true});
+    res.redirect("/");
+});
