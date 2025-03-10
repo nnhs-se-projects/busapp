@@ -27,19 +27,20 @@ body {
     width: 98%;
     background-color: var(--space-cadet);
     border-radius: 5px;
-    color: var(--dark-cyan);
+    /* color: var(--dark-cyan); */
+    color: white;
     border: solid var(--giants-orange);
 }
 
 
-.navbar-brand, .navbar-toggler {
+.navbar-text, .navbar-toggler {
     background-color: var(--giants-orange);
     border-radius: 5px;
     border-bottom: solid var(--crimson); 
     padding-left: 5px;
     padding-right: 5px;
-    color: var(--space-cadet);
     margin: 5px;
+    color: white;
 }
 
 .navbar-brand:hover, .navbar-toggler:hover {
@@ -55,7 +56,7 @@ body {
 }
 
 .nav-item:active a {
-    transform: translateY(1px);
+    transform: translateY(2px);
     border-bottom: none; 
 }
 
@@ -72,6 +73,7 @@ button {
 
 button:active, button.show {
     transform: translateY(1px);
+    margin-top: 8px;
     border-bottom: none; 
 }
 
@@ -82,53 +84,6 @@ button:active, button.show {
     background-color: var(--space-cadet);
     border: solid var(--giants-orange);
     border-radius: 5px;
-}
-
-#panel-header {
-    height: 10vh;
-    background-color: white;
-    width: 80vw;
-    border-radius: 10px;
-    transform: translate(10vw, 1vh);
-}
-
-#pBusBanner {
-    text-align: center;
-}
-
-#panel {
-    position: absolute;
-    transform: translate(10vw, 1.5vh);
-    width: 80vw;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    overflow: scroll;
-}
-#panel.expanded{
-    height: 80vh;
-}
-
-#panel.expanded table tbody {
-    display: table-row-group;
-}
-#panel table tbody {
-    overflow: auto;
-    background-color: yellow;
-    display: none;
-}
-
-#top-bus-table {
-    width: 80vw;
-    background-color: red;
-    color: black;
-    border-radius: 10px;
-}
-
-th, td {
-    border: 1px solid black;
-    border-radius: 10px;
 }
 
 .num-col {
