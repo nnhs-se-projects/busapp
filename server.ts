@@ -85,6 +85,11 @@ app.use("/js", express.static(path.resolve(__dirname, "static/ts")));
 app.use("/img", express.static(path.resolve(__dirname, "static/img")));
 app.use('/html', express.static(path.resolve(__dirname, "static/html")));
 
+// custom 404 page - must come after all other instances of "app.use"
+app.all('*', (req, res) => {
+    res.status(404).render('404', {url: req.url});
+});  
+
 startWeather(io);
 
 var now = new Date();

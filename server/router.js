@@ -193,7 +193,7 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
-                }));
+                })).then(() => { });
             });
         }));
     }
@@ -225,7 +225,7 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
-                }));
+                })).then(() => { });
             });
         }));
     }
