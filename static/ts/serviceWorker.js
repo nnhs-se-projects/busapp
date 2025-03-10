@@ -15,6 +15,8 @@ self.addEventListener('push', (e) => __awaiter(void 0, void 0, void 0, function*
     const promiseChain = tmp.registration.showNotification(data.title, {
         body: data.body,
         icon: data.icon,
+        click_action: "/",
+        badge: "/img/busapp-badge.png"
     });
     yield e.waitUntil(promiseChain);
 }));
