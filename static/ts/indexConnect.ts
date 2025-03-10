@@ -214,14 +214,3 @@ var x = setInterval(async function() {
         });
     }
 }, 1000);
-
-function togglePanelExpanded() {
-    const panel = document.getElementById("panel");
-    panelExpanded = !panelExpanded;
-
-    if (panelExpanded) {
-        panel?.classList.add("expanded");
-    } else {
-        panel?.classList.remove("expanded");
-    }
-}

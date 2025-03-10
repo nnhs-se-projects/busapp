@@ -208,14 +208,4 @@ var x = setInterval(function () {
         }
     });
 }, 1000);
-function togglePanelExpanded() {
-    const panel = document.getElementById("panel");
-    panelExpanded = !panelExpanded;
-    if (panelExpanded) {
-        panel === null || panel === void 0 ? void 0 : panel.classList.add("expanded");
-    }
-    else {
-        panel === null || panel === void 0 ? void 0 : panel.classList.remove("expanded");
-    }
-}
 //# sourceMappingURL=indexConnect.js.map

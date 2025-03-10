@@ -84,6 +84,11 @@ button:active, button.show {
     background-color: var(--space-cadet);
     border: solid var(--giants-orange);
     border-radius: 5px;
+    overflow: auto;
+}
+
+.announcement-nav {
+    z-index: -10;
 }
 
 .num-col {
