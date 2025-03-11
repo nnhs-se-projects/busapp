@@ -43,10 +43,10 @@ window.onload = () => {
     }
 };
 function updateTables() {
-    updatePins();
-    let tablePins = document.getElementById("pin-bus-table");
+    // updatePins();
+    // let tablePins = <HTMLTableElement> document.getElementById("pin-bus-table");
     // let pinRows = tablePins.rows;
-    let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
+    // let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
     // for (let i = 2; i < pinRows.length - 1; i++) { // hides rows that aren't in the pins
     //     let number = parseInt(pinRows[i]!.firstElementChild!.innerHTML);
     //     if (pins.includes(number)) {
@@ -57,7 +57,7 @@ function updateTables() {
     //     }
     // }
     // pinRows[pinRows.length - 1].hidden = lastHide;
-    let tableFull = document.getElementById("all-bus-table");
+    // let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
     // let fullRows = tableFull.rows;
     // for (let i = 2; i < fullRows.length; i++) { // first two rows are the table header and the column headers
     //     let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
@@ -87,6 +87,13 @@ function updatePins() {
             }
         }
     }
+    const pinBusHolder = document.getElementById("pin-bus-holder");
+    pins.sort();
+    var tmp = "";
+    for (let i = 1; i < pins.length; i++) {
+        tmp += ", " + pins[i];
+    }
+    pinBusHolder.textContent = tmp;
 }
 function pinBus(button) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -154,11 +161,7 @@ function pinBus(button) {
                 localStorage.setItem("pins", newPinString);
             }
         }
-        const pinBusHolder = document.getElementById("pin-bus-holder");
-        pins.sort();
-        pinBusHolder.textContent = ": " + busNumber;
         updateTables();
-        // updateTables();
     });
 }
 function getRow(n) {

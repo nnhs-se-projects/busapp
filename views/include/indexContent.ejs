@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-text">NNHS Bus App</div>
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
@@ -25,38 +25,28 @@
   </div>
 </nav>  
 
-
-<!-- <div class="container-fluid"> -->
-
-<ul class="nav bus-nav mt-2 align-items-center justify-content-center">
-  <li class="nav-item me-1">
-    <i class="fa-solid fa-bus-simple" id="pin-bus-holder">: #</i>
-  </li>
-  <li class="nav-item">
-    Departure: None
-  </li>
-  <div class="nav-item dropdown-center">
-    <button class="dropdown-toggle ms-2" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside" aria-expanded="false">
-    <i class="fa-solid fa-thumbtack"></i> 
-    </button>
-    <ul class="dropdown-menu">
-      <% for(let i = 0; i < data.buses.length; i++) { %> 
-          <li class = "bus-row p-1 text-center">
-              <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
-          </li>
-      <% } %> 
-    </ul>
+<div class="d-flex justify-content-center w-100 mt-1">
+  <div class="row announcement-nav bus-nav mt-2 text-center align-items-center justify-content-center">
+      <!-- <i class="fa-solid fa-bullhorn"></i> -->
+      <h3>Announcements:</h3>
+      <hr>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum euismod nunc felis, id semper nulla feugiat sed. </p>
   </div>
-</ul>
-
-
-<div class="announcement-nav nav bus-nav mt-2 text-center align-items-center justify-content-center">
-    <i class="fa-solid fa-bullhorn"></i>
-    <h3>- Announcements:</h3>
-    <hr>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum euismod nunc felis, id semper nulla feugiat sed. Aenean malesuada sed neque vitae porttitor. Aliquam euismod sit amet arcu vel mollis. Quisque congue quam ac libero ullamcorper, nec semper erat fringilla. Vivamus maximus nisi non mauris mollis mollis. Morbi eleifend efficitur dignissim. Integer in nisi odio. Curabitur fermentum, diam ac blandit ullamcorper, quam sem efficitur dolor, in posuere dolor purus et purus. Nam vulputate arcu vitae eros fringilla, quis bibendum nisi venenatis. Maecenas interdum felis odio, ac consequat mi blandit a. Phasellus fringilla erat convallis velit accumsan, nec volutpat orci lacinia. In eu tincidunt eros.</p>
 </div>
-<!-- </div> -->
+
+<div class="nav-item d-flex justify-content-center w-100 dropdown-center mt-1">
+  <button class="dropdown-toggle ms-2" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside" aria-expanded="false">
+  <i class="fa-solid fa-thumbtack"></i> 
+  </button>
+  <ul class="dropdown-menu">
+    <% for(let i = 0; i < data.buses.length; i++) { %> 
+        <li class = "bus-row p-1 text-center">
+            <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
+        </li>
+    <% } %> 
+  </ul>
+</div>
+
 
 <!-- <div id = "panel-header" class = "panel-header" onclick = "togglePanelExpanded()">
     <h1 id = "pBusBanner">Pinned Bus: </h1>

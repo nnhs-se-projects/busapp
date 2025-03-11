@@ -22,7 +22,7 @@ body {
     /* backdrop-filter: blur(10px); */
 }
 
-.navbar, .nav {
+.navbar {
     transform: translate(1%, 1vh);
     width: 98%;
     background-color: var(--space-cadet);
@@ -68,12 +68,10 @@ button {
     padding-left: 30%;
     padding-right: 30%;
     border-bottom: solid var(--crimson); 
-    margin: 5px;
 }
 
-button:active, button.show {
+button:active{
     transform: translateY(1px);
-    margin-top: 8px;
     border-bottom: none; 
 }
 
@@ -88,26 +86,12 @@ button:active, button.show {
 }
 
 .announcement-nav {
-    z-index: -10;
-}
-
-.num-col {
-    font-size: 5vw;
-    text-align: center;
-}
-
-.status-col {
-    font-size: 5vw;
-    text-align: center;
-}
-
-.pin-col {
-    text-align: center;
-    width: 22%;
-}
-
-.fa-chevron-down {
-    position: relative;
+    width: 98%;
+    background-color: var(--space-cadet);
+    border-radius: 5px;
+    /* color: var(--dark-cyan); */
+    color: white;
+    border: solid var(--giants-orange);
 }
 
 #IOSnotifpopup > div, #whatsNewPopup > div {
@@ -137,56 +121,6 @@ button:active, button.show {
     font-size: calc(1vw + 1em);
 }
 
-.weather-container {
-    grid-column: 1/2;
-    grid-row: 1/3;
-
-    background-color: rgb(208, 207, 188);
-    border: rgb(208, 207, 188);;
-    border-radius: 10px;
-    
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 2fr 1fr;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.weather-container * {
-    margin: 0;
-}
-
-.weather-temperature {
-    grid-column: 1/2;
-    grid-row: 1/2;
-    text-align: center;
-    font-size: 2.4vh;
-}
-
-.weather-temperature > * {
-    padding: 13% 0 0;
-}
-
-.weather-status {
-    grid-column: 1/2;
-    grid-row: 2/3;    
-    text-align: center;
-    font-size: 1.5vh;
-}
-
-.weather-status > * {
-    padding: 0 0 5%;
-}
-
-.weather-img {
-    text-align: center;
-    grid-column: 2/3;
-    grid-row: 1/3;
-}
-
-.weather-img > * {
-    height: 100%;
-}
-
 .button2 {
     background-color: #008CBA; 
     color: #ffffff;
@@ -195,7 +129,7 @@ button:active, button.show {
 .button2:hover {
     background-color: #003749;
     color: rgb(255, 255, 255);
-}
+} */
 
 .android-button {
     font-family: 'Montserrat', sans-serif;
@@ -226,45 +160,6 @@ button:active, button.show {
 #pin-bus-table tbody tr {
     background-color: #ffffff;
 } */
-
-
-.announcement {
-    font-family: 'Montserrat', sans-serif;
-    text-decoration: none;
-    font-size: 3.1vw;
-    padding-left: 5px;
-    padding-right: 5px;
-    text-align: center;
-    color:#000000;
-}
-
-.announcement-table {
-    margin: 0 auto 3%;
-    width: 90%;
-    border-collapse: collapse;
-    font-size: 1.7vw;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.announcement-table thead th {
-    background-color: #838BC2; 
-    font-size: 310%; 
-    padding-top: 5px; 
-    padding-bottom: 5px; 
-    padding-left: 7px;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-.announcement-table tbody tr {
-    border-bottom: 2px solid #dddddd;
-    height: 5vh;
-}
-
-#announcement-table tbody tr {
-    background-color: #ffffff;
-}
 
 .timer-box {
     display: flex;
@@ -416,20 +311,6 @@ button:active, button.show {
         cursor: pointer;
     }
   
-    .announcement-table {
-        width: 70%;
-        font-size: 0.8vw;
-        background-color: #838BC2; 
-        padding-top: 5px; 
-        padding-bottom: 5px; 
-        padding-left: 10px;
-        color: #ffffff;
-        text-align: left;
-    }
-
-    .announcement {
-        font-size: 1.5vw;
-    }
     .timer-box{
         display: flex;
         justify-content: center;

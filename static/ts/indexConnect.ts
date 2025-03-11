@@ -45,10 +45,10 @@ window.onload = () => {
 };
 
 function updateTables() { // updates what rows show on the pinned list and what buttons show Unpin or Pin on the full list.
-    updatePins();
-    let tablePins = <HTMLTableElement> document.getElementById("pin-bus-table");
+    // updatePins();
+    // let tablePins = <HTMLTableElement> document.getElementById("pin-bus-table");
     // let pinRows = tablePins.rows;
-    let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
+    // let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
     // for (let i = 2; i < pinRows.length - 1; i++) { // hides rows that aren't in the pins
     //     let number = parseInt(pinRows[i]!.firstElementChild!.innerHTML);
     //     if (pins.includes(number)) {
@@ -60,7 +60,7 @@ function updateTables() { // updates what rows show on the pinned list and what 
     // }
     // pinRows[pinRows.length - 1].hidden = lastHide;
 
-    let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
+    // let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
     // let fullRows = tableFull.rows;
     // for (let i = 2; i < fullRows.length; i++) { // first two rows are the table header and the column headers
     //     let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
@@ -88,6 +88,13 @@ function updatePins() { // guess what
             if (!pins.includes(n)) { pins.push(n); }
         }
     }
+    const pinBusHolder = document.getElementById("pin-bus-holder");
+    pins.sort();
+    var tmp : string = "";
+    for (let i = 1; i < pins.length; i++) {
+        tmp += ", " + pins[i];
+    }
+    pinBusHolder!.textContent = tmp;
 }
 
 async function pinBus(button: HTMLButtonElement) { // pins the bus when the user clicks the button
@@ -152,12 +159,8 @@ async function pinBus(button: HTMLButtonElement) { // pins the bus when the user
             localStorage.setItem("pins", newPinString);
         }
     }
-    const pinBusHolder = document.getElementById("pin-bus-holder");
-    pins.sort();
-    pinBusHolder!.textContent = ": " + busNumber;
-    updateTables();
 
-    // updateTables();
+    updateTables();
 }
 
 
