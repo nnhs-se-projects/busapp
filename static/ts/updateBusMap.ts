@@ -1,7 +1,15 @@
+let nextWave: any[] = [];
+let lots: any[] = [];
+let currentWave: any[] = [];
+
+let addNext = (bus) => {
+    nextWave.push(bus);
+}
+
+
+
 async function saveMap() {
     // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
-    
-    let beans = document.getElementsByClassName("test");
 
     await fetch("/updateBusMap", {
         method: 'POST',
@@ -11,10 +19,12 @@ async function saveMap() {
         },
         body: 
         JSON.stringify({
-            beans: beans
+            nextWave: nextWave,
+            lots: lots,
+            currentWave: currentWave
         })
     });
 
     updateBusMap();
-    window.location.assign("/admin");
+    window.location.assign("/");
 }

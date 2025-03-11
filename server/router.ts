@@ -479,7 +479,7 @@ router.post("/updateBusMap", async (req: Request, res: Response) => {
         res.redirect("/login");
         return;
     }
-
-    // await Bus.findOneAndUpdate({}, {beans: req.body.beans}, {upsert: true});
+ 
+    await Bus.findOneAndUpdate({}, {nextWave, lots, currentWave}, {upsert: true});
     res.redirect("/");
 });

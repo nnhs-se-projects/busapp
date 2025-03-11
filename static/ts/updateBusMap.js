@@ -8,10 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+let beans = document.getElementsByClassName("test");
 function saveMap() {
     return __awaiter(this, void 0, void 0, function* () {
         // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
-        let beans = document.getElementsByClassName("test");
         yield fetch("/updateBusMap", {
             method: 'POST',
             headers: {
@@ -23,7 +23,7 @@ function saveMap() {
             })
         });
         updateBusMap();
-        window.location.assign("/admin");
+        window.location.assign("/");
     });
 }
 //# sourceMappingURL=updateBusMap.js.map

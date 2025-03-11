@@ -435,11 +435,11 @@ exports.router.get("/busMap", (req, res) => __awaiter(void 0, void 0, void 0, fu
     });
 }));
 exports.router.post("/updateBusMap", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
-    // await Bus.findOneAndUpdate({}, {beans: req.body.beans}, {upsert: true});
+    // if (!req.session.userEmail) {
+    //     res.redirect("/login");
+    //     return;
+    // }
+    yield Bus.findOneAndUpdate({}, { beans: req.body.beans }, { upsert: true });
     res.redirect("/");
 }));
 //# sourceMappingURL=router.js.map
