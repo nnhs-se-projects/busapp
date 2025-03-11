@@ -91,23 +91,26 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
     res.status(201).end();
 });
 
-// Checks if the user's email is in the whitelist and authorizes accordingly
-async function authorize(req: Request) {
-    req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()})); 
+// check the login, return false if user cannot continue and true if user can.
+// renders appropriate login or unauthorized page accordingly
+async function checkLogin(req, res) {
+    if(!req.session.userEmail) {
+        res.redirect("/login");
+        return false;
+    }
+    req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()}));
+    if(req.session.isAdmin === false) {
+        res.render("unauthorized");
+        return false;
+    }
+    return true;
 }
-
-
 
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
 router.get("/admin", async (req: Request, res: Response) => {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
-    
-    // Authorizes user, then either displays admin page or unauthorized page
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     let data = {
         allBuses: await getBuses(),
@@ -119,16 +122,10 @@ router.get("/admin", async (req: Request, res: Response) => {
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
-    await authorize(req);
-    if (req.session.isAdmin) {
-        res.render("admin", {
-            data: data,
-            render: fs.readFileSync(path.resolve(__dirname, "../views/include/adminContent.ejs")),
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("admin", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/include/adminContent.ejs")),
+    });
 });
 
 // https://save418.com/ 
@@ -161,10 +158,8 @@ router.get("/waveStatus", async (req: Request, res: Response) => {
 });
 
 router.post("/updateBusChange", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     let busNumber = req.body.number;
     let busChange = req.body.change;
@@ -174,10 +169,8 @@ router.post("/updateBusChange", async (req: Request, res: Response) => {
 });
 
 router.post("/updateBusStatus", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     let busNumber = req.body.number;
     let busStatus = req.body.status;
@@ -188,10 +181,8 @@ router.post("/updateBusStatus", async (req: Request, res: Response) => {
 
 
 router.post("/sendWave", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     // find the wave
     if( !(null === await Wave.findOne({locked: true})) ) { 
@@ -221,10 +212,8 @@ router.post("/sendWave", async (req: Request, res: Response) => {
 });
 
 router.post("/lockWave", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     await Wave.findOneAndUpdate({}, { locked: !(await Wave.findOne({})).locked }, { upsert: true });
     const leavingAt = new Date();
@@ -253,10 +242,8 @@ router.post("/lockWave", async (req: Request, res: Response) => {
 });
 
 router.post("/setTimer", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     var tmpTimer = Number(req.body.minutes) * 60;
     if(Number.isNaN(tmpTimer) || tmpTimer === null) {
@@ -277,10 +264,8 @@ router.get("/leavingAt", async (req: Request, res: Response) => {
 });
 
 router.post("/resetAllBusses", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     await Bus.updateMany({}, { $set: { status: "" } }); 
     res.send("success");
@@ -291,26 +276,17 @@ router.get("/beans", async (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../static/img/beans.jpg"));
 });
 
-// old manifest, leaving it because im not sure if anything still uses it?
-// EDIT: commenting this out because I cannot find anything that uses it and having 2 manifest files is cause for confusion
-/*router.get("/manifest.webmanifest", (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, "../data/manifest.webmanifest"))
-});*/
-
-// new manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
+// manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
+// not serving in static because iirc it is necessary to have it at the root for scope reasons
 router.get("/manifest.json", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
 });
 
-
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
 router.get("/updateBusList", async (req: Request, res: Response) => {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     // Authorizes user, then either displays admin page or unauthorized page
 
@@ -319,79 +295,28 @@ router.get("/updateBusList", async (req: Request, res: Response) => {
 
     let data = { busList: busList };
 
-    await authorize(req);
-    if (req.session.isAdmin) {
-        res.render("updateBusList",
-        {
-            data: data
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("updateBusList", { data: data });
 });
 
 router.get("/makeAnnouncement", async (req: Request, res: Response) => {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
     
-    // Authorizes user, then either displays admin page or unauthorized page
-    await authorize(req);
-    if (req.session.isAdmin) {
-        res.render("makeAnnouncement",
-        {
-            currentAnnouncement: (await Announcement.findOne({})).announcement,
-            currentTvAnnouncement: (await Announcement.findOne({})).tvAnnouncement
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("makeAnnouncement", {
+        currentAnnouncement: (await Announcement.findOne({})).announcement,
+        currentTvAnnouncement: (await Announcement.findOne({})).tvAnnouncement
+    });
 });
 
 router.get('/whitelist', async (req: Request,res: Response)=>{
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
     
-    // Authorizes user, then either displays admin page or unauthorized page
-    await authorize(req);
-
-    if (req.session.isAdmin) {
-        res.render("updateWhitelist", {
-            whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email).reverse()}
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("updateWhitelist", {
+        whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email).reverse()}
+    });
 })
 
-
-// TODO: remove this, I think it's no longer used for anything and it just straight up crashes the server
-/*
-router.get('/updateWhitelist', (req: Request,res: Response)=>{
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
-    
-    // Authorizes user, then either displays admin page or unauthorized page
-    await authorize(req);
-    if (req.session.isAdmin) {
-        res.render("updateWhitelist");
-    }
-    else {
-        res.render("unauthorized");
-    }
-})
-*/
 
 router.get("/updateBusListEmptyRow", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
@@ -409,16 +334,16 @@ router.get("/busList", async (req: Request, res: Response) => {
     res.type("json").send(await Bus.find().distinct("busNumber"));
 });
 
-//TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
 router.get("/getWhitelist", async (req: Request, res: Response) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
     res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email).reverse());
 });
 
 router.post("/updateBusList", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     // use the posted bus list to update the database, removing any buses that are not in the list, and adding any buses that are in the list but not in the database
     const busList: string[] = req.body.busList;
@@ -452,12 +377,16 @@ router.get('/help',(req: Request, res: Response)=>{
 });
 
 router.post("/updateWhitelist", async (req:Request,res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
     const adminExists = await Admin.findOne({Email: req.body.admin.toLowerCase()}).exec();
+
     if(adminExists){
+        if(req.session.userEmail?.toLowerCase() === req.body.admin.toLowerCase()) {
+            res.status(409).send("Refusing to remove email of admin currently logged in");
+            return;
+        }
         await Admin.findByIdAndDelete(adminExists._id);
     } else {
         await (new Admin({Email: req.body.admin.toLowerCase()})).save();
@@ -466,10 +395,8 @@ router.post("/updateWhitelist", async (req:Request,res: Response) => {
 });
 
 router.post("/submitAnnouncement", async (req: Request, res: Response) => {    //overwrites the announcement in the database
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
 
     await Announcement.findOneAndUpdate({}, {announcement: req.body.announcement, tvAnnouncement: req.body.tvAnnouncement}, {upsert: true});
     res.redirect("/admin");
@@ -477,10 +404,8 @@ router.post("/submitAnnouncement", async (req: Request, res: Response) => {    /
 
 
 router.post("/clearAnnouncement", async (req: Request, res: Response) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
     
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
