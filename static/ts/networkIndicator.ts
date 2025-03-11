@@ -29,10 +29,10 @@ function setIndicatorStatus(stat : string) {
 async function checkNetworkConnectivity() {
     try {
         var ping = performance.now();
-        const response = await fetch("/getConnectivity");
+        const response = await fetch("/getConnectivity", {cache: "no-store"});
         ping = performance.now() - ping;
         if(response.ok) {
-            if(ping < 550) { return "connected"; }
+            if(ping < 450) { return "connected"; }
             return "slow";
         }
     } catch(e) {

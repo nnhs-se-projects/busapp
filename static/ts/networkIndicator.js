@@ -39,10 +39,10 @@ function checkNetworkConnectivity() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             var ping = performance.now();
-            const response = yield fetch("/getConnectivity");
+            const response = yield fetch("/getConnectivity", { cache: "no-store" });
             ping = performance.now() - ping;
             if (response.ok) {
-                if (ping < 550) {
+                if (ping < 450) {
                     return "connected";
                 }
                 return "slow";
