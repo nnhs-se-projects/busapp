@@ -111,6 +111,10 @@ body {
     padding: 0 !important;
 }
 
+#gleepGlorp {
+    height: auto;
+}
+
 @media (orientation: landscape) {
     .button {
         font-size: 2vw;

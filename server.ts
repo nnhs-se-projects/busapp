@@ -1,7 +1,7 @@
 import express, {Application, Request, Response} from "express";
 import {router} from "./server/router";
 import path from "path";
-import fs from "fs";
+import fs, { read } from "fs";
 import bodyParser from "body-parser";
 import {createServer} from "http";
 import {Server} from "socket.io";
@@ -48,7 +48,7 @@ io.of("/admin").on("connection", async (socket) => {
             nextWave: await Bus.find({status: "Next Wave"}),
             loading: await Bus.find({status: "Loading"}),
             isLocked: false, 
-            leavingAt: new Date()
+            leavingAt: new Date(),
         };
         data.isLocked = (await Wave.findOne({})).locked;
         data.leavingAt = (await Wave.findOne({})).leavingAt;
@@ -84,6 +84,11 @@ app.use("/css", express.static(path.resolve(__dirname, "static/css")));
 app.use("/js", express.static(path.resolve(__dirname, "static/ts")));
 app.use("/img", express.static(path.resolve(__dirname, "static/img")));
 app.use('/html', express.static(path.resolve(__dirname, "static/html")));
+
+// custom 404 page - must come after all other instances of "app.use"
+app.all('*', (req, res) => {
+    res.status(404).render('404', {url: req.url});
+});  
 
 startWeather(io);
 

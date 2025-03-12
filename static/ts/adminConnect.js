@@ -12,6 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var adminSocket = window.io("/admin");
 var countDownDate = new Date();
 var updatingCount = 0;
+var TIMER = document.getElementById("timerDurationSelector").value;
 adminSocket.on("update", (data) => {
     // convert from time strings to dates to allow conversion to local time
     data.allBuses.forEach((bus) => {
@@ -24,8 +25,8 @@ adminSocket.on("update", (data) => {
     document.getElementById("content").innerHTML = html;
     // update the timer input to match the actual value
     var timerValue = document.getElementById("timerDurationSelector");
-    if (timerValue === null) {
-        timerValue = { value: 1 };
+    if (timerValue !== null) {
+        timerValue.value = TIMER;
     }
     fetch("/getTimer", { method: "GET" })
         .then((response) => response.json())
@@ -33,6 +34,7 @@ adminSocket.on("update", (data) => {
         timerValue.value = json.minutes;
         console.log(json);
     });
+    setIndicatorStatus(lastStatus);
 });
 function update() {
     adminSocket.emit("updateMain", {
@@ -57,6 +59,8 @@ function updateTimer() {
         if (!res.ok) {
             console.log(`Response status: ${res.status}`);
         }
+        TIMER = timerValue.value;
+        update();
     });
 }
 function updateStatus(button, status) {

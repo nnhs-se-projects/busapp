@@ -43,20 +43,24 @@ function enablePushNotifications(publicKey) {
                 // iterate over pins and subscribe to them
                 const pins = ((_a = localStorage.getItem("pins")) !== null && _a !== void 0 ? _a : "").split(", ");
                 for (var i = 0; i < pins.length; i++) {
-                    const response = yield fetch("/subscribe", {
+                    if (Number.isNaN(Number(pins[i]))) {
+                        continue;
+                    }
+                    fetch("/subscribe", {
                         headers: {
                             "Content-Type": "application/json",
                         },
                         method: "POST",
                         body: JSON.stringify({ busNumber: Number(pins[i]), pushObject: localStorage.getItem("pushObject"), remove: false }),
-                    });
-                    if (response.ok) {
-                        console.log(yield response.text());
-                    }
-                    else {
-                        console.log("error!" + response.status);
-                        alert("Something went wrong while subscribing to your pinned buses. Please unpin and repin them.");
-                    }
+                    }).then((response) => __awaiter(this, void 0, void 0, function* () {
+                        if (response.ok) {
+                            console.log(yield response.text());
+                        }
+                        else {
+                            console.log("error!" + response.status);
+                            alert("Something went wrong while subscribing to your pinned buses. Please unpin and repin them.");
+                        }
+                    }));
                 }
                 // all is well - remove the button
                 (_b = document.getElementById("notif-container")) === null || _b === void 0 ? void 0 : _b.remove();

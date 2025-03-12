@@ -47,7 +47,7 @@ io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, f
             nextWave: yield Bus.find({ status: "Next Wave" }),
             loading: yield Bus.find({ status: "Loading" }),
             isLocked: false,
-            leavingAt: new Date()
+            leavingAt: new Date(),
         };
         data.isLocked = (yield Wave.findOne({})).locked;
         data.leavingAt = (yield Wave.findOne({})).leavingAt;
@@ -77,6 +77,10 @@ app.use("/css", express_1.default.static(path_1.default.resolve(__dirname, "stat
 app.use("/js", express_1.default.static(path_1.default.resolve(__dirname, "static/ts")));
 app.use("/img", express_1.default.static(path_1.default.resolve(__dirname, "static/img")));
 app.use('/html', express_1.default.static(path_1.default.resolve(__dirname, "static/html")));
+// custom 404 page - must come after all other instances of "app.use"
+app.all('*', (req, res) => {
+    res.status(404).render('404', { url: req.url });
+});
 (0, weatherController_1.startWeather)(io);
 var now = new Date();
 var milliSecondsUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 0, 0, 0).getTime() - now.getTime();
