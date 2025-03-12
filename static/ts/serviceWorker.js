@@ -9,13 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 self.addEventListener('push', (e) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(e.data);
     const data = e.data.json();
     const tmp = self;
     const promiseChain = tmp.registration.showNotification(data.title, {
         body: data.body,
         icon: data.icon,
-        click_action: "/",
         badge: "/img/busapp-badge.png"
     });
     yield e.waitUntil(promiseChain);
