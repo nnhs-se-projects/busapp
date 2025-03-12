@@ -189,7 +189,7 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
                 web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus Just Left!',
                     body: `Bus number ${bus.busNumber} just left.`,
-                    icon: "/img/Icon-New-512.png"
+                    icon: "/img/Icon-New-512-any.png"
                 })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
@@ -221,7 +221,7 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
                 web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus is Here!',
                     body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds`,
-                    icon: "/img/Icon-New-512.png"
+                    icon: "/img/Icon-New-512-any.png"
                 })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
