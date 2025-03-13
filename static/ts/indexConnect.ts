@@ -93,7 +93,6 @@ async function pinBus(button: HTMLInputElement) { // pins the bus when the user 
     const busNumber = busRow!.firstElementChild!.innerHTML; // this is the stringification of the number of the bus
 
     var removing = false;
-
     const num = parseInt(busNumber); // this is the number of the bus
 
     // subscribe to the bus
@@ -152,6 +151,16 @@ async function pinBus(button: HTMLInputElement) { // pins the bus when the user 
     }
 
     updateTables();
+
+    if(localStorage.getItem("pushObject")) {
+        fetch("/subscribe", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing}),
+        });
+    }
 }
 
 

@@ -204,6 +204,22 @@ router.post("/sendWave", async (req: Request, res: Response) => {
         });
     }
 
+    if(!(null === await Wave.findOne({locked: true})))(await Bus.find({status: "Loading"})).forEach(async (bus) => {
+        (await Subscription.find({bus: bus.busNumber})).forEach(async (sub) => {
+            try {
+                await webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
+                    title: 'Your Bus Just Left!',
+                    body: `Bus number ${bus.busNumber} just left.`,
+                    icon: "/img/busAppIcon.png"
+                }));
+            } catch(e) {
+                if(typeof(e) == webpush.WebPushError && (<webpush.WebPushError>e).statusCode === 410) {
+                    await Subscription.findByIdAndDelete(sub._id);
+                }
+            }
+        });
+    })
+
     await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
     await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
     await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
