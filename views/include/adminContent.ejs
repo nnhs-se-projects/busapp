@@ -110,6 +110,7 @@
                         <p onclick="addToNextWave(this)" class="button-text">Add Next</p>
                     <% } else { %>
                         <p onclick="addToWave(this)" class="button-text">Add Current</p>
+                        <% updateBusMap.nextWave.push(data.allBuses[i].number) %>
                     <% } %>
                 </td>
                 

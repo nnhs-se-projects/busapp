@@ -481,5 +481,5 @@ router.post("/updateBusMap", async (req: Request, res: Response) => {
     }
  
     // await Bus.findOneAndUpdate({}, {nextWave, lots, currentWave}, {upsert: true});
-    res.redirect("/admin");
+    res.redirect("/");
 });

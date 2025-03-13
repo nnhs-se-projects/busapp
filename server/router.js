@@ -440,6 +440,6 @@ exports.router.post("/updateBusMap", (req, res) => __awaiter(void 0, void 0, voi
         return;
     }
     // await Bus.findOneAndUpdate({}, {nextWave, lots, currentWave}, {upsert: true});
-    res.redirect("/admin");
+    res.redirect("/");
 }));
 //# sourceMappingURL=router.js.map
