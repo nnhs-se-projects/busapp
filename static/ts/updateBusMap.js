@@ -8,7 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-let beans = document.getElementsByClassName("test");
+let nextWave = [];
+let lots = [];
+let currentWave = [];
+const addNext = (bus) => {
+    nextWave.push(bus);
+};
+const addLots = (bus) => {
+    lots.push(bus);
+};
+const addCurrent = (bus) => {
+    currentWave.push(bus);
+};
 function saveMap() {
     return __awaiter(this, void 0, void 0, function* () {
         // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
@@ -19,11 +30,13 @@ function saveMap() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                beans: beans
+                nextWave: nextWave,
+                lots: lots,
+                currentWave: currentWave
             })
         });
         updateBusMap();
-        window.location.assign("/");
+        window.location.assign("/admin");
     });
 }
 //# sourceMappingURL=updateBusMap.js.map

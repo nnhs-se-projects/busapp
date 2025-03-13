@@ -2,11 +2,17 @@ let nextWave: any[] = [];
 let lots: any[] = [];
 let currentWave: any[] = [];
 
-let addNext = (bus) => {
+const addNext = (bus) => {
     nextWave.push(bus);
 }
 
+const addLots = (bus) => {
+    lots.push(bus);
+}
 
+const addCurrent = (bus) => {
+    currentWave.push(bus);
+}
 
 async function saveMap() {
     // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
@@ -26,5 +32,5 @@ async function saveMap() {
     });
 
     updateBusMap();
-    window.location.assign("/");
+    window.location.assign("/admin");
 }
