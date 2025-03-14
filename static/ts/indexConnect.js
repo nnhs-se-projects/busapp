@@ -28,7 +28,8 @@ indexSocket.on("update", (data) => {
     });
     countDownDate = new Date(data.leavingAt);
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data, announcement: data.announcement });
-    document.getElementById("content").innerHTML = html;
+    // document.getElementById("content")!.innerHTML = html;
+    document.getElementById("announcement-text").innerText = data.announcement;
     updateTables();
     setIndicatorStatus(lastStatus);
 });
@@ -77,6 +78,7 @@ function updateTables() {
 }
 function updatePins() {
     const pinString = localStorage.getItem("pins"); // retrieves "pins" item
+    document.getElementsByClassName("pinned-bus-table");
     pins = [];
     if (pinString != null) {
         let pinArrayString = pinString.split(", ");
@@ -87,13 +89,10 @@ function updatePins() {
             }
         }
     }
-    const pinBusHolder = document.getElementById("pin-bus-holder");
     pins.sort();
-    var tmp = "";
+    // var tmp : string = "";
     for (let i = 1; i < pins.length; i++) {
-        tmp += ", " + pins[i];
     }
-    pinBusHolder.textContent = tmp;
 }
 function pinBus(button) {
     return __awaiter(this, void 0, void 0, function* () {

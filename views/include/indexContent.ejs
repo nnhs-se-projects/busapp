@@ -30,21 +30,33 @@
       <!-- <i class="fa-solid fa-bullhorn"></i> -->
       <h3>Announcements:</h3>
       <hr>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum euismod nunc felis, id semper nulla feugiat sed. </p>
+      <p id="announcement-text"><%= announcement %></p>
   </div>
 </div>
 
-<div class="nav-item d-flex justify-content-center w-100 dropdown-center mt-1">
-  <button class="dropdown-toggle ms-2" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside" aria-expanded="false">
-  <i class="fa-solid fa-thumbtack"></i> 
-  </button>
-  <ul class="dropdown-menu">
-    <% for(let i = 0; i < data.buses.length; i++) { %> 
-        <li class = "bus-row p-1 text-center">
-            <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
-        </li>
-    <% } %> 
-  </ul>
+<div class="content-container nav-item container-fluid text-center mt-1">
+  <div class="row justify-content-center dropdown-center">
+    <button class="dropdown-toggle" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false">
+    <i class="fa-solid fa-thumbtack"></i> 
+    </button>
+    <ul class="dropdown-menu">
+      <% for(let i = 0; i < data.buses.length; i++) { %> 
+          <li class = "bus-row p-1 text-center">
+              <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
+          </li>
+      <% } %> 
+    </ul>
+  </div>
+  <div class="row justify-content-center">
+    <table class="pinned-bus-table">
+      <thead>
+          <th>Bus #</th>
+          <th>Status</th>
+          <th>Pin</th>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 

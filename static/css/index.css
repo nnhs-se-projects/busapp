@@ -60,13 +60,14 @@ body {
     border-bottom: none; 
 }
 
-button {
+button:not(.navbar-toggler) {
     border-radius: 5px;
     background-color: var(--giants-orange);
     border: none;
     padding: 5%;
-    padding-left: 30%;
-    padding-right: 30%;
+    /* padding-left: 30%;
+    padding-right: 30%; */
+    width: 80%;
     border-bottom: solid var(--crimson); 
 }
 
@@ -75,7 +76,18 @@ button:active{
     border-bottom: none; 
 }
 
+.dropdown-toggle {
+    padding: 10px;
+    max-width: 90%;
+    margin-bottom: 5px;
+}
+
+.dropdown-toggle:active {
+    margin-top: 3px;
+}
+
 .dropdown-menu {
+    max-width: 90%;
     height: 50vh;
     scrollbar-width: auto;
     overflow: scroll;
@@ -91,6 +103,25 @@ button:active{
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
+    border: solid var(--giants-orange);
+}
+
+.content-container {
+    width: 98%;
+    background-color: var(--space-cadet);
+    /* color: var(--dark-cyan); */
+    color: white;
+    border-radius: 5px;
+    border: solid var(--giants-orange);
+
+    padding: 5px;
+    padding-left: 5px;
+}
+
+.pinned-bus-table {
+    width: 90%;
+    max-width: 90%;
+    border-radius: 5px;
     border: solid var(--giants-orange);
 }
 
@@ -148,18 +179,6 @@ button:active{
     color: #ffffff;
     padding: 2%;
 }
-
-/* #all-bus-table tbody tr:nth-of-type(even) {
-    background-color: #e7e6e6;
-}
-
-#all-bus-table tbody tr:nth-of-type(odd) {
-    background-color: #ffffff;
-}
-
-#pin-bus-table tbody tr {
-    background-color: #ffffff;
-} */
 
 .timer-box {
     display: flex;
@@ -280,23 +299,12 @@ button:active{
         padding: 1%;
     }
     
-    .bus-table {
-        width: 70%;     
-        font-size: 1.5vw;
-    }
-
     .weather-temperature > *{
         padding: 5% 0 0;
     }
 
     .weather-status > *{
         padding: 0 0 3%;
-    }
-
-    .bus-table th,
-    .bus-table td {
-        padding: 0.6% 1%;
-        width: 28%;
     }
 
     .num-col:not(th) {

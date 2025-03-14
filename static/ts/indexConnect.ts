@@ -28,6 +28,7 @@ indexSocket.on("update", (data) => {
 
     const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
     document.getElementById("content")!.innerHTML = html;
+    // document.getElementById("announcement-text")!.innerText = data.announcement;
     updateTables();
     setIndicatorStatus(lastStatus);
 });
@@ -80,6 +81,7 @@ function updateTables() { // updates what rows show on the pinned list and what 
 
 function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
+    document.getElementsByClassName("pinned-bus-table");
     pins = [];
     if (pinString != null) {
         let pinArrayString:string[] = pinString.split(", ");
@@ -88,13 +90,11 @@ function updatePins() { // guess what
             if (!pins.includes(n)) { pins.push(n); }
         }
     }
-    const pinBusHolder = document.getElementById("pin-bus-holder");
     pins.sort();
-    var tmp : string = "";
+    // var tmp : string = "";
     for (let i = 1; i < pins.length; i++) {
-        tmp += ", " + pins[i];
     }
-    pinBusHolder!.textContent = tmp;
+
 }
 
 async function pinBus(button: HTMLButtonElement) { // pins the bus when the user clicks the button
