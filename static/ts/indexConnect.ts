@@ -26,7 +26,7 @@ indexSocket.on("update", (data) => {
 
     countDownDate = new Date(data.leavingAt);
 
-    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
+    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
     document.getElementById("content")!.innerHTML = html;
     updateTables();
     setIndicatorStatus(lastStatus);
@@ -101,10 +101,26 @@ async function pinBus(button: HTMLButtonElement) { // pins the bus when the user
     // const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = button.innerText; // this is the stringification of the number of the bus
     var removing = false;
-
     const num = parseInt(busNumber); // this is the number of the bus
 
-    // subscribe to the bus
+    if (pins.includes(num) == false) {
+        pins.push(num);
+        pins.sort();
+        let newPinString = pins.join(", "); // representation of the pins list as a string
+        localStorage.setItem("pins", newPinString);
+    } else {
+        removing = true;
+        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
+        pins.sort();
+        if (pins.length == 0) {
+            localStorage.removeItem("pins");
+        } else {
+            let newPinString = pins.join(", "); // representation of the pins list as a string
+            localStorage.setItem("pins", newPinString);
+        }
+    }
+
+    // subscribe to the bus (or unsubscribe)
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // change pin icon to loading
         // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
@@ -142,26 +158,8 @@ async function pinBus(button: HTMLButtonElement) { // pins the bus when the user
         }
     }
 
-    if (pins.includes(num) == false) {
-        pins.push(num);
-        pins.sort();
-        let newPinString = pins.join(", "); // representation of the pins list as a string
-        localStorage.setItem("pins", newPinString);
-    } else {
-        removing = true;
-        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
-        pins.sort();
-        if (pins.length == 0) {
-            localStorage.removeItem("pins");
-        } else {
-            let newPinString = pins.join(", "); // representation of the pins list as a string
-            localStorage.setItem("pins", newPinString);
-        }
-    }
-
     updateTables();
 }
-
 
 function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
     let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");

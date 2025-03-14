@@ -56,14 +56,14 @@ exports.router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function
         buses: yield (0, jsonHandler_1.getBuses)(), weather: yield Weather.findOne({}),
         isLocked: false,
         leavingAt: new Date(),
-        vapidPublicKey
+        vapidPublicKey,
+        announcement: (yield Announcement.findOne({})).announcement
     };
     data.isLocked = (yield Wave.findOne({})).locked;
     data.leavingAt = (yield Wave.findOne({})).leavingAt;
     res.render("index", {
         data: data,
-        render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/include/indexContent.ejs")),
-        announcement: (yield Announcement.findOne({})).announcement
+        render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/include/indexContent.ejs"))
     });
 }));
 // tv route
@@ -81,30 +81,38 @@ exports.router.get("/login", (req, res) => {
 });
 // Authenticates the user
 exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     let token = req.body.token; // Gets token from request body
     let ticket = yield oAuth2.verifyIdToken({
         idToken: token,
         audience: CLIENT_ID
     });
     req.session.userEmail = ticket.getPayload().email; // Store email in session
+    req.session.isAdmin = Boolean(yield Admin.findOne({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
     res.status(201).end();
 }));
-// Checks if the user's email is in the whitelist and authorizes accordingly
-function authorize(req) {
-    var _a;
+// check the login, return false if user cannot continue and true if user can.
+// renders appropriate login or unauthorized page accordingly
+function checkLogin(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        req.session.isAdmin = Boolean(yield Admin.findOne({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
+        if (!req.session.userEmail) {
+            res.redirect("/login");
+            return false;
+        }
+        if (req.session.isAdmin === false) {
+            res.render("unauthorized");
+            return false;
+        }
+        return true;
     });
 }
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
 exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
-    // Authorizes user, then either displays admin page or unauthorized page
     let data = {
         allBuses: yield (0, jsonHandler_1.getBuses)(),
         nextWave: yield Bus.find({ status: "Next Wave" }),
@@ -115,16 +123,10 @@ exports.router.get("/admin", (req, res) => __awaiter(void 0, void 0, void 0, fun
     };
     data.isLocked = (yield Wave.findOne({})).locked;
     data.leavingAt = (yield Wave.findOne({})).leavingAt;
-    yield authorize(req);
-    if (req.session.isAdmin) {
-        res.render("admin", {
-            data: data,
-            render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/include/adminContent.ejs")),
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("admin", {
+        data: data,
+        render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/include/adminContent.ejs")),
+    });
 }));
 // https://save418.com/ 
 exports.router.get("/teapot", (req, res) => { res.sendStatus(418); });
@@ -140,11 +142,15 @@ exports.router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0
     const rm = req.body.remove;
     if (rm) {
         (yield Subscription.find({ subscription, bus: num })).forEach((e) => __awaiter(void 0, void 0, void 0, function* () { return yield Subscription.findByIdAndDelete(e._id); }));
+        res.send("success!");
+    }
+    else if (!(yield Subscription.findOne({ subscription, bus: num }))) {
+        yield Subscription.create({ subscription, bus: num });
+        res.send("success!");
     }
     else {
-        yield Subscription.create({ subscription, bus: num });
+        res.send("Duplicate, pin request ignored");
     }
-    res.send("success!");
 }));
 exports.router.get("/waveStatus", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the wave status from the wave schema
@@ -152,8 +158,8 @@ exports.router.get("/waveStatus", (req, res) => __awaiter(void 0, void 0, void 0
     res.send(wave.locked);
 }));
 exports.router.post("/updateBusChange", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     let busNumber = req.body.number;
@@ -163,8 +169,8 @@ exports.router.post("/updateBusChange", (req, res) => __awaiter(void 0, void 0, 
     res.send("success");
 }));
 exports.router.post("/updateBusStatus", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     let busNumber = req.body.number;
@@ -174,10 +180,13 @@ exports.router.post("/updateBusStatus", (req, res) => __awaiter(void 0, void 0, 
     res.send("success");
 }));
 exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
+    yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
+    yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
+    yield Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
     // find the wave
     if (!(null === (yield Wave.findOne({ locked: true })))) {
         // find the buses and iterate over them
@@ -187,7 +196,7 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
                 web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus Just Left!',
                     body: `Bus number ${bus.busNumber} just left.`,
-                    icon: "/img/Icon-New-512.png"
+                    icon: "/img/Icon-New-512-any.png"
                 })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
@@ -197,14 +206,12 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
             });
         }));
     }
-    yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
-    yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
-    yield Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
+    ;
     res.send("success");
 }));
 exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     yield Wave.findOneAndUpdate({}, { locked: !(yield Wave.findOne({})).locked }, { upsert: true });
@@ -219,7 +226,7 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
                 web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus is Here!',
                     body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer / 60)} minutes and ${timer % 60} seconds`,
-                    icon: "/img/Icon-New-512.png"
+                    icon: "/img/Icon-New-512-any.png"
                 })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                     if ([410, 400, 403, 401].includes(e.statusCode)) {
@@ -229,11 +236,12 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
             });
         }));
     }
+    ;
     res.send("success");
 }));
 exports.router.post("/setTimer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     var tmpTimer = Number(req.body.minutes) * 60;
@@ -243,16 +251,21 @@ exports.router.post("/setTimer", (req, res) => __awaiter(void 0, void 0, void 0,
     timer = tmpTimer;
     res.send("success");
 }));
-exports.router.get("/getTimer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send(JSON.stringify({ minutes: timer / 60 }));
-}));
+/*
+// I think this did not exist previously... I added it as an extremely inefficient fix to a minor bug.
+// I have since implemented a better solution but I connot remember if anything else used it
+// Leaving but commented in case theres a thing that still uses it that I forgot
+router.get("/getTimer", async (req: Request, res: Response) => {
+    res.send(JSON.stringify({minutes: timer/60}));
+});
+*/
 exports.router.get("/leavingAt", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const leavingAt = (yield Wave.findOne({})).leavingAt;
     res.send(leavingAt);
 }));
 exports.router.post("/resetAllBusses", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     yield Bus.updateMany({}, { $set: { status: "" } });
@@ -261,91 +274,42 @@ exports.router.post("/resetAllBusses", (req, res) => __awaiter(void 0, void 0, v
 exports.router.get("/beans", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.sendFile(path_1.default.resolve(__dirname, "../static/img/beans.jpg"));
 }));
-// old manifest, leaving it because im not sure if anything still uses it?
-// EDIT: commenting this out because I cannot find anything that uses it and having 2 manifest files is cause for confusion
-/*router.get("/manifest.webmanifest", (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, "../data/manifest.webmanifest"))
-});*/
-// new manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
+// manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
+// not serving in static because iirc it is necessary to have it at the root for scope reasons
 exports.router.get("/manifest.json", (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, "../data/manifest.json"));
 });
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
 exports.router.get("/updateBusList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
-    // Authorizes user, then either displays admin page or unauthorized page
     // get all the bus numbers of all the buses from the database and make a list of them
     const busList = yield Bus.find().distinct("busNumber");
     let data = { busList: busList };
-    yield authorize(req);
-    if (req.session.isAdmin) {
-        res.render("updateBusList", {
-            data: data
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("updateBusList", { data: data });
 }));
 exports.router.get("/makeAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
-    // Authorizes user, then either displays admin page or unauthorized page
-    yield authorize(req);
-    if (req.session.isAdmin) {
-        res.render("makeAnnouncement", {
-            currentAnnouncement: (yield Announcement.findOne({})).announcement,
-            currentTvAnnouncement: (yield Announcement.findOne({})).tvAnnouncement
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("makeAnnouncement", {
+        currentAnnouncement: (yield Announcement.findOne({})).announcement,
+        currentTvAnnouncement: (yield Announcement.findOne({})).tvAnnouncement
+    });
 }));
 exports.router.get('/whitelist', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
-    // Authorizes user, then either displays admin page or unauthorized page
-    yield authorize(req);
-    if (req.session.isAdmin) {
-        res.render("updateWhitelist", {
-            whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email).reverse() }
-        });
-    }
-    else {
-        res.render("unauthorized");
-    }
+    res.render("updateWhitelist", {
+        whitelist: { admins: (yield Admin.find({}).exec()).map((e) => e.Email).reverse() }
+    });
 }));
-// TODO: remove this, I think it's no longer used for anything and it just straight up crashes the server
-/*
-router.get('/updateWhitelist', (req: Request,res: Response)=>{
-    // If user is not authenticated (email is not is session) redirects to login page
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
-    
-    // Authorizes user, then either displays admin page or unauthorized page
-    await authorize(req);
-    if (req.session.isAdmin) {
-        res.render("updateWhitelist");
-    }
-    else {
-        res.render("unauthorized");
-    }
-})
-*/
 exports.router.get("/updateBusListEmptyRow", (req, res) => {
     res.sendFile(path_1.default.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
 });
@@ -358,13 +322,16 @@ exports.router.get("/adminEmptyRow", (req, res) => {
 exports.router.get("/busList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.type("json").send(yield Bus.find().distinct("busNumber"));
 }));
-//TODO: consult if we want this to be publically accessible or not, idk why it would need to be anyway
 exports.router.get("/getWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
+        return;
+    }
     res.type("json").send((yield Admin.find({}).exec()).map((e) => e.Email).reverse());
 }));
 exports.router.post("/updateBusList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     // use the posted bus list to update the database, removing any buses that are not in the list, and adding any buses that are in the list but not in the database
@@ -397,12 +364,17 @@ exports.router.get('/help', (req, res) => {
     res.render('help');
 });
 exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    var _b;
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     const adminExists = yield Admin.findOne({ Email: req.body.admin.toLowerCase() }).exec();
     if (adminExists) {
+        if (((_b = req.session.userEmail) === null || _b === void 0 ? void 0 : _b.toLowerCase()) === req.body.admin.toLowerCase()) {
+            res.status(409).send("Refusing to remove email of admin currently logged in");
+            return;
+        }
         yield Admin.findByIdAndDelete(adminExists._id);
     }
     else {
@@ -411,16 +383,16 @@ exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, 
     res.send("success!");
 }));
 exports.router.post("/submitAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     yield Announcement.findOneAndUpdate({}, { announcement: req.body.announcement, tvAnnouncement: req.body.tvAnnouncement }, { upsert: true });
     res.redirect("/admin");
 }));
 exports.router.post("/clearAnnouncement", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
+    // Check if user is logged in and is an admin
+    if (!(yield checkLogin(req, res))) {
         return;
     }
     yield Announcement.findOneAndUpdate({}, { announcement: "" }, { upsert: true });

@@ -27,9 +27,10 @@ indexSocket.on("update", (data) => {
             bus.time = new Date(bus.time);
     });
     countDownDate = new Date(data.leavingAt);
-    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data, announcement: data.announcement });
-    // document.getElementById("content")!.innerHTML = html;
-    document.getElementById("announcement-text").innerText = data.announcement;
+
+    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data });
+    document.getElementById("content").innerHTML = html;
+
     updateTables();
     setIndicatorStatus(lastStatus);
 });
@@ -101,7 +102,25 @@ function pinBus(button) {
         const busNumber = button.innerText; // this is the stringification of the number of the bus
         var removing = false;
         const num = parseInt(busNumber); // this is the number of the bus
-        // subscribe to the bus
+        if (pins.includes(num) == false) {
+            pins.push(num);
+            pins.sort();
+            let newPinString = pins.join(", "); // representation of the pins list as a string
+            localStorage.setItem("pins", newPinString);
+        }
+        else {
+            removing = true;
+            pins = pins.filter(function notNum(n) { return n != num; }); // this is how you remove elements in js arrays. pain
+            pins.sort();
+            if (pins.length == 0) {
+                localStorage.removeItem("pins");
+            }
+            else {
+                let newPinString = pins.join(", "); // representation of the pins list as a string
+                localStorage.setItem("pins", newPinString);
+            }
+        }
+        // subscribe to the bus (or unsubscribe)
         if (localStorage.getItem("pushObject") && Notification.permission === "granted") {
             // change pin icon to loading
             // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
@@ -140,24 +159,6 @@ function pinBus(button) {
             finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
                 // button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
                 // button.querySelector("i")!.classList.add("fa-thumbtack");
-            }
-        }
-        if (pins.includes(num) == false) {
-            pins.push(num);
-            pins.sort();
-            let newPinString = pins.join(", "); // representation of the pins list as a string
-            localStorage.setItem("pins", newPinString);
-        }
-        else {
-            removing = true;
-            pins = pins.filter(function notNum(n) { return n != num; }); // this is how you remove elements in js arrays. pain
-            pins.sort();
-            if (pins.length == 0) {
-                localStorage.removeItem("pins");
-            }
-            else {
-                let newPinString = pins.join(", "); // representation of the pins list as a string
-                localStorage.setItem("pins", newPinString);
             }
         }
         updateTables();

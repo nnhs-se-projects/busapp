@@ -1,3 +1,5 @@
+
+
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
@@ -21,6 +23,9 @@ function setIndicatorStatus(stat : string) {
         document.body.style.overflow = "hidden";
         blocker?.classList.add("shown");
     }
+    if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
+        window.location.reload();
+    }
     lastStatus = stat;
 }
 
@@ -29,10 +34,10 @@ function setIndicatorStatus(stat : string) {
 async function checkNetworkConnectivity() {
     try {
         var ping = performance.now();
-        const response = await fetch("/getConnectivity");
+        const response = await fetch("/getConnectivity", {cache: "no-store"});
         ping = performance.now() - ping;
         if(response.ok) {
-            if(ping < 550) { return "connected"; }
+            if(ping < 450) { return "connected"; }
             return "slow";
         }
     } catch(e) {
@@ -56,4 +61,4 @@ async function checkAndChange() {
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
 checkAndChange();
-setInterval(checkAndChange, 8000);
+setInterval(checkAndChange, 10000); // check connection every 10 seconds
