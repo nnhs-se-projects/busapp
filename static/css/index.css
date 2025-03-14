@@ -121,6 +121,10 @@ button:active{
 .pinned-bus-table {
     width: 90%;
     max-width: 90%;
+    border-collapse: separate;
+}
+
+td {
     border-radius: 5px;
     border: solid var(--giants-orange);
 }

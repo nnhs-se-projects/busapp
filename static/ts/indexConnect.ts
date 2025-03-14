@@ -26,9 +26,9 @@ indexSocket.on("update", (data) => {
 
     countDownDate = new Date(data.leavingAt);
 
-    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
+    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
     document.getElementById("content")!.innerHTML = html;
-    updateTables();
+    updatePins();
     setIndicatorStatus(lastStatus);
 });
 
@@ -73,54 +73,39 @@ function updateTables() { // updates what rows show on the pinned list and what 
     //         button!.style.backgroundColor = "#327fa8";
     //     }
     // }
-
     try { removeNotifButton(); }// comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
     catch(e) {}
 }
 
 function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
-    document.getElementsByClassName("pinned-bus-table");
     pins = [];
     if (pinString != null) {
         let pinArrayString:string[] = pinString.split(", ");
         for (let i = 0; i < pinArrayString.length; i++) {
             let n = parseInt(pinArrayString[i]);
+            // I'm going to leave this in here, but I don't know why we should need to check for duplicates there should never be any duplicates of busses
             if (!pins.includes(n)) { pins.push(n); }
         }
     }
-    pins.sort();
-    // var tmp : string = "";
-    for (let i = 1; i < pins.length; i++) {
-    }
 
+    var tableBody = document.getElementsByClassName("pinned-bus-table")[0].getElementsByTagName("tbody")[0];
+    // var tmp : string = "";
+    tableBody.innerHTML = ""; 
+    for (let i = 0; i < pins.length; i++) {
+        tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='status-col' colspan='5'>Loading...";
+    }
 }
 
 async function pinBus(button: HTMLButtonElement) { // pins the bus when the user clicks the button
-    updatePins();
+    // updatePins();
     // const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = button.innerText; // this is the stringification of the number of the bus
     var removing = false;
+
     const num = parseInt(busNumber); // this is the number of the bus
 
-    if (pins.includes(num) == false) {
-        pins.push(num);
-        pins.sort();
-        let newPinString = pins.join(", "); // representation of the pins list as a string
-        localStorage.setItem("pins", newPinString);
-    } else {
-        removing = true;
-        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
-        pins.sort();
-        if (pins.length == 0) {
-            localStorage.removeItem("pins");
-        } else {
-            let newPinString = pins.join(", "); // representation of the pins list as a string
-            localStorage.setItem("pins", newPinString);
-        }
-    }
-
-    // subscribe to the bus (or unsubscribe)
+    // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // change pin icon to loading
         // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
@@ -156,21 +141,42 @@ async function pinBus(button: HTMLButtonElement) { // pins the bus when the user
             // button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
             // button.querySelector("i")!.classList.add("fa-thumbtack");
         }
+
     }
+
+    if (pins.includes(num) == false) {
+        pins.push(num);
+        pins.sort();
+        let newPinString = pins.join(", "); // representation of the pins list as a string
+        localStorage.setItem("pins", newPinString);
+    } else {
+        removing = true;
+        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
+        pins.sort();
+        if (pins.length == 0) {
+            localStorage.removeItem("pins");
+        } else {
+            let newPinString = pins.join(", "); // representation of the pins list as a string
+            localStorage.setItem("pins", newPinString);
+        }
+    }
+    
+    updatePins();
 
     updateTables();
 }
 
-function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
-    let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
-    let fullRows = tableFull.rows;
-    for (let i = 2; i < fullRows.length; i++) {
-        let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
-        if (n === number) {
-            return fullRows[i];
-        }
-    }
-}
+
+// function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
+//     let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
+//     let fullRows = tableFull.rows;
+//     for (let i = 2; i < fullRows.length; i++) {
+//         let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
+//         if (n === number) {
+//             return fullRows[i];
+//         }
+//     }
+// }
 
 // Set the date we're counting down to
 fetch('/leavingAt')
