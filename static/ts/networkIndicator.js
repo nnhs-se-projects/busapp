@@ -32,6 +32,9 @@ function setIndicatorStatus(stat) {
         document.body.style.overflow = "hidden";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.add("shown");
     }
+    if ((stat === "slow" || stat === "connected") && lastStatus === "offline") {
+        window.location.reload();
+    }
     lastStatus = stat;
 }
 // sends a sort of ping to the server, and evaluates connection status based on latency and whether the request failed
@@ -73,5 +76,5 @@ function checkAndChange() {
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
 checkAndChange();
-setInterval(checkAndChange, 8000);
+setInterval(checkAndChange, 10000); // check connection every 10 seconds
 //# sourceMappingURL=networkIndicator.js.map

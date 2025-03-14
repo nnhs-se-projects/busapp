@@ -13,6 +13,7 @@ const connectDB = require("./server/database/connection");
 const Bus = require("./server/model/bus");
 const Wave = require("./server/model/wave");
 const Weather = require("./server/model/weather");
+const Announcement = require("./server/model/announcement");
 
 const app: Application = express();
 const httpServer = createServer(app);
@@ -59,7 +60,8 @@ io.of("/admin").on("connection", async (socket) => {
             buses: (await readData()).buses,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
-            weather: await Weather.findOne({})
+            weather: await Weather.findOne({}),
+            announcement: (await Announcement.findOne({})).announcement
         }
         
         io.of("/admin").emit("update", data);
@@ -72,7 +74,7 @@ io.of("/admin").on("connection", async (socket) => {
 
 app.set("view engine", "ejs"); // Allows res.render() to render ejs
 app.use(session({
-    secret: "KQdqLPDjaGUWPXFKZrEGYYANxsxPvFMwGYpAtLjCCcN",
+    secret: require('crypto').randomBytes(48).toString('base64'),
     resave: true,
     saveUninitialized: true
 })); // Allows use of req.session

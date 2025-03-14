@@ -56,14 +56,14 @@ exports.router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function
         buses: yield (0, jsonHandler_1.getBuses)(), weather: yield Weather.findOne({}),
         isLocked: false,
         leavingAt: new Date(),
-        vapidPublicKey
+        vapidPublicKey,
+        announcement: (yield Announcement.findOne({})).announcement
     };
     data.isLocked = (yield Wave.findOne({})).locked;
     data.leavingAt = (yield Wave.findOne({})).leavingAt;
     res.render("index", {
         data: data,
-        render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/include/indexContent.ejs")),
-        announcement: (yield Announcement.findOne({})).announcement
+        render: fs_1.default.readFileSync(path_1.default.resolve(__dirname, "../views/include/indexContent.ejs"))
     });
 }));
 // tv route
@@ -81,24 +81,24 @@ exports.router.get("/login", (req, res) => {
 });
 // Authenticates the user
 exports.router.post("/auth/v1/google", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     let token = req.body.token; // Gets token from request body
     let ticket = yield oAuth2.verifyIdToken({
         idToken: token,
         audience: CLIENT_ID
     });
     req.session.userEmail = ticket.getPayload().email; // Store email in session
+    req.session.isAdmin = Boolean(yield Admin.findOne({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
     res.status(201).end();
 }));
 // check the login, return false if user cannot continue and true if user can.
 // renders appropriate login or unauthorized page accordingly
 function checkLogin(req, res) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         if (!req.session.userEmail) {
             res.redirect("/login");
             return false;
         }
-        req.session.isAdmin = Boolean(yield Admin.findOne({ Email: (_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase() }));
         if (req.session.isAdmin === false) {
             res.render("unauthorized");
             return false;
@@ -142,11 +142,15 @@ exports.router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0
     const rm = req.body.remove;
     if (rm) {
         (yield Subscription.find({ subscription, bus: num })).forEach((e) => __awaiter(void 0, void 0, void 0, function* () { return yield Subscription.findByIdAndDelete(e._id); }));
+        res.send("success!");
+    }
+    else if (!(yield Subscription.findOne({ subscription, bus: num }))) {
+        yield Subscription.create({ subscription, bus: num });
+        res.send("success!");
     }
     else {
-        yield Subscription.create({ subscription, bus: num });
+        res.send("Duplicate, pin request ignored");
     }
-    res.send("success!");
 }));
 exports.router.get("/waveStatus", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the wave status from the wave schema
@@ -180,6 +184,9 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
     if (!(yield checkLogin(req, res))) {
         return;
     }
+    yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
+    yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
+    yield Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
     // find the wave
     if (!(null === (yield Wave.findOne({ locked: true })))) {
         // find the buses and iterate over them
@@ -199,9 +206,7 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
             });
         }));
     }
-    yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
-    yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
-    yield Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
+    ;
     res.send("success");
 }));
 exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -231,6 +236,7 @@ exports.router.post("/lockWave", (req, res) => __awaiter(void 0, void 0, void 0,
             });
         }));
     }
+    ;
     res.send("success");
 }));
 exports.router.post("/setTimer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -245,9 +251,14 @@ exports.router.post("/setTimer", (req, res) => __awaiter(void 0, void 0, void 0,
     timer = tmpTimer;
     res.send("success");
 }));
-exports.router.get("/getTimer", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send(JSON.stringify({ minutes: timer / 60 }));
-}));
+/*
+// I think this did not exist previously... I added it as an extremely inefficient fix to a minor bug.
+// I have since implemented a better solution but I connot remember if anything else used it
+// Leaving but commented in case theres a thing that still uses it that I forgot
+router.get("/getTimer", async (req: Request, res: Response) => {
+    res.send(JSON.stringify({minutes: timer/60}));
+});
+*/
 exports.router.get("/leavingAt", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const leavingAt = (yield Wave.findOne({})).leavingAt;
     res.send(leavingAt);
@@ -275,7 +286,6 @@ exports.router.get("/updateBusList", (req, res) => __awaiter(void 0, void 0, voi
     if (!(yield checkLogin(req, res))) {
         return;
     }
-    // Authorizes user, then either displays admin page or unauthorized page
     // get all the bus numbers of all the buses from the database and make a list of them
     const busList = yield Bus.find().distinct("busNumber");
     let data = { busList: busList };
@@ -354,14 +364,14 @@ exports.router.get('/help', (req, res) => {
     res.render('help');
 });
 exports.router.post("/updateWhitelist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
+    var _b;
     // Check if user is logged in and is an admin
     if (!(yield checkLogin(req, res))) {
         return;
     }
     const adminExists = yield Admin.findOne({ Email: req.body.admin.toLowerCase() }).exec();
     if (adminExists) {
-        if (((_a = req.session.userEmail) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === req.body.admin.toLowerCase()) {
+        if (((_b = req.session.userEmail) === null || _b === void 0 ? void 0 : _b.toLowerCase()) === req.body.admin.toLowerCase()) {
             res.status(409).send("Refusing to remove email of admin currently logged in");
             return;
         }
