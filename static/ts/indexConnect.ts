@@ -28,7 +28,6 @@ indexSocket.on("update", (data) => {
 
     const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
     document.getElementById("content")!.innerHTML = html;
-    // document.getElementById("announcement-text")!.innerText = data.announcement;
     updateTables();
     setIndicatorStatus(lastStatus);
 });
