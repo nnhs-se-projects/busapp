@@ -142,11 +142,15 @@ exports.router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0
     const rm = req.body.remove;
     if (rm) {
         (yield Subscription.find({ subscription, bus: num })).forEach((e) => __awaiter(void 0, void 0, void 0, function* () { return yield Subscription.findByIdAndDelete(e._id); }));
+        res.send("success!");
+    }
+    else if (!(yield Subscription.findOne({ subscription, bus: num }))) {
+        yield Subscription.create({ subscription, bus: num });
+        res.send("success!");
     }
     else {
-        yield Subscription.create({ subscription, bus: num });
+        res.send("Duplicate, pin request ignored");
     }
-    res.send("success!");
 }));
 exports.router.get("/waveStatus", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the wave status from the wave schema
@@ -199,6 +203,23 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
             });
         }));
     }
+    if (!(null === (yield Wave.findOne({ locked: true }))))
+        (yield Bus.find({ status: "Loading" })).forEach((bus) => __awaiter(void 0, void 0, void 0, function* () {
+            (yield Subscription.find({ bus: bus.busNumber })).forEach((sub) => __awaiter(void 0, void 0, void 0, function* () {
+                try {
+                    yield web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
+                        title: 'Your Bus Just Left!',
+                        body: `Bus number ${bus.busNumber} just left.`,
+                        icon: "/img/busAppIcon.png"
+                    }));
+                }
+                catch (e) {
+                    if (typeof (e) == web_push_1.default.WebPushError && e.statusCode === 410) {
+                        yield Subscription.findByIdAndDelete(sub._id);
+                    }
+                }
+            }));
+        }));
     yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
     yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
     yield Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });

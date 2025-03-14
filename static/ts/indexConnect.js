@@ -155,6 +155,15 @@ function pinBus(button) {
             }
         }
         updateTables();
+        if (localStorage.getItem("pushObject")) {
+            fetch("/subscribe", {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({ busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing }),
+            });
+        }
     });
 }
 function getRow(n) {

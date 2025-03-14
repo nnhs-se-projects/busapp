@@ -145,10 +145,13 @@ router.post("/subscribe", async (req: Request, res: Response) => {
     const rm = req.body.remove;
     if(rm) {
         (await Subscription.find({subscription, bus: num})).forEach(async (e) => await Subscription.findByIdAndDelete(e._id));
+        res.send("success!");
+    } else if(!(await Subscription.findOne({subscription, bus: num}))) {
+        await Subscription.create({subscription, bus: num});
+        res.send("success!");
     } else {
-        await Subscription.create({subscription, bus: num})
+        res.send("Duplicate, pin request ignored");
     }
-    res.send("success!");
 })
 
 router.get("/waveStatus", async (req: Request, res: Response) => {
