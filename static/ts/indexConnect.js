@@ -25,7 +25,7 @@ indexSocket.on("update", (data) => {
             bus.time = new Date(bus.time);
     });
     countDownDate = new Date(data.leavingAt);
-    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data, announcement: data.announcement });
+    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data });
     document.getElementById("content").innerHTML = html;
     updateTables();
     setIndicatorStatus(lastStatus);

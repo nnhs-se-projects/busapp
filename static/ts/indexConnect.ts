@@ -23,7 +23,7 @@ indexSocket.on("update", (data) => {
 
     countDownDate = new Date(data.leavingAt);
 
-    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
+    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
     document.getElementById("content")!.innerHTML = html;
     updateTables();
     setIndicatorStatus(lastStatus);
@@ -152,7 +152,6 @@ async function pinBus(button: HTMLInputElement) { // pins the bus when the user 
 
     updateTables();
 }
-
 
 function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
     let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");

@@ -53,15 +53,15 @@ router.get("/", async (req: Request, res: Response) => {
         buses: await getBuses(), weather: await Weather.findOne({}),
         isLocked: false,
         leavingAt: new Date(),
-        vapidPublicKey
+        vapidPublicKey,
+        announcement: (await Announcement.findOne({})).announcement
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
 
     res.render("index", {
         data: data,
-        render: fs.readFileSync(path.resolve(__dirname, "../views/include/indexContent.ejs")),
-        announcement: (await Announcement.findOne({})).announcement
+        render: fs.readFileSync(path.resolve(__dirname, "../views/include/indexContent.ejs"))
     });
 });
 
@@ -88,6 +88,7 @@ router.post("/auth/v1/google", async (req: Request, res: Response) => {
         audience: CLIENT_ID
     });
     req.session.userEmail = ticket.getPayload()!.email!; // Store email in session
+    req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()}));
     res.status(201).end();
 });
 
@@ -98,7 +99,7 @@ async function checkLogin(req, res) {
         res.redirect("/login");
         return false;
     }
-    req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()}));
+    
     if(req.session.isAdmin === false) {
         res.render("unauthorized");
         return false;
@@ -187,6 +188,10 @@ router.post("/sendWave", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
+    await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
+    await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
+    await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
+
     // find the wave
     if( !(null === await Wave.findOne({locked: true})) ) { 
         // find the buses and iterate over them
@@ -205,28 +210,8 @@ router.post("/sendWave", async (req: Request, res: Response) => {
                 }).then(() => {});
             });
         });
-    }
+    };
 
-    if(!(null === await Wave.findOne({locked: true})))(await Bus.find({status: "Loading"})).forEach(async (bus) => {
-        (await Subscription.find({bus: bus.busNumber})).forEach(async (sub) => {
-            try {
-                await webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
-                    title: 'Your Bus Just Left!',
-                    body: `Bus number ${bus.busNumber} just left.`,
-                    icon: "/img/busAppIcon.png"
-                }));
-            } catch(e) {
-                if(typeof(e) == webpush.WebPushError && (<webpush.WebPushError>e).statusCode === 410) {
-                    await Subscription.findByIdAndDelete(sub._id);
-                }
-            }
-        });
-    })
-
-    await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
-    await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
-    await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
-    
     res.send("success");
 });
 
@@ -256,7 +241,8 @@ router.post("/lockWave", async (req: Request, res: Response) => {
                 }).then(() => {});
             });
         });
-    }
+    };
+
     res.send("success");
 });
 
@@ -272,9 +258,14 @@ router.post("/setTimer", async (req: Request, res: Response) => {
     res.send("success");
 });
 
+/*
+// I think this did not exist previously... I added it as an extremely inefficient fix to a minor bug.
+// I have since implemented a better solution but I connot remember if anything else used it
+// Leaving but commented in case theres a thing that still uses it that I forgot
 router.get("/getTimer", async (req: Request, res: Response) => {
     res.send(JSON.stringify({minutes: timer/60}));
 });
+*/
 
 router.get("/leavingAt", async (req: Request, res: Response) => {
     const leavingAt = (await Wave.findOne({})).leavingAt;
@@ -306,8 +297,6 @@ Reads from data file and displays data */
 router.get("/updateBusList", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
-
-    // Authorizes user, then either displays admin page or unauthorized page
 
     // get all the bus numbers of all the buses from the database and make a list of them
     const busList: string[] = await Bus.find().distinct("busNumber");

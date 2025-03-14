@@ -1,3 +1,5 @@
+
+
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
@@ -20,6 +22,9 @@ function setIndicatorStatus(stat : string) {
         indicator!.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
         document.body.style.overflow = "hidden";
         blocker?.classList.add("shown");
+    }
+    if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
+        window.location.reload();
     }
     lastStatus = stat;
 }
@@ -56,4 +61,4 @@ async function checkAndChange() {
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
 checkAndChange();
-setInterval(checkAndChange, 8000);
+setInterval(checkAndChange, 10000); // check connection every 10 seconds
