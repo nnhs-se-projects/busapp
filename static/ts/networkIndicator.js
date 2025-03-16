@@ -17,19 +17,16 @@ function setIndicatorStatus(stat) {
     if (stat === "connected") {
         indicator.style.backgroundColor = "green";
         indicator.innerHTML = '<i class="fa-solid fa-check"></i>';
-        document.body.style.overflow = "";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.remove("shown");
     }
     else if (stat === "slow") {
         indicator.style.backgroundColor = "yellow";
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        document.body.style.overflow = "";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.remove("shown");
     }
     else if (stat === "offline") {
         indicator.style.backgroundColor = "red";
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        document.body.style.overflow = "hidden";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.add("shown");
     }
     if ((stat === "slow" || stat === "connected") && lastStatus === "offline") {
