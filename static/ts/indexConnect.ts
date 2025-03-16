@@ -23,10 +23,10 @@ indexSocket.on("update", (data) => {
 
     countDownDate = new Date(data.leavingAt);
 
-    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data, announcement: data.announcement});
+    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
     document.getElementById("content")!.innerHTML = html;
     updateTables();
-
+    setIndicatorStatus(lastStatus);
 });
 
 function hideWhatsNew(version: number) {
@@ -87,14 +87,14 @@ function updatePins() { // guess what
     }
 }
 
-function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks the button
+async function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks the button
     updatePins();
     const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = busRow!.firstElementChild!.innerHTML; // this is the stringification of the number of the bus
 
     var removing = false;
-    
     const num = parseInt(busNumber); // this is the number of the bus
+
     if (pins.includes(num) == false) {
         pins.push(num);
         pins.sort();
@@ -111,19 +111,47 @@ function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks
             localStorage.setItem("pins", newPinString);
         }
     }
-    updateTables();
 
-    if(localStorage.getItem("pushObject")) {
-        fetch("/subscribe", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing}),
-        });
+    // subscribe to the bus (or unsubscribe)
+    if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
+        // change pin icon to loading
+        button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
+        button.querySelector("i")!.classList.remove("fa-thumbtack");
+
+        // temporary function to do recursion 'n such
+        async function temp(wait) {
+            try { 
+                const res = await fetch("/subscribe", {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                    body: JSON.stringify({busNumber: num, pushObject: localStorage.getItem("pushObject"), remove: removing}),
+                })
+            } catch {
+                // retry with exponential backoff and recursion
+                if(wait > 5000) {
+                    throw new Error("failed to contact server");
+                }
+                await new Promise(r => setTimeout(r, wait));
+                await temp(wait * 1.2);
+            };
+            return "success";
+        }
+
+        try {
+            console.log(await temp(256))
+        } catch { 
+            alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
+            return; 
+        } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
+            button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
+            button.querySelector("i")!.classList.add("fa-thumbtack");
+        }
     }
-}
 
+    updateTables();
+}
 
 function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
     let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
