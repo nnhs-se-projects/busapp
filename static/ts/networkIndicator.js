@@ -63,6 +63,7 @@ function checkAndChange() {
         const stat = yield checkNetworkConnectivity();
         if (stat === "offline") {
             // double check before blocking stuff
+            yield new Promise(resolve => setTimeout(resolve, 3000));
             if (stat === (yield checkNetworkConnectivity())) {
                 setIndicatorStatus(stat);
             }
