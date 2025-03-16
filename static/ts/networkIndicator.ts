@@ -51,6 +51,7 @@ async function checkAndChange() {
     const stat = await checkNetworkConnectivity()
     if(stat === "offline") {
         // double check before blocking stuff
+        await new Promise(resolve => setTimeout(resolve, 3000));
         if(stat === await checkNetworkConnectivity()) { setIndicatorStatus(stat); }
     } else {
         setIndicatorStatus(stat);
