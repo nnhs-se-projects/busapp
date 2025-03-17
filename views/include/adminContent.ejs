@@ -23,7 +23,7 @@
 <table id="bus-table" class="bus-table">
     <thead>
         <tr colspan="5" style="background-color: #05a1f5; font-size: 160%;">
-            <th colspan="2"><i class="fa fa-star fa-fw"></i> Current Wave</th>
+            <th colspan="2"><i class="fa fa-star fa-fw"></i>Current Wave</th>
             <% if (data.isLocked === true) { %>
                 <th><button class="table-button" onclick="lockWave()">Unlock Wave</button></th>
             <% } %>
@@ -68,7 +68,7 @@
         </tr>
     </thead>
     <tbody id="tbody">
-        <% for(let i = 0; i < data.allBuses.length; i++) { %> 
+        <% for(let i = 0; i < data.allBuses.length; i++) { %>
             <% if (data.allBuses[i].status === 'Next Wave') { %>
                 <tr>
                     <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
@@ -110,7 +110,6 @@
                         <p onclick="addToNextWave(this)" class="button-text">Add Next</p>
                     <% } else { %>
                         <p onclick="addToWave(this)" class="button-text">Add Current</p>
-                        <% updateBusMap.nextWave.push(data.allBuses[i].number) %>
                     <% } %>
                 </td>
                 

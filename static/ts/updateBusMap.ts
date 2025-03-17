@@ -2,6 +2,8 @@ let nextWave: any[] = [];
 let lots: any[] = [];
 let currentWave: any[] = [];
 
+currentWave = JSON.parse(document.getElementsByClassName("test")[0].getAttribute("data-currentwave")!);
+
 const addNext = (bus) => {
     nextWave.push(bus);
 }
@@ -25,8 +27,8 @@ async function saveMap() {
         },
         body: 
         JSON.stringify({
-            nextWave: nextWave,
-            lots: lots,
+            //nextWave: nextWave,
+            // lots: lots,
             currentWave: currentWave
         })
     });
