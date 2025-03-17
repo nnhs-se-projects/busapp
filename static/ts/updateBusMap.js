@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 let nextWave = [];
 let lots = [];
 let currentWave = [];
+nextWave = JSON.parse(document.getElementsByClassName("test")[0].innerHTML);
 const addNext = (bus) => {
     nextWave.push(bus);
 };
@@ -31,8 +32,8 @@ function saveMap() {
             },
             body: JSON.stringify({
                 nextWave: nextWave,
-                lots: lots,
-                currentWave: currentWave
+                // lots: lots,
+                // currentWave: currentWave
             })
         });
         updateBusMap();
