@@ -25,6 +25,7 @@ const connectDB = require("./server/database/connection");
 const Bus = require("./server/model/bus");
 const Wave = require("./server/model/wave");
 const Weather = require("./server/model/weather");
+const Announcement = require("./server/model/announcement");
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(httpServer);
@@ -56,7 +57,8 @@ io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, f
             buses: (yield (0, jsonHandler_1.readData)()).buses,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
-            weather: yield Weather.findOne({})
+            weather: yield Weather.findOne({}),
+            announcement: (yield Announcement.findOne({})).announcement
         };
         io.of("/admin").emit("update", data);
         io.of("/").emit("update", indexData);
@@ -67,7 +69,7 @@ io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, f
 }));
 app.set("view engine", "ejs"); // Allows res.render() to render ejs
 app.use((0, express_session_1.default)({
-    secret: "KQdqLPDjaGUWPXFKZrEGYYANxsxPvFMwGYpAtLjCCcN",
+    secret: require('crypto').randomBytes(48).toString('base64'),
     resave: true,
     saveUninitialized: true
 })); // Allows use of req.session
@@ -77,6 +79,10 @@ app.use("/css", express_1.default.static(path_1.default.resolve(__dirname, "stat
 app.use("/js", express_1.default.static(path_1.default.resolve(__dirname, "static/ts")));
 app.use("/img", express_1.default.static(path_1.default.resolve(__dirname, "static/img")));
 app.use('/html', express_1.default.static(path_1.default.resolve(__dirname, "static/html")));
+// custom 404 page - must come after all other instances of "app.use"
+app.all('*', (req, res) => {
+    res.status(404).render('404', { url: req.url });
+});
 (0, weatherController_1.startWeather)(io);
 var now = new Date();
 var milliSecondsUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 0, 0, 0).getTime() - now.getTime();

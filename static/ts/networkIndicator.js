@@ -17,20 +17,20 @@ function setIndicatorStatus(stat) {
     if (stat === "connected") {
         indicator.style.backgroundColor = "green";
         indicator.innerHTML = '<i class="fa-solid fa-check"></i>';
-        document.body.style.overflow = "";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.remove("shown");
     }
     else if (stat === "slow") {
         indicator.style.backgroundColor = "yellow";
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        document.body.style.overflow = "";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.remove("shown");
     }
     else if (stat === "offline") {
         indicator.style.backgroundColor = "red";
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        document.body.style.overflow = "hidden";
         blocker === null || blocker === void 0 ? void 0 : blocker.classList.add("shown");
+    }
+    if ((stat === "slow" || stat === "connected") && lastStatus === "offline") {
+        window.location.reload();
     }
     lastStatus = stat;
 }
@@ -39,10 +39,10 @@ function checkNetworkConnectivity() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             var ping = performance.now();
-            const response = yield fetch("/getConnectivity");
+            const response = yield fetch("/getConnectivity", { cache: "no-store" });
             ping = performance.now() - ping;
             if (response.ok) {
-                if (ping < 550) {
+                if (ping < 450) {
                     return "connected";
                 }
                 return "slow";
@@ -60,6 +60,7 @@ function checkAndChange() {
         const stat = yield checkNetworkConnectivity();
         if (stat === "offline") {
             // double check before blocking stuff
+            yield new Promise(resolve => setTimeout(resolve, 3000));
             if (stat === (yield checkNetworkConnectivity())) {
                 setIndicatorStatus(stat);
             }
@@ -73,5 +74,5 @@ function checkAndChange() {
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
 checkAndChange();
-setInterval(checkAndChange, 8000);
+setInterval(checkAndChange, 10000); // check connection every 10 seconds
 //# sourceMappingURL=networkIndicator.js.map

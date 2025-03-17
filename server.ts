@@ -13,6 +13,7 @@ const connectDB = require("./server/database/connection");
 const Bus = require("./server/model/bus");
 const Wave = require("./server/model/wave");
 const Weather = require("./server/model/weather");
+const Announcement = require("./server/model/announcement");
 
 const app: Application = express();
 const httpServer = createServer(app);
@@ -59,7 +60,8 @@ io.of("/admin").on("connection", async (socket) => {
             buses: (await readData()).buses,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
-            weather: await Weather.findOne({})
+            weather: await Weather.findOne({}),
+            announcement: (await Announcement.findOne({})).announcement
         }
         
         io.of("/admin").emit("update", data);
@@ -72,7 +74,7 @@ io.of("/admin").on("connection", async (socket) => {
 
 app.set("view engine", "ejs"); // Allows res.render() to render ejs
 app.use(session({
-    secret: "KQdqLPDjaGUWPXFKZrEGYYANxsxPvFMwGYpAtLjCCcN",
+    secret: require('crypto').randomBytes(48).toString('base64'),
     resave: true,
     saveUninitialized: true
 })); // Allows use of req.session
@@ -84,6 +86,11 @@ app.use("/css", express.static(path.resolve(__dirname, "static/css")));
 app.use("/js", express.static(path.resolve(__dirname, "static/ts")));
 app.use("/img", express.static(path.resolve(__dirname, "static/img")));
 app.use('/html', express.static(path.resolve(__dirname, "static/html")));
+
+// custom 404 page - must come after all other instances of "app.use"
+app.all('*', (req, res) => {
+    res.status(404).render('404', {url: req.url});
+});  
 
 startWeather(io);
 

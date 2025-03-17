@@ -354,8 +354,9 @@ li {
     height: 0%;
     transition: height 0.5s;
     color: rgba(200, 200, 200, 0.6);
-    backdrop-filter: grayscale(1) blur(1px) brightness(0.4);
+    backdrop-filter: grayscale(1) brightness(0.7);
     overflow: hidden;
+    pointer-events: none;
     display: flex;
     align-items: center;
     justify-content: center;
