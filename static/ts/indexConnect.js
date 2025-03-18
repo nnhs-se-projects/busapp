@@ -29,6 +29,16 @@ indexSocket.on("update", (data) => {
     countDownDate = new Date(data.leavingAt);
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data });
     document.getElementById("content").innerHTML = html;
+    if (typeof data !== 'undefined' && data.buses) {
+        const statusCells = document.querySelectorAll('.status-col[data-bus-number]');
+        statusCells.forEach(cell => {
+            const busNumber = parseInt(cell.getAttribute('data-bus-number') || '0');
+            const busInfo = data.buses.find(bus => bus.number === busNumber);
+            if (busInfo) {
+                cell.textContent = busInfo.status || ''; // Or whatever property you want to display
+            }
+        });
+    }
     updatePins();
     setIndicatorStatus(lastStatus);
 });
@@ -66,7 +76,7 @@ function updatePins() {
     // var tmp : string = "";
     tableBody.innerHTML = "";
     for (let i = 0; i < pins.length; i++) {
-        tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='status-col' colspan='5'>Loading...";
+        tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='status-col' data-bus-number='" + pins[i] + "' colspan='5'></td></tr>";
     }
 }
 function pinBus(button) {
