@@ -13,4 +13,3 @@ const schema = new mongoose.Schema({
 });
 const Subscription = mongoose.model("Subscription", schema);
 module.exports = Subscription;
-//# sourceMappingURL=subscription.js.map

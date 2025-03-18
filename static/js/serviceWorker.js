@@ -1,9 +1,7 @@
-
-
-self.addEventListener('push', async (e: any) => {
+self.addEventListener('push', async (e) => {
     const data = e.data.json();
 
-    const tmp: any = self;
+    const tmp = self;
 
     const promiseChain = tmp.registration.showNotification(data.title, {
         body: data.body,

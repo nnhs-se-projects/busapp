@@ -43,14 +43,14 @@ Follow these steps to setup the Bus App project
 ## Running the Bus App
 
 #### On Local Host
-To run the Bus App on local host, run `npm run buildStart` using a terminal currently in the home directory of the project. This compiles the typescript and starts the server. After you see the message `Server is running on port 5182` you’ve started the server successfully. Now go to `http://localhost:5182/` to start development.
+To run the Bus App on local host, run `npm run start` using a terminal currently in the home directory of the project. This and starts the server. After you see the message `Server is running on port 5182` you’ve started the server successfully. Now go to `http://localhost:5182/` to start development.
 
 ### On Dev Server
 To run the Bus App on the development server, you need to ask Mr. Schmit to host the server, and after he gives you confirmation that it is up and running, it's exactly the same as the production server, but with a different domain name. Go to 'https://busappdev.nnhsse.org/' to start development. One thing to note is that the development server does not update until the server is rebuilt, so make sure everything you want to test is in a finished state.
 
 
 #### Debugging
-To debug the Bus App on your development system, run `npm run devstart` using a terminal currently in the home directory of the project. Then choose the "Start Debugging" menu item in the "Run" menu. You can now set breakpoints in the typescript files.
+To debug the Bus App on your development system, run `npm run dev` using a terminal currently in the home directory of the project. Then choose the "Start Debugging" menu item in the "Run" menu. You can now set breakpoints in the javascript files.
 
 ### Production Server Deployment
 1. Create a new EC2 instance used on Ubuntu.
@@ -97,7 +97,7 @@ server {
 
 ```
 sudo npm install pm2 -g
-sudo pm2 --name busapp start "npm run buildStart"
+sudo pm2 --name busapp start "npm run start"
 ```
 
 14. Verify that the node server is running: `sudo pm2 list`
@@ -113,7 +113,7 @@ sudo pm2 --name busapp start "npm run buildStart"
 ## Working with the Bus App
 
 #### Overview of Web Applications
-The Bus App is a web application built using Node. Specifically, the key dependency to managing a server is Express. Like all projects working with Express should, the entire project is started from the file `server.ts` (note the .ts file extension. This is because the project uses Typescript which will be covered later). In this file, all the setup for the project happens:
+The Bus App is a web application built using Node. Specifically, the key dependency to managing a server is Express. Like all projects working with Express should, the entire project is started from the file `server.js`. In this file, all the setup for the project happens:
 1. Setting the port number
 2. Setting up Socket.io
 3. Setting up Express to render the ejs file type and defining path shortcuts for assets
@@ -128,13 +128,6 @@ The Bus App uses a variety of technologies. Below is some information on how to 
 
 ##### Express
 As mentioned above, Express is the key technology we use to run a server. Please check the official documentation: https://expressjs.com/
-
-##### Typescript
-Read this document to get started with Typescript. Keep in mind that if you have followed the setup instructions you already have installed Typescript in your project and do not need to do it again.
-
-Typescript Setup: https://docs.google.com/document/d/1Nz-GhLjmN0Ouh1HqJKd14x_Rf_aChft_tl6PNyOLsHA/edit?usp=sharing
-
-Typescript Crash Course: https://docs.google.com/document/d/1KSmqDuMzLxKAVosLv3uDOzb63P3wa08IcdHxCy8rYwo/edit?usp=sharing
 
 ##### Ejs
 Ejs is a form of html that allows javascript to be run during the creation of the html. This allows for tables to be created much more easily. Please see the official documentation: https://ejs.co/
@@ -158,34 +151,20 @@ server/ - the most important file
 
 | - - - connection.js
 
-| - - - connection.js.map
-
-| - - - connection.ts
-
 | - jsonHandler.js - useless and deprecated
-
-| - jsonHandler.ts - useless and deprecated
 
 | - model/ - contains all the mongo schema files
 
-| - - - announcement.js
+| - - - announcement.js - contains the code for the announcement schema
 
-| - - - announcement.js.map
+| - router.js - where 90% of stuff is. When the user goes to an endpoint (URL), it calls the function for the URL and runs the code
 
-| - - - announcement.ts - contains the code for the announcement schema
-
-| - router.js
-
-| - router.ts - where 90% of stuff is. When the user goes to an endpoint (URL), it calls the function for the URL and runs the code
-
-| - weatherController.js 
-
-| - weatherController.ts - where the weather data is stored
+| - weatherController.js - where the weather data is stored
 
 ## Mongo
 
 ```
-const Announcement = require("./model/announcement");
+const Announcement = require("./model/announcement.js");
 
 Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
