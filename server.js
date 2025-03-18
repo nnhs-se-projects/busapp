@@ -82,10 +82,10 @@ app.use(session({
 })); // Allows use of req.session
 app.use(express.json());
 
-app.use("/", router); // Imports routes from server/router.ts
+app.use("/", router); // Imports routes from server/router.js
 
 app.use("/css", express.static(path.resolve(__dirname, "static/css")));
-app.use("/js", express.static(path.resolve(__dirname, "static/ts")));
+app.use("/js", express.static(path.resolve(__dirname, "static/js")));
 app.use("/img", express.static(path.resolve(__dirname, "static/img")));
 app.use('/html', express.static(path.resolve(__dirname, "static/html")));
 

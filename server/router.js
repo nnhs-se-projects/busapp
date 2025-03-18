@@ -139,7 +139,7 @@ router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 
 // this needs to be served from the root of the server to work properly - used for push notifications
 router.get("/serviceWorker.js", async (req, res) => {
-    res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/ts/') });
+    res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/js/') });
 })
 
 router.post("/subscribe", async (req, res) => {
