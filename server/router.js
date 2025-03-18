@@ -190,10 +190,6 @@ router.post("/sendWave", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
-    await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
-    await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
-
     // find the wave
     if( !(null === await Wave.findOne({locked: true})) ) { 
         // find the buses and iterate over them
@@ -213,6 +209,10 @@ router.post("/sendWave", async (req, res) => {
             });
         });
     };
+
+    await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
+    await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
+    await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
 
     res.send("success");
 });
