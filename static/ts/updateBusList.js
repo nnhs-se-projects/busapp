@@ -1,4 +1,4 @@
-let busList: number[];
+let busList;
 fetch("/busList").then((res) => res.json()).then((data) => busList = data).then(() => console.log(busList));
 
 let newBusEmptyRow;
