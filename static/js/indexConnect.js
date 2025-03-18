@@ -1,5 +1,3 @@
-/// <reference path="./socket-io-client.d.ts"/>
-
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
 

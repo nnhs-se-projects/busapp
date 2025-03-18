@@ -3,8 +3,6 @@
 const express = require("express");
 const router = require("./server/router.js");
 const path = require("path");
-// const { fs, read } = require("fs");
-// const bodyParser = require("body-parser");
 const {createServer} = require("http");
 const {Server} = require("socket.io");
 const {readData} = require("./server/jsonHandler.js");
