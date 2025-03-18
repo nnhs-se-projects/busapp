@@ -50,7 +50,7 @@ To run the Bus App on the development server, you need to ask Mr. Schmit to host
 
 
 #### Debugging
-To debug the Bus App on your development system, run `npm run dev` using a terminal currently in the home directory of the project. Then choose the "Start Debugging" menu item in the "Run" menu. You can now set breakpoints in the typescript files.
+To debug the Bus App on your development system, run `npm run dev` using a terminal currently in the home directory of the project. Then choose the "Start Debugging" menu item in the "Run" menu. You can now set breakpoints in the javascript files.
 
 ### Production Server Deployment
 1. Create a new EC2 instance used on Ubuntu.
