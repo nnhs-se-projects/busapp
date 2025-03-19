@@ -33,6 +33,10 @@ dotenv.config({ path: ".env" });
 // Remember to set vapid keys in .env - run ```npx web-push generate-vapid-keys``` to generate
 const vapidPrivateKey = process.env.VAPID_PRIVATE;
 const vapidPublicKey = process.env.VAPID_PUBLIC;
+// CHECK BEFORE MERGING
+if (!vapidPrivateKey || !vapidPublicKey) {
+    throw new Error("VAPID keys are not set in the environment variables.");
+}
 web_push_1.default.setVapidDetails('mailto:test@test.com', vapidPublicKey, vapidPrivateKey);
 const bodyParser = require('body-parser');
 exports.router.use(bodyParser.urlencoded({ extended: true }));
@@ -152,26 +156,6 @@ exports.router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0
         res.send("Duplicate, pin request ignored");
     }
 }));
-// https://save418.com/ 
-exports.router.get("/teapot", (req, res) => { res.sendStatus(418); });
-// used for networkIndicator
-exports.router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
-// this needs to be served from the root of the server to work properly - used for push notifications
-exports.router.get("/serviceWorker.js", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.sendFile("serviceWorker.js", { root: path_1.default.join(__dirname, '../static/ts/') });
-}));
-exports.router.post("/subscribe", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const subscription = req.body.pushObject;
-    const num = Number(req.body.busNumber);
-    const rm = req.body.remove;
-    if (rm) {
-        (yield Subscription.find({ subscription, bus: num })).forEach((e) => __awaiter(void 0, void 0, void 0, function* () { return yield Subscription.findByIdAndDelete(e._id); }));
-    }
-    else {
-        yield Subscription.create({ subscription, bus: num });
-    }
-    res.send("success!");
-}));
 exports.router.get("/waveStatus", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // get the wave status from the wave schema
     const wave = yield Wave.findOne({});
@@ -203,25 +187,6 @@ exports.router.post("/sendWave", (req, res) => __awaiter(void 0, void 0, void 0,
     // Check if user is logged in and is an admin
     if (!(yield checkLogin(req, res))) {
         return;
-    }
-    // find the wave
-    if (!(null === (yield Wave.findOne({ locked: true })))) {
-        // find the buses and iterate over them
-        (yield Bus.find({ status: "Loading" })).forEach((bus) => __awaiter(void 0, void 0, void 0, function* () {
-            // get every subscription for that bus and iterate over them
-            (yield Subscription.find({ bus: bus.busNumber })).forEach((sub) => {
-                web_push_1.default.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
-                    title: 'Your Bus Just Left!',
-                    body: `Bus number ${bus.busNumber} just left.`,
-                    icon: "/img/busAppIcon.png"
-                })).catch((e) => __awaiter(void 0, void 0, void 0, function* () {
-                    // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
-                    if ([410, 400, 403, 401].includes(e.statusCode)) {
-                        return Subscription.findByIdAndDelete(sub._id);
-                    }
-                }));
-            });
-        }));
     }
     yield Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
     yield Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });

@@ -2,23 +2,13 @@ let nextWave: any[] = [];
 let lots: any[] = [];
 let currentWave: any[] = [];
 
-currentWave = JSON.parse(document.getElementsByClassName("test")[0].getAttribute("data-currentwave")!);
-
-const addNext = (bus) => {
-    nextWave.push(bus);
-}
-
-const addLots = (bus) => {
-    lots.push(bus);
-}
-
-const addCurrent = (bus) => {
-    currentWave.push(bus);
+const next = document.getElementById("next-wave")!;
+const g = next.getElementsByTagName("input");
+for (let i = 0; i < g.length; i++) {
+    nextWave.push(g[i].getAttribute("value"));
 }
 
 async function saveMap() {
-    // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
-
     await fetch("/updateBusMap", {
         method: 'POST',
         headers: {
@@ -27,9 +17,9 @@ async function saveMap() {
         },
         body: 
         JSON.stringify({
-            //nextWave: nextWave,
+            nextWave: nextWave,
             // lots: lots,
-            currentWave: currentWave
+            // currentWave: currentWave
         })
     });
 

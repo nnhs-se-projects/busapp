@@ -11,19 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 let nextWave = [];
 let lots = [];
 let currentWave = [];
-nextWave = JSON.parse(document.getElementsByClassName("test")[0].innerHTML);
-const addNext = (bus) => {
-    nextWave.push(bus);
-};
-const addLots = (bus) => {
-    lots.push(bus);
-};
-const addCurrent = (bus) => {
-    currentWave.push(bus);
-};
 function saveMap() {
     return __awaiter(this, void 0, void 0, function* () {
-        // if (!confirm("AHHHHHHHHHHHHHHHHH")) return;
         yield fetch("/updateBusMap", {
             method: 'POST',
             headers: {
