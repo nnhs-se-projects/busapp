@@ -15,8 +15,7 @@ var indexSocket = window.io('/'); // This line and the line above is how you get
 var countDownDate = new Date();
 var pins = [];
 var notifStatus = {};
-updatePins();
-updateTables();
+var buses;
 var panelExpanded = false;
 // end of initializing stuff
 indexSocket.on("update", (data) => {
@@ -27,18 +26,9 @@ indexSocket.on("update", (data) => {
             bus.time = new Date(bus.time);
     });
     countDownDate = new Date(data.leavingAt);
+    buses = data.buses;
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), { data: data });
     document.getElementById("content").innerHTML = html;
-    if (typeof data !== 'undefined' && data.buses) {
-        const statusCells = document.querySelectorAll('.status-col[data-bus-number]');
-        statusCells.forEach(cell => {
-            const busNumber = parseInt(cell.getAttribute('data-bus-number') || '0');
-            const busInfo = data.buses.find(bus => bus.number === busNumber);
-            if (busInfo) {
-                cell.textContent = busInfo.status || ''; // Or whatever property you want to display
-            }
-        });
-    }
     updatePins();
     setIndicatorStatus(lastStatus);
 });
@@ -51,6 +41,9 @@ window.onload = () => {
     if (!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
         document.getElementById('whatsNewPopup').style.display = 'block';
     }
+    buses = JSON.parse(document.getElementById("getRender").getAttribute("buses"));
+    updatePins();
+    updateTables();
 };
 // We can probably remove this function when we rewrite in JS. Basically useless after the UI overhaul
 function updateTables() {
@@ -78,6 +71,14 @@ function updatePins() {
     for (let i = 0; i < pins.length; i++) {
         tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='status-col' data-bus-number='" + pins[i] + "' colspan='5'></td></tr>";
     }
+    const statusCells = document.querySelectorAll('.status-col');
+    statusCells.forEach(cell => {
+        const busNumber = parseInt(cell.getAttribute('data-bus-number') || '0');
+        const busInfo = buses.find(bus => bus.number === busNumber);
+        if (busInfo) {
+            cell.textContent = busInfo.status || ''; // Or whatever property you want to display
+        }
+    });
 }
 function pinBus(button) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -149,16 +150,6 @@ function pinBus(button) {
         updateTables();
     });
 }
-// function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
-//     let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
-//     let fullRows = tableFull.rows;
-//     for (let i = 2; i < fullRows.length; i++) {
-//         let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
-//         if (n === number) {
-//             return fullRows[i];
-//         }
-//     }
-// }
 // Set the date we're counting down to
 fetch('/leavingAt')
     .then(response => response.json())
