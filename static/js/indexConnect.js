@@ -215,7 +215,7 @@ var lastTime = (new Date()).getTime();
 // set the interval for every 30 seconds
 const reloadChecker = setInterval(async function() {
     var currentTime = (new Date()).getTime();
-    console.log(currentTime - lastTime);
+    //console.log(currentTime - lastTime);
     // check if it has been significantly more than 30 seconds, this would indicate code execution was paused or throttled
     // also check if the page is visible - if it already is then a reload wont help it
     if (currentTime > (lastTime + 40000) && document.visibilityState !== "visible") {
