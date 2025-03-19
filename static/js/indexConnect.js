@@ -204,3 +204,27 @@ var x = setInterval(async function() {
         });
     }
 }, 1000);
+
+
+// When the app gets put into the background, the browser pauses execution of the code.
+// This frequently causes the bus app to miss updates, and means it has to be reloaded or restarted.
+// This code checks if there is a significant discrepancy in how long since the code last ran,
+// if there is a discrepancy, reload the page once it regains focus.
+
+var lastTime = (new Date()).getTime();
+// set the interval for every 30 seconds
+const reloadChecker = setInterval(async function() {
+    var currentTime = (new Date()).getTime();
+    console.log(currentTime - lastTime);
+    // check if it has been significantly more than 30 seconds, this would indicate code execution was paused or throttled
+    // also check if the page is visible - if it already is then a reload wont help it
+    if (currentTime > (lastTime + 40000) && document.visibilityState !== "visible") {
+        document.addEventListener("visibilitychange", (event) => {
+            // once the page is visible again, we reload it!
+            if (document.visibilityState === "visible") { window.location.reload(); }
+        });
+        // clear the interval, the reload is primed and there is nothing more to be done
+        clearInterval(reloadChecker);
+    }
+    lastTime = currentTime;
+}, 30000);
