@@ -21,4 +21,3 @@ const schema = new mongoose.Schema({
 });
 const Bus = mongoose.model("Bus", schema);
 module.exports = Bus;
-//# sourceMappingURL=bus.js.map

@@ -13,4 +13,3 @@ const schema = new mongoose.Schema({
 });
 const Announcement = mongoose.model("Announcement", schema);
 module.exports = Announcement;
-//# sourceMappingURL=announcement.js.map

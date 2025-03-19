@@ -13,4 +13,3 @@ const schema = new mongoose.Schema({
 });
 const Wave = mongoose.model("Wave", schema);
 module.exports = Wave;
-//# sourceMappingURL=wave.js.map

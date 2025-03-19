@@ -1,6 +1,5 @@
 /// <reference path="./socket-io-client.d.ts"/>
 
-var pinButtons = document.getElementsByClassName("pin-button");
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
 
@@ -8,10 +7,8 @@ var countDownDate = new Date();
 
 var pins: number[] = [];
 var notifStatus = {};
-var buses: any;
-
-
-var panelExpanded : boolean = false;
+updatePins();
+updateTables();
 
 // end of initializing stuff
 
@@ -26,14 +23,9 @@ indexSocket.on("update", (data) => {
 
     countDownDate = new Date(data.leavingAt);
 
-    buses = data.buses;
-
     const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
     document.getElementById("content")!.innerHTML = html;
-
-
-    updatePins();
-
+    updateTables();
     setIndicatorStatus(lastStatus);
 });
 
@@ -47,14 +39,38 @@ window.onload = () => {
     if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion")! < version) {
         document.getElementById('whatsNewPopup')!.style.display='block';
     }
-
-    buses = JSON.parse(document.getElementById("getRender")!.getAttribute("buses")!);
-    updatePins();
-    updateTables();
 };
 
-// We can probably remove this function when we rewrite in JS. Basically useless after the UI overhaul
 function updateTables() { // updates what rows show on the pinned list and what buttons show Unpin or Pin on the full list.
+    updatePins();
+    let tablePins = <HTMLTableElement> document.getElementById("pin-bus-table");
+    let pinRows = tablePins.rows;
+    let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
+    for (let i = 2; i < pinRows.length - 1; i++) { // hides rows that aren't in the pins
+        let number = parseInt(pinRows[i]!.firstElementChild!.innerHTML);
+        if (pins.includes(number)) {
+            pinRows[i].hidden = false;
+            lastHide = true;
+        } else {
+            pinRows[i].hidden = true;
+        }
+    }
+    pinRows[pinRows.length - 1].hidden = lastHide;
+
+    let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
+    let fullRows = tableFull.rows;
+    for (let i = 2; i < fullRows.length; i++) { // first two rows are the table header and the column headers
+        let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
+        let button = <HTMLElement> fullRows[i].lastElementChild!.firstElementChild
+        if (pins.includes(number)){ // lol, lmao even
+            button!.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Unpin"
+            button!.style.backgroundColor = "#ab0808";
+        } else {
+            button!.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Pin"
+            button!.style.backgroundColor = "#327fa8";
+        }
+    }
+
     try { removeNotifButton(); }// comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
     catch(e) {}
 }
@@ -66,41 +82,41 @@ function updatePins() { // guess what
         let pinArrayString:string[] = pinString.split(", ");
         for (let i = 0; i < pinArrayString.length; i++) {
             let n = parseInt(pinArrayString[i]);
-            // I'm going to leave this in here, but I don't know why we should need to check for duplicates there should never be any duplicates of busses
             if (!pins.includes(n)) { pins.push(n); }
         }
     }
-
-    var tableBody = document.getElementsByClassName("pinned-bus-table")[0].getElementsByTagName("tbody")[0];
-    // var tmp : string = "";
-    tableBody.innerHTML = ""; 
-    for (let i = 0; i < pins.length; i++) {
-        tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='status-col' data-bus-number='" + pins[i] + "' colspan='5'></td></tr>";
-    }
-
-    const statusCells = document.querySelectorAll('.status-col');
-    statusCells.forEach(cell => {
-        const busNumber = parseInt(cell.getAttribute('data-bus-number') || '0');
-        const busInfo = buses.find(bus => bus.number === busNumber);
-        if (busInfo) {
-            cell.textContent = busInfo.status || ''; // Or whatever property you want to display
-        }
-    });
 }
 
-async function pinBus(button: HTMLButtonElement) { // pins the bus when the user clicks the button
-    // updatePins();
-    // const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
-    const busNumber = button.innerText; // this is the stringification of the number of the bus
-    var removing = false;
+async function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks the button
+    updatePins();
+    const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
+    const busNumber = busRow!.firstElementChild!.innerHTML; // this is the stringification of the number of the bus
 
+    var removing = false;
     const num = parseInt(busNumber); // this is the number of the bus
 
-    // subscribe to the bus
+    if (pins.includes(num) == false) {
+        pins.push(num);
+        pins.sort();
+        let newPinString = pins.join(", "); // representation of the pins list as a string
+        localStorage.setItem("pins", newPinString);
+    } else {
+        removing = true;
+        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
+        pins.sort();
+        if (pins.length == 0) {
+            localStorage.removeItem("pins");
+        } else {
+            let newPinString = pins.join(", "); // representation of the pins list as a string
+            localStorage.setItem("pins", newPinString);
+        }
+    }
+
+    // subscribe to the bus (or unsubscribe)
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // change pin icon to loading
-        // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
-        // button.querySelector("i")!.classList.remove("fa-thumbtack");
+        button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
+        button.querySelector("i")!.classList.remove("fa-thumbtack");
 
         // temporary function to do recursion 'n such
         async function temp(wait) {
@@ -129,31 +145,23 @@ async function pinBus(button: HTMLButtonElement) { // pins the bus when the user
             alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
-            // button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
-            // button.querySelector("i")!.classList.add("fa-thumbtack");
-        }
-
-    }
-
-    if (pins.includes(num) == false) {
-        pins.push(num);
-        pins.sort();
-        let newPinString = pins.join(", "); // representation of the pins list as a string
-        localStorage.setItem("pins", newPinString);
-    } else {
-        removing = true;
-        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
-        pins.sort();
-        if (pins.length == 0) {
-            localStorage.removeItem("pins");
-        } else {
-            let newPinString = pins.join(", "); // representation of the pins list as a string
-            localStorage.setItem("pins", newPinString);
+            button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
+            button.querySelector("i")!.classList.add("fa-thumbtack");
         }
     }
-    updatePins();
 
     updateTables();
+}
+
+function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
+    let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
+    let fullRows = tableFull.rows;
+    for (let i = 2; i < fullRows.length; i++) {
+        let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
+        if (n === number) {
+            return fullRows[i];
+        }
+    }
 }
 
 // Set the date we're counting down to
