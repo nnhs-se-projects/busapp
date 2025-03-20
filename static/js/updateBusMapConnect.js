@@ -1,5 +1,3 @@
-/// <reference path="./socket-io-client.d.ts"/>
-
 var adminSocket = window.io('/admin');
 
 adminSocket.on("update", (data) => {

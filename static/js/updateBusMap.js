@@ -1,8 +1,8 @@
-let nextWave: any[] = [];
-let lots: any[] = [];
-let currentWave: any[] = [];
+let nextWave = [];
+let lots = [];
+let currentWave = [];
 
-const next = document.getElementById("next-wave")!;
+const next = document.getElementById("next-wave");
 const g = next.getElementsByTagName("input");
 for (let i = 0; i < g.length; i++) {
     nextWave.push(g[i].getAttribute("value"));
