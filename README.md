@@ -129,6 +129,9 @@ The Bus App uses a variety of technologies. Below is some information on how to 
 ##### Express
 As mentioned above, Express is the key technology we use to run a server. Please check the official documentation: https://expressjs.com/
 
+##### Bootstrap
+Bootstrap is a UI framework that helps to abstract vanilla CSS into modifiable and customizable premade classes. https://getbootstrap.com/docs/5.3/components/accordion/
+
 ##### Typescript
 Read this document to get started with Typescript. Keep in mind that if you have followed the setup instructions you already have installed Typescript in your project and do not need to do it again.
 

@@ -40,7 +40,7 @@ Announcement.findOneAndUpdate({}, { announcement: "" }, { upsert: true });
 Announcement.findOneAndUpdate({}, { tvAnnouncement: "" }, { upsert: true });
 let timer = 30;
 // this was to migrate the admins from the file to the database when on the production server
-// no longer neeeded but keeping it commented for the time being in case something went wrong with the migration
+// no longer needed but keeping it commented for the time being in case something went wrong with the migration
 /*
 router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
     readWhitelist().admins.forEach(async e => {
