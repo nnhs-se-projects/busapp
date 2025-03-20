@@ -1,17 +1,15 @@
-/// <reference path="./socket-io-client.d.ts"/>
-
 var pinButtons = document.getElementsByClassName("pin-button");
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
 
 var countDownDate = new Date();
 
-var pins: number[] = [];
+var pins = [];
 var notifStatus = {};
-var buses: any;
+var buses;
 
 
-var panelExpanded : boolean = false;
+var panelExpanded = false;
 
 // end of initializing stuff
 
@@ -28,8 +26,8 @@ indexSocket.on("update", (data) => {
 
     buses = data.buses;
 
-    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
-    document.getElementById("content")!.innerHTML = html;
+    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
+    document.getElementById("content").innerHTML = html;
 
 
     updatePins();
@@ -37,18 +35,18 @@ indexSocket.on("update", (data) => {
     setIndicatorStatus(lastStatus);
 });
 
-function hideWhatsNew(version: number) {
-    document.getElementById('whatsNewPopup')!.style.display='none'
+function hideWhatsNew(version) {
+    document.getElementById('whatsNewPopup').style.display='none'
     localStorage.setItem("whatsNewVersion", String(version));
 }
 
 window.onload = () => {
-    var version = +(<HTMLInputElement>document.getElementById("whatsNewVersion")).value;
-    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion")! < version) {
-        document.getElementById('whatsNewPopup')!.style.display='block';
+    var version = +(document.getElementById("whatsNewVersion")).value;
+    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
+        document.getElementById('whatsNewPopup').style.display='block';
     }
 
-    buses = JSON.parse(document.getElementById("getRender")!.getAttribute("buses")!);
+    buses = JSON.parse(document.getElementById("getRender").getAttribute("buses"));
     updatePins();
     updateTables();
 };
@@ -63,7 +61,7 @@ function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
     pins = [];
     if (pinString != null) {
-        let pinArrayString:string[] = pinString.split(", ");
+        let pinArrayString = pinString.split(", ");
         for (let i = 0; i < pinArrayString.length; i++) {
             let n = parseInt(pinArrayString[i]);
             // I'm going to leave this in here, but I don't know why we should need to check for duplicates there should never be any duplicates of busses
@@ -88,7 +86,7 @@ function updatePins() { // guess what
     });
 }
 
-async function pinBus(button: HTMLButtonElement) { // pins the bus when the user clicks the button
+async function pinBus(button) { // pins the bus when the user clicks the button
     // updatePins();
     // const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = button.innerText; // this is the stringification of the number of the bus
@@ -142,7 +140,7 @@ async function pinBus(button: HTMLButtonElement) { // pins the bus when the user
         localStorage.setItem("pins", newPinString);
     } else {
         removing = true;
-        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
+        pins = pins.filter(function notNum(n) {return n != num;}); // this is how you remove elements in js arrays. pain
         pins.sort();
         if (pins.length == 0) {
             localStorage.removeItem("pins");
