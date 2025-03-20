@@ -1,12 +1,14 @@
-let nextWave = [];
-let lots = [];
-let currentWave = [];
+//let nextWave = [];
+//let lots = [];
+//let currentWave = [];
 
-const next = document.getElementById("next-wave");
-const g = next.getElementsByTagName("input");
-for (let i = 0; i < g.length; i++) {
-    nextWave.push(g[i].getAttribute("value"));
-}
+//const next = document.getElementById("next-wave");
+//const g = next.getElementsByTagName("input");
+//for (let i = 0; i < g.length; i++) {
+//    nextWave.push(g[i].getAttribute("value"));
+//}
+
+currentWave.push("129");
 
 async function saveMap() {
     await fetch("/updateBusMap", {
@@ -17,7 +19,7 @@ async function saveMap() {
         },
         body: 
         JSON.stringify({
-            nextWave: nextWave,
+            currentWave: currentWave,
             // lots: lots,
             // currentWave: currentWave
         })
