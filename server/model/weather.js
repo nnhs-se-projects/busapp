@@ -21,4 +21,3 @@ const schema = new mongoose.Schema({
 });
 const Weather = mongoose.model("Weather", schema);
 module.exports = Weather;
-//# sourceMappingURL=weather.js.map
