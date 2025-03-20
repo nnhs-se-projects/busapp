@@ -11,6 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 let nextWave = [];
 let lots = [];
 let currentWave = [];
+const nextTable = document.getElementById("next-wave");
+const g = nextTable.rows[0];
+for (let i = 0; i < 8; i++) {
+    nextWave.push(g.cells[i].textContent);
+}
 function saveMap() {
     return __awaiter(this, void 0, void 0, function* () {
         yield fetch("/updateBusMap", {

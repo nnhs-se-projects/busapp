@@ -8,8 +8,8 @@
         <table style="width:100%" id="next-wave">
             <th colspan="100%">Next Wave
                 <tr style="height: 100px">
-                    <% for (let i = 0; i < 8; i++) { %>
-                        <td class="test"><input placeholder="enter"></td>
+                    <% for (let i = 0; i < currentWave.length; i++) { %>
+                        <td class="test"><%-currentWave%></td>
                     <% } %>
                 </tr>
             </th>
