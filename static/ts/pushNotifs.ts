@@ -62,7 +62,7 @@ async function enablePushNotifications(publicKey) {
             alert("You denied notification permission, this will result in push notifications not working");
         }
     } else if('serviceWorker' in navigator) { // If the browser supports service workers but not notifications, I'm like 60% sure it'll be safari on IOS
-        document.getElementById('IOSnotifpopup').style.display='block';
+        document.getElementById('IOSnotifpopup')!.style.display='block';
     } else {
         alert("Your browser is not supported :(");
     }

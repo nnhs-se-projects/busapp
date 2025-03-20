@@ -8,17 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose = require("mongoose");
-const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const con = yield mongoose.connect(process.env.MONGO_URI, {});
-        console.log(`MongoDB connected : ${con.connection.host}`);
-    }
-    catch (err) {
-        console.log(err);
-        process.exit(1);
-    }
-});
-module.exports = connectDB;
-//# sourceMappingURL=connection.js.map
+self.addEventListener('push', (e) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = e.data.json();
+    const tmp = self;
+    const promiseChain = tmp.registration.showNotification(data.title, {
+        body: data.body,
+        icon: data.icon,
+        badge: "/img/busapp-badge.png"
+    });
+    yield e.waitUntil(promiseChain);
+}));
+//# sourceMappingURL=serviceWorker.js.map

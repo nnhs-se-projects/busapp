@@ -1,36 +1,38 @@
 "use strict";
-
-const express = require("express");
-const router = require("./server/router.js");
-const path = require("path");
-const {createServer} = require("http");
-const {Server} = require("socket.io");
-const {readData} = require("./server/jsonHandler.js");
-const startWeather = require("./server/weatherController.js");
-const session = require("express-session");
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const router_1 = require("./server/router");
+const path_1 = __importDefault(require("path"));
+const http_1 = require("http");
+const socket_io_1 = require("socket.io");
+const jsonHandler_1 = require("./server/jsonHandler");
+const weatherController_1 = require("./server/weatherController");
+const express_session_1 = __importDefault(require("express-session"));
 const dotenv = require("dotenv");
-const connectDB = require("./server/database/connection.js");
-const Bus = require("./server/model/bus.js");
-const Wave = require("./server/model/wave.js");
-const Weather = require("./server/model/weather.js");
-const Announcement = require("./server/model/announcement.js");
-
-const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer);
-
+const connectDB = require("./server/database/connection");
+const Bus = require("./server/model/bus");
+const Wave = require("./server/model/wave");
+const Weather = require("./server/model/weather");
+const Announcement = require("./server/model/announcement");
+const app = (0, express_1.default)();
+const httpServer = (0, http_1.createServer)(app);
+const io = new socket_io_1.Server(httpServer);
 dotenv.config({ path: ".env" });
 connectDB();
-
 const PORT = process.env.PORT || 5182;
-/*
-type BusCommand = {
-    type: string
-    data: BusData
-}
-*/
-// let buses: BusData[];
-
+let buses;
 //root socket
 io.of("/").on("connection", (socket) => {
     //console.log(`new connection on root (id:${socket.id})`);
@@ -38,62 +40,50 @@ io.of("/").on("connection", (socket) => {
         // console.log(`debug(root): ${data}`);
     });
 });
-
 //admin socket
-io.of("/admin").on("connection", async (socket) => {
-    socket.on("updateMain", async (command) => {
-
-
-        let data ={
-            allBuses: (await readData()).buses,
-            nextWave: await Bus.find({status: "Next Wave"}),
-            loading: await Bus.find({status: "Loading"}),
-            isLocked: false, 
+io.of("/admin").on("connection", (socket) => __awaiter(void 0, void 0, void 0, function* () {
+    socket.on("updateMain", (command) => __awaiter(void 0, void 0, void 0, function* () {
+        let data = {
+            allBuses: (yield (0, jsonHandler_1.readData)()).buses,
+            nextWave: yield Bus.find({ status: "Next Wave" }),
+            loading: yield Bus.find({ status: "Loading" }),
+            isLocked: false,
             leavingAt: new Date(),
         };
-        data.isLocked = (await Wave.findOne({})).locked;
-        data.leavingAt = (await Wave.findOne({})).leavingAt;
-        
+        data.isLocked = (yield Wave.findOne({})).locked;
+        data.leavingAt = (yield Wave.findOne({})).leavingAt;
         // console.log("updateMain called")
-
         let indexData = {
-            buses: (await readData()).buses,
+            buses: (yield (0, jsonHandler_1.readData)()).buses,
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
-            weather: await Weather.findOne({}),
-            announcement: (await Announcement.findOne({})).announcement
-        }
-        
+            weather: yield Weather.findOne({}),
+            announcement: (yield Announcement.findOne({})).announcement
+        };
         io.of("/admin").emit("update", data);
-        io.of("/").emit("update", indexData);        
-    });
+        io.of("/").emit("update", indexData);
+    }));
     socket.on("debug", (data) => {
         // console.log(`debug(admin): ${data}`);
     });
-});
-
+}));
 app.set("view engine", "ejs"); // Allows res.render() to render ejs
-app.use(session({
+app.use((0, express_session_1.default)({
     secret: require('crypto').randomBytes(48).toString('base64'),
     resave: true,
     saveUninitialized: true
 })); // Allows use of req.session
-app.use(express.json());
-
-app.use("/", router); // Imports routes from server/router.js
-
-app.use("/css", express.static(path.resolve(__dirname, "static/css")));
-app.use("/js", express.static(path.resolve(__dirname, "static/js")));
-app.use("/img", express.static(path.resolve(__dirname, "static/img")));
-app.use('/html', express.static(path.resolve(__dirname, "static/html")));
-
+app.use(express_1.default.json());
+app.use("/", router_1.router); // Imports routes from server/router.ts
+app.use("/css", express_1.default.static(path_1.default.resolve(__dirname, "static/css")));
+app.use("/js", express_1.default.static(path_1.default.resolve(__dirname, "static/ts")));
+app.use("/img", express_1.default.static(path_1.default.resolve(__dirname, "static/img")));
+app.use('/html', express_1.default.static(path_1.default.resolve(__dirname, "static/html")));
 // custom 404 page - must come after all other instances of "app.use"
 app.all('*', (req, res) => {
-    res.status(404).render('404', {url: req.url});
-});  
-
-startWeather(io);
-
+    res.status(404).render('404', { url: req.url });
+});
+(0, weatherController_1.startWeather)(io);
 var now = new Date();
 var milliSecondsUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 0, 0, 0).getTime() - now.getTime();
 if (milliSecondsUntilMidnight < 0) {
@@ -102,22 +92,21 @@ if (milliSecondsUntilMidnight < 0) {
 console.log("delay: " + milliSecondsUntilMidnight);
 var busResetInterval = setInterval(resetBusChanges, milliSecondsUntilMidnight); // every 24 hours
 var firstRun = true;
-
-httpServer.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
-
-async function resetBusChanges() {
-    if(firstRun) {
-        firstRun = false;
-        clearInterval(busResetInterval); // clear the initial interval
-        busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
-    }
-
-    let buses = await Bus.find({});
-    buses.forEach((bus) => { // for each bus in the database
-        bus.busChange = 0; // reset the bus change
-        bus.status = "normal"; // reset the bus status
-        bus.save(); // save the bus
+httpServer.listen(PORT, () => { console.log(`Server is running on port ${PORT}`); });
+function resetBusChanges() {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (firstRun) {
+            firstRun = false;
+            clearInterval(busResetInterval); // clear the initial interval
+            busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
+        }
+        let buses = yield Bus.find({});
+        buses.forEach((bus) => {
+            bus.busChange = 0; // reset the bus change
+            bus.status = "normal"; // reset the bus status
+            bus.save(); // save the bus
+        });
+        console.log("reset bus changes: " + new Date().toLocaleString());
     });
-
-    console.log("reset bus changes: " + new Date().toLocaleString());
 }
+//# sourceMappingURL=server.js.map

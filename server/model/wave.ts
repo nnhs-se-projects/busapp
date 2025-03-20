@@ -1,6 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+
+/**
+ * schema for a journal entry
+ */
+export {};
 const mongoose = require("mongoose");
+
 const schema = new mongoose.Schema({
     locked: {
         type: Boolean,
@@ -11,6 +15,7 @@ const schema = new mongoose.Schema({
         required: true,
     }
 });
+
 const Wave = mongoose.model("Wave", schema);
+
 module.exports = Wave;
-//# sourceMappingURL=wave.js.map

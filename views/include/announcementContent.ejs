@@ -1,12 +1,49 @@
-<label class="label">Announcement</label>
-<textarea type="text" name="announcement" class="content"><%= currentAnnouncement%></textarea>
-<div class="buttons">
-    <button class="button" onclick="clearAnnouncement()">Clear Current Announcement</button>
-</div>
-<text class="label">TV Announcement</label>
-<textarea type="text" name="tvAnnouncement" class="content"><%= currentTvAnnouncement%></textarea>
-<div class="buttonsTv">
-    <button class="button" onclick="clearTvAnnouncement()">Clear Current Announcement</button>
-</div>
-<br/>
-<button class="button back-button" onclick="save_()">Save And Quit</button>
+<form action="/submitAnnouncement" method="post">
+    <text class="label">Announcement</label>
+    <textarea type="text" name="announcement" class="content"><%= currentAnnouncement%></textarea>
+    <div class="buttons">
+        <button class="button" type="submit" onclick="clearAnnouncement()">Clear Current Announcement</button>
+
+    </div>
+    <text class="label">TV Announcement</label>
+    <textarea type="text" name="tvAnnouncement" class="content"><%= currentTvAnnouncement%></textarea>
+    <div class="buttonsTv">
+        <button class="button" type="submit" onclick="clearTvAnnouncement()">Clear Current Announcement</button>
+        <button class="button back-button" onclick="save_()" href="/admin">Back to Admin Page</a>
+    </div>
+</form>
+
+<script>
+    function clearAnnouncement() {
+        document.getElementsByName("announcement")[0].value = "";
+        save_();
+    }
+</script>
+<script>
+    function clearTvAnnouncement() {
+        document.getElementsByName("tvAnnouncement")[0].value = "";
+        save_();
+    }
+</script>
+<script>
+    announcement = document.getElementsByName("announcement")[0].value;
+    tvAnnouncement = document.getElementsByName("tvAnnouncement")[0].value;
+
+    async function save_() {
+        await fetch("/updateAnnouncement", {
+            method: 'POST',
+            headers: {
+                accept: 'application.json',
+                'Content-Type': 'application/json'
+            },
+            body:
+            JSON.stringify({
+                announcement: document.getElementsByName("announcement")[0].value,
+                tvAnnouncement: document.getElementsByName("tvAnnouncement")[0].value
+            })
+        });
+
+        updateAnnouncement();
+}
+</script>
+<script src="js/updateAnnouncementConnect.js"></script>
