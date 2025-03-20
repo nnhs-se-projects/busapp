@@ -1,4 +1,6 @@
-var adminSocket = window.io('/admin'); 
+/// <reference path="./socket-io-client.d.ts"/>
+
+var adminSocket = window.io('/admin');
 
 adminSocket.on("update", (data) => {
     console.log("update received")
@@ -10,11 +12,9 @@ adminSocket.on("update", (data) => {
 
 });
 
-function updateBusList() {
+function updateAnnouncement() {
     console.log("update called")
     adminSocket.emit("updateMain", {
         type: "update",
     });
 }
-
-

@@ -1,21 +1,23 @@
+
+
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
-function setIndicatorStatus(stat) {
+function setIndicatorStatus(stat : string) {
     const indicator = document.getElementById("networkIndicator");
     const blocker = document.getElementById("networkBlocker");
     const content = document.getElementById("content");
     if(stat === "connected") {
-        indicator.style.backgroundColor = "green";
-        indicator.innerHTML = '<i class="fa-solid fa-check"></i>';
+        indicator!.style.backgroundColor = "green";
+        indicator!.innerHTML = '<i class="fa-solid fa-check"></i>';
         blocker?.classList.remove("shown");
     } else if(stat === "slow") {
-        indicator.style.backgroundColor = "yellow";
-        indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
+        indicator!.style.backgroundColor = "yellow";
+        indicator!.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
         blocker?.classList.remove("shown");
     } else if(stat === "offline") {
-        indicator.style.backgroundColor = "red";
-        indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
+        indicator!.style.backgroundColor = "red";
+        indicator!.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
         blocker?.classList.add("shown");
     }
     if((stat === "slow" || stat === "connected") && lastStatus === "offline") {

@@ -1,9 +1,11 @@
+/// <reference path="./socket-io-client.d.ts"/>
+
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
 
 var countDownDate = new Date();
 
-var pins = [];
+var pins: number[] = [];
 var notifStatus = {};
 updatePins();
 updateTables();
@@ -21,31 +23,31 @@ indexSocket.on("update", (data) => {
 
     countDownDate = new Date(data.leavingAt);
 
-    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
-    document.getElementById("content").innerHTML = html;
+    const html = ejs.render(document.getElementById("getRender")!.getAttribute("render")!, {data: data});
+    document.getElementById("content")!.innerHTML = html;
     updateTables();
     setIndicatorStatus(lastStatus);
 });
 
-function hideWhatsNew(version) {
-    document.getElementById('whatsNewPopup').style.display='none'
+function hideWhatsNew(version: number) {
+    document.getElementById('whatsNewPopup')!.style.display='none'
     localStorage.setItem("whatsNewVersion", String(version));
 }
 
 window.onload = () => {
-    var version = +(document.getElementById("whatsNewVersion")).value;
-    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
-        document.getElementById('whatsNewPopup').style.display='block';
+    var version = +(<HTMLInputElement>document.getElementById("whatsNewVersion")).value;
+    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion")! < version) {
+        document.getElementById('whatsNewPopup')!.style.display='block';
     }
 };
 
 function updateTables() { // updates what rows show on the pinned list and what buttons show Unpin or Pin on the full list.
     updatePins();
-    let tablePins = document.getElementById("pin-bus-table");
+    let tablePins = <HTMLTableElement> document.getElementById("pin-bus-table");
     let pinRows = tablePins.rows;
     let lastHide = false; // determines if the last row ("no buses pinned") should be hidden or not
     for (let i = 2; i < pinRows.length - 1; i++) { // hides rows that aren't in the pins
-        let number = parseInt(pinRows[i].firstElementChild.innerHTML);
+        let number = parseInt(pinRows[i]!.firstElementChild!.innerHTML);
         if (pins.includes(number)) {
             pinRows[i].hidden = false;
             lastHide = true;
@@ -55,17 +57,17 @@ function updateTables() { // updates what rows show on the pinned list and what 
     }
     pinRows[pinRows.length - 1].hidden = lastHide;
 
-    let tableFull = document.getElementById("all-bus-table");
+    let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
     let fullRows = tableFull.rows;
     for (let i = 2; i < fullRows.length; i++) { // first two rows are the table header and the column headers
-        let number = parseInt(fullRows[i].firstElementChild.innerHTML)
-        let button = fullRows[i].lastElementChild.firstElementChild
+        let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
+        let button = <HTMLElement> fullRows[i].lastElementChild!.firstElementChild
         if (pins.includes(number)){ // lol, lmao even
-            button.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Unpin"
-            button.style.backgroundColor = "#ab0808";
+            button!.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Unpin"
+            button!.style.backgroundColor = "#ab0808";
         } else {
-            button.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Pin"
-            button.style.backgroundColor = "#327fa8";
+            button!.innerHTML = "<i class='fa-solid fa-thumbtack'></i> Pin"
+            button!.style.backgroundColor = "#327fa8";
         }
     }
 
@@ -77,7 +79,7 @@ function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
     pins = [];
     if (pinString != null) {
-        let pinArrayString = pinString.split(", ");
+        let pinArrayString:string[] = pinString.split(", ");
         for (let i = 0; i < pinArrayString.length; i++) {
             let n = parseInt(pinArrayString[i]);
             if (!pins.includes(n)) { pins.push(n); }
@@ -85,10 +87,10 @@ function updatePins() { // guess what
     }
 }
 
-async function pinBus(button) { // pins the bus when the user clicks the button
+async function pinBus(button: HTMLInputElement) { // pins the bus when the user clicks the button
     updatePins();
-    const busRow = button.parentElement.parentElement; // this is the overarching <tr> element of the bus row
-    const busNumber = busRow.firstElementChild.innerHTML; // this is the stringification of the number of the bus
+    const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
+    const busNumber = busRow!.firstElementChild!.innerHTML; // this is the stringification of the number of the bus
 
     var removing = false;
     const num = parseInt(busNumber); // this is the number of the bus
@@ -100,7 +102,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
         localStorage.setItem("pins", newPinString);
     } else {
         removing = true;
-        pins = pins.filter(function notNum(n) {return n != num;}); // this is how you remove elements in js arrays. pain
+        pins = pins.filter(function notNum(n: number) {return n != num;}); // this is how you remove elements in js arrays. pain
         pins.sort();
         if (pins.length == 0) {
             localStorage.removeItem("pins");
@@ -113,8 +115,8 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     // subscribe to the bus (or unsubscribe)
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // change pin icon to loading
-        button.querySelector("i").classList.add("fa-spinner", "fa-spin");
-        button.querySelector("i").classList.remove("fa-thumbtack");
+        button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
+        button.querySelector("i")!.classList.remove("fa-thumbtack");
 
         // temporary function to do recursion 'n such
         async function temp(wait) {
@@ -143,19 +145,19 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
-            button.querySelector("i").classList.remove("fa-spinner", "fa-spin");
-            button.querySelector("i").classList.add("fa-thumbtack");
+            button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
+            button.querySelector("i")!.classList.add("fa-thumbtack");
         }
     }
 
     updateTables();
 }
 
-function getRow(n) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
-    let tableFull = document.getElementById("all-bus-table");
+function getRow(n: number) { // returns the row from the all-bus-table corresponding with the number input, doesn't return anything otherwise
+    let tableFull = <HTMLTableElement> document.getElementById("all-bus-table");
     let fullRows = tableFull.rows;
     for (let i = 2; i < fullRows.length; i++) {
-        let number = parseInt(fullRows[i].firstElementChild.innerHTML)
+        let number = parseInt(fullRows[i]!.firstElementChild!.innerHTML)
         if (n === number) {
             return fullRows[i];
         }

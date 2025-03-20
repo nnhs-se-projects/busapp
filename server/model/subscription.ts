@@ -1,6 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+export {};
 const mongoose = require("mongoose");
+
 const schema = new mongoose.Schema({
     bus: {
         type: Number,
@@ -11,6 +11,7 @@ const schema = new mongoose.Schema({
         required: false,
     },
 });
+
 const Subscription = mongoose.model("Subscription", schema);
+
 module.exports = Subscription;
-//# sourceMappingURL=subscription.js.map
