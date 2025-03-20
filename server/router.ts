@@ -1,12 +1,10 @@
-"use strict"
-
-const express = require("express");
-const {OAuth2Client, TokenPayload} = require("google-auth-library");
-const { getBuses, readData } = require('./jsonHandler');
-const path = require("path");
-const fs = require("fs");
-const router = express.Router();
-const webpush = require('web-push');
+import express, {Request, Response} from "express";
+import {OAuth2Client, TokenPayload} from "google-auth-library";
+import { getBuses, readData, readWhitelist } from './jsonHandler';
+import path from "path";
+import fs, {readFileSync} from "fs";
+export const router = express.Router();
+import webpush from 'web-push';
 const dotenv = require("dotenv");
 const Announcement = require("./model/announcement");
 const Bus = require("./model/bus");
@@ -49,7 +47,7 @@ router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
 */
 
 // Homepage. This is where students will view bus information from. 
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
     // Reads from data file and displays data
     let data = {
         buses: await getBuses(), weather: await Weather.findOne({}),
@@ -68,7 +66,7 @@ router.get("/", async (req, res) => {
 });
 
 // tv route
-router.get("/tv", async (req, res) => {
+router.get("/tv", async (req: Request, res: Response) => {
     // Reads from data file and displays data
     res.render("tv", {
         data: await readData(),
@@ -78,18 +76,18 @@ router.get("/tv", async (req, res) => {
 })
 
 // Login page. User authenticates here and then is redirected to admin (where they will be authorized)
-router.get("/login", (req, res) => {
+router.get("/login", (req: Request, res: Response) => {
     res.render("login");
 });
 
 // Authenticates the user
-router.post("/auth/v1/google", async (req, res) => {
+router.post("/auth/v1/google", async (req: Request, res: Response) => {
     let token = req.body.token; // Gets token from request body
     let ticket = await oAuth2.verifyIdToken({ // Verifies and decodes token    
         idToken: token,
         audience: CLIENT_ID
     });
-    req.session.userEmail = ticket.getPayload().email; // Store email in session
+    req.session.userEmail = ticket.getPayload()!.email!; // Store email in session
     req.session.isAdmin = Boolean(await Admin.findOne({Email: req.session.userEmail?.toLowerCase()}));
     res.status(201).end();
 });
@@ -111,7 +109,7 @@ async function checkLogin(req, res) {
 
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
-router.get("/admin", async (req, res) => {
+router.get("/admin", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -138,11 +136,11 @@ router.get("/teapot", (req, res) => { res.sendStatus(418); });
 router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 
 // this needs to be served from the root of the server to work properly - used for push notifications
-router.get("/serviceWorker.js", async (req, res) => {
-    res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/js/') });
+router.get("/serviceWorker.js", async (req: Request, res: Response) => {
+    res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/ts/') });
 })
 
-router.post("/subscribe", async (req, res) => {
+router.post("/subscribe", async (req: Request, res: Response) => {
     const subscription = req.body.pushObject;
     const num = Number(req.body.busNumber);
     const rm = req.body.remove;
@@ -157,13 +155,13 @@ router.post("/subscribe", async (req, res) => {
     }
 })
 
-router.get("/waveStatus", async (req, res) => {
+router.get("/waveStatus", async (req: Request, res: Response) => {
     // get the wave status from the wave schema
     const wave = await Wave.findOne({});
     res.send(wave.locked);
 });
 
-router.post("/updateBusChange", async (req, res) => {
+router.post("/updateBusChange", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -174,7 +172,7 @@ router.post("/updateBusChange", async (req, res) => {
     res.send("success");
 });
 
-router.post("/updateBusStatus", async (req, res) => {
+router.post("/updateBusStatus", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -186,9 +184,13 @@ router.post("/updateBusStatus", async (req, res) => {
 });
 
 
-router.post("/sendWave", async (req, res) => {
+router.post("/sendWave", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
+
+    await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
+    await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
+    await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
 
     // find the wave
     if( !(null === await Wave.findOne({locked: true})) ) { 
@@ -202,7 +204,7 @@ router.post("/sendWave", async (req, res) => {
                     icon: "/img/Icon-New-512-any.png"
                 })).catch(async (e) => { // if fail, delete endpoint
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
-                    if([410, 400, 403, 401].includes(e.statusCode)) {
+                    if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
                 }).then(() => {});
@@ -210,14 +212,10 @@ router.post("/sendWave", async (req, res) => {
         });
     };
 
-    await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
-    await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
-    await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
-
     res.send("success");
 });
 
-router.post("/lockWave", async (req, res) => {
+router.post("/lockWave", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -237,7 +235,7 @@ router.post("/lockWave", async (req, res) => {
                     icon: "/img/Icon-New-512-any.png"
                 })).catch(async (e) => { // if fail, delete endpoint
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
-                    if([410, 400, 403, 401].includes(e.statusCode)) {
+                    if([410, 400, 403, 401].includes((<webpush.WebPushError>e).statusCode)) {
                         return Subscription.findByIdAndDelete(sub._id);
                     }
                 }).then(() => {});
@@ -248,7 +246,7 @@ router.post("/lockWave", async (req, res) => {
     res.send("success");
 });
 
-router.post("/setTimer", async (req, res) => {
+router.post("/setTimer", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -269,13 +267,13 @@ router.get("/getTimer", async (req: Request, res: Response) => {
 });
 */
 
-router.get("/leavingAt", async (req, res) => {
+router.get("/leavingAt", async (req: Request, res: Response) => {
     const leavingAt = (await Wave.findOne({})).leavingAt;
     res.send(leavingAt);
 
 });
 
-router.post("/resetAllBusses", async (req, res) => {
+router.post("/resetAllBusses", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -284,31 +282,31 @@ router.post("/resetAllBusses", async (req, res) => {
 
 });
 
-router.get("/beans", async (req, res) => {
+router.get("/beans", async (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../static/img/beans.jpg"));
 });
 
 // manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
 // not serving in static because iirc it is necessary to have it at the root for scope reasons
-router.get("/manifest.json", (req, res) => {
+router.get("/manifest.json", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
 });
 
 /* Admin page. This is where bus information can be updated from
 Reads from data file and displays data */
-router.get("/updateBusList", async (req, res) => {
+router.get("/updateBusList", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
     // get all the bus numbers of all the buses from the database and make a list of them
-    const busList = await Bus.find().distinct("busNumber");
+    const busList: string[] = await Bus.find().distinct("busNumber");
 
     let data = { busList: busList };
 
     res.render("updateBusList", { data: data });
 });
 
-router.get("/makeAnnouncement", async (req, res) => {
+router.get("/makeAnnouncement", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
     
@@ -318,7 +316,7 @@ router.get("/makeAnnouncement", async (req, res) => {
     });
 });
 
-router.get('/whitelist', async (req, res)=>{
+router.get('/whitelist', async (req: Request,res: Response)=>{
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
     
@@ -328,44 +326,44 @@ router.get('/whitelist', async (req, res)=>{
 })
 
 
-router.get("/updateBusListEmptyRow", (req, res) => {
+router.get("/updateBusListEmptyRow", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
 });
 
-router.get("/updateBusListPopulatedRow", (req, res) => {
+router.get("/updateBusListPopulatedRow", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListPopulatedRow.ejs"));
 });
 
-router.get("/adminEmptyRow", (req, res) => {
+router.get("/adminEmptyRow", (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, "../views/sockets/adminEmptyRow.ejs"));
 });
 
-router.get("/busList", async (req, res) => {
+router.get("/busList", async (req: Request, res: Response) => {
     res.type("json").send(await Bus.find().distinct("busNumber"));
 });
 
-router.get("/getWhitelist", async (req, res) => {
+router.get("/getWhitelist", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
     res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email).reverse());
 });
 
-router.post("/updateBusList", async (req, res) => {
+router.post("/updateBusList", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
     // use the posted bus list to update the database, removing any buses that are not in the list, and adding any buses that are in the list but not in the database
-    const busList = req.body.busList;
+    const busList: string[] = req.body.busList;
     
     let buses = await Bus.find({});
-    buses.forEach((bus) => { // for each bus in the database
+    buses.forEach((bus: any) => { // for each bus in the database
         if (!busList.includes(bus.busNumber)) { // if the bus is not in the list
             Bus.findOneAndDelete({ busNumber: bus.busNumber }).exec(); // remove the bus from the database
         }
     });
-    busList.forEach(async (busNumber) => { // for each bus in the list
-        if (!buses.map( (bus) => bus.busNumber).includes(busNumber)) { // if the bus is not in the database
+    busList.forEach(async (busNumber: string) => { // for each bus in the list
+        if (!buses.map( (bus: any) => bus.busNumber).includes(busNumber)) { // if the bus is not in the database
             try {
                 const newBus = new Bus({ // add the bus to the database
                     busNumber: busNumber,
@@ -382,11 +380,11 @@ router.post("/updateBusList", async (req, res) => {
     res.status(201).end();
 });
 
-router.get('/help',(req, res)=>{
+router.get('/help',(req: Request, res: Response)=>{
     res.render('help');
 });
 
-router.post("/updateWhitelist", async (req, res) => {
+router.post("/updateWhitelist", async (req:Request,res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -404,7 +402,7 @@ router.post("/updateWhitelist", async (req, res) => {
     res.send("success!");
 });
 
-router.post("/submitAnnouncement", async (req, res) => {    //overwrites the announcement in the database
+router.post("/submitAnnouncement", async (req: Request, res: Response) => {    //overwrites the announcement in the database
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
@@ -413,11 +411,9 @@ router.post("/submitAnnouncement", async (req, res) => {    //overwrites the ann
 });
 
 
-router.post("/clearAnnouncement", async (req, res) => {
+router.post("/clearAnnouncement", async (req: Request, res: Response) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
     
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
-
-module.exports = router;

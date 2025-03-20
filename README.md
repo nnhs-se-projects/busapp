@@ -129,6 +129,10 @@ The Bus App uses a variety of technologies. Below is some information on how to 
 ##### Express
 As mentioned above, Express is the key technology we use to run a server. Please check the official documentation: https://expressjs.com/
 
+
+##### Bootstrap
+Bootstrap is a UI framework that helps to abstract vanilla CSS into modifiable and customizable premade classes. https://getbootstrap.com/docs/5.3/components/accordion/
+
 ##### Ejs
 Ejs is a form of html that allows javascript to be run during the creation of the html. This allows for tables to be created much more easily. Please see the official documentation: https://ejs.co/
 
