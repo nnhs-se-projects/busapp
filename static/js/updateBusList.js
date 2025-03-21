@@ -1,36 +1,36 @@
-let busList: number[];
+let busList;
 fetch("/busList").then((res) => res.json()).then((data) => busList = data).then(() => console.log(busList));
 
-let newBusEmptyRow: string;
+let newBusEmptyRow;
 fetch("/updateBusListEmptyRow").then((res) => res.text()).then((data) => newBusEmptyRow = data);
 
-let newBusRow: string;
+let newBusRow;
 fetch("/updateBusListPopulatedRow").then((res) => res.text()).then((data) => newBusRow = data);
 
 function newBus_busList() {
-    const row = (<HTMLTableElement> document.getElementsByClassName("buslist-table")[0]).insertRow(1);
+    const row = (document.getElementsByClassName("buslist-table")[0]).insertRow(1);
     const html = ejs.render(newBusEmptyRow);
     row.innerHTML = html;
-    let input = row.children[0]!.children[0] as HTMLInputElement;
+    let input = row.children[0].children[0];
     input.focus();
 }
 
-function addBus_busList(confirmButton: HTMLElement) {
-    let row = confirmButton.parentElement!.parentElement! as HTMLTableRowElement;
-    let number = parseInt((row.children[0]!.children[0] as HTMLInputElement).value);
+function addBus_busList(confirmButton) {
+    let row = confirmButton.parentElement.parentElement;
+    let number = parseInt((row.children[0].children[0]).value);
     let index = busList.findIndex((currentNumber) => {return number < currentNumber});
     if (index == -1) index = busList.length;
     busList.splice(index, 0, number);
     row.remove();
-    const newRow = (<HTMLTableElement> document.getElementsByClassName("buslist-table")[0]).insertRow(index + 1);
+    const newRow = (document.getElementsByClassName("buslist-table")[0]).insertRow(index + 1);
     const html = ejs.render(newBusRow, {number: number});
     newRow.innerHTML = html;
     newBus_busList();
 }
 
-function removeBus_busList(secondChild: HTMLElement) {
-    let row = secondChild.parentElement!.parentElement! as HTMLTableRowElement;
-    let number = row.children[0]!.innerHTML as string;
+function removeBus_busList(secondChild) {
+    let row = secondChild.parentElement.parentElement;
+    let number = row.children[0].innerHTML;
     busList.splice(busList.indexOf(parseInt(number)), 1);
     row.remove();
 }
