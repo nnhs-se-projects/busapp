@@ -10,7 +10,7 @@
           <a class="nav-link button" href="/help">Help</a>
         </li>
         <li class="nav-item text-center">
-          <a class="nav-link button" style="cursor:pointer;" onclick="showCredits()">Credits</a>
+          <a class="nav-link button" style="cursor:pointer;" onclick="toggleCredits()">Credits</a>
         </li>
       </ul>
     </div>
@@ -91,19 +91,26 @@
 
 <!-- Main Content /\/\/\ ----------------------------------------------->
 
-<input type="checkbox" id="credits-dropdown" />
-<label class="credits-dropdown-label" for="credits-dropdown"
-  >Show Credits</label
->
-<div class="credits">
+<div id="credits">
+  <i class="fa-regular fa-circle-xmark" onclick="toggleCredits()" style="position: absolute; z-index: 2; font-size: 50%; right: 10px; top: 10px; cursor: pointer"></i>
   <div class="spacer"></div>
   <div class="starWarsContainer">
     <% for(var i = 0; i < 4; i++) { %>
-      <p>
-        Pierre Hanlet <br>JD Piar <br>Varun Vaid <br>Maaz Zubair <br>Sayee Anand <br>Wyatt
-        Barnes <br>Kurt Lovisa <br>Nolan Yee <br>Devam Das <br>Ronith Manikonda <br>Everett
-        Dombrowski <br>Rohan Rao <br>Lucas van Laerhoven <br>Aidan Malana <br>Muhammad Yulbarsov
-      </p>
+      <p>Pierre Hanlet</p>
+      <p>JD Piar</p>
+      <p>Varun Vaid</p>
+      <p>Maaz Zubair</p>
+      <p>Sayee Anand</p>
+      <p>Wyatt Barnes</p>
+      <p>Kurt Lovisa</p>
+      <p>Nolan Yee</p>
+      <p>Devam Das</p>
+      <p>Ronith Manikonda</p>
+      <p>Everett Dombrowski</p>
+      <p>Rohan Rao</p>
+      <p>Lucas van Laerhoven</p>
+      <p>Aidan Malana</p>
+      <p>Muhammad Yulbarsov</p>
     <% } %>
   </div>
 </div>

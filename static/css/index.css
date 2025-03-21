@@ -242,10 +242,11 @@ td {
     transition: height 0.5s;
 }
 
-.credits {
-    --angle: 10deg;
-    --gap: 30px;
-    display: block;
+#credits {
+    --angle: 12deg;
+    --gap: 20px;
+    border-radius: 15px;
+    display: none;
     position: fixed;
     width: calc(100% - calc(var(--gap) * 2));
     height: calc(100% - calc(var(--gap) * 2));
@@ -258,24 +259,60 @@ td {
     z-index: 1;
     perspective: 80px;
     overflow: hidden;
-    font-size: min(10vw, 10vh);
+    font-size: max(min(10vw, 10vh), 30px);
     text-align: center;
     color: yellow;
+    animation-play-state: paused;
+    font-family: sans-serif;
+    font-weight: 900;
 }
-.credits > .spacer {
+#credits > .spacer {
     position: relative;
     height: 100%;
 }
-.credits > .starWarsContainer {
-    animation: forwards 10s infinite linear starwars;
+#credits > .starWarsContainer {
+    transform: rotateX(var(--angle)) translateY(0%);
+    animation: forwards 30s 1 linear startwars, forwards 10s infinite linear starwars;
+    animation-delay: 2s, 32s;
+    animation-play-state: inherit;
     transform-origin: top;
     position: relative;
+}
+#credits > .starWarsContainer:before {
+    content: "CREDITS";
+    left: 50%;
+    translate: -50%;
+    display: block;
+    position: absolute;
+    animation: forwards 1.5s ease-in prologue;
+    animation-delay: 0.5s;
+    animation-play-state: inherit;
+    font-size: 200%;
+}
+#credits p {
+    padding-bottom: .75ch;
+    line-height: 1.6ch;
 }
 @keyframes starwars {
     from {
         transform: rotateX(var(--angle)) translateY(-75%);
     } to {
-        transform: rotateX(var(--angle)) translateY(-100%)/*translateY(calc(calc(-100vh / sin(var(--angle))) - 100%))*/;
+        transform: rotateX(var(--angle)) translateY(-100%);
+    }
+}
+@keyframes startwars {
+    from {
+        transform: rotateX(var(--angle)) translateY(0%);
+    }
+    to {
+        transform: rotateX(var(--angle)) translateY(-75%);
+    }
+}
+@keyframes prologue {
+    from {
+        transform: translateY(0%);
+    } to {
+        transform: translateY(-100%);
     }
 }
 
