@@ -24,6 +24,11 @@ dotenv.config({ path: ".env" });
 const vapidPrivateKey = process.env.VAPID_PRIVATE;
 const vapidPublicKey = process.env.VAPID_PUBLIC;
 
+// CHECK BEFORE MERGING
+if (!vapidPrivateKey || !vapidPublicKey) {
+    throw new Error("VAPID keys are not set in the environment variables.");
+}
+
 webpush.setVapidDetails(
     'mailto:test@test.com',
     vapidPublicKey,
@@ -419,5 +424,23 @@ router.post("/clearAnnouncement", async (req, res) => {
     
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
+
+router.get("/busMap", async (req, res) => {
+    res.render("busMap", {
+        data: await readData(),
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
+    });
+});
+
+router.post("/updateBusMap", async (req, res) => {
+    if (!req.session.userEmail) {
+        res.redirect("/login");
+        return;
+    }
+
+    await Bus.findOneAndUpdate({}, {currentWave}, {upsert: true});
+    res.redirect("/");
+});
+
 
 module.exports = router;

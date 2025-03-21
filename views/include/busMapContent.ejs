@@ -1,0 +1,53 @@
+<form action="/updateBusMap" method="POST">
+<div class="buttons">
+        <button class="button back-button" onclick="saveMap()" href="/admin">Back to Admin Page</a>
+</div>
+
+    <div>
+
+        <table style="width:100%" id="next-wave">
+            <th colspan="100%">Next Wave
+                <tr style="height: 100px">
+                    <% for (let i = 0; i < currentWave.length; i++) { %>
+                        <td class="test"><%-currentWave%></td>
+                    <% } %>
+                </tr>
+            </th>
+        </table>
+        
+    </div>
+
+    <!-- <div>
+
+        <table style="width:100%">
+            <th colspan="100%">Bus Lots
+                <tr style="height: 100px">
+                    <% for (let i = 0; i < 14; i++) { %>
+                        <td class="row1"><input placeholder="enter"></td>
+                    <% } %>
+                </tr>
+                <tr style="height: 100px">
+                    <% for (let i = 0; i < 14; i++) { %>
+                        <td class="row2"><input placeholder="enter"></td>
+                    <% } %>
+                </tr>
+            </th>
+        </table>
+        
+    </div>
+
+    <div>
+
+        <table style="width:100%">
+            <th colspan="100%">Current Wave
+                <tr style="height: 100px">
+                    <% for (let i = 0; i < 8; i++) { %>
+                        <td class="current"><input placeholder="enter"></td>
+                    <% } %>
+                </tr>
+            </th>
+        </table>
+        
+    </div> -->
+
+</form>

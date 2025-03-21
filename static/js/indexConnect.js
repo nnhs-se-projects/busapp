@@ -164,6 +164,23 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     }
     updatePins();
 
+    if (pins.includes(num) == false) {
+        pins.push(num);
+        pins.sort();
+        let newPinString = pins.join(", "); // representation of the pins list as a string
+        localStorage.setItem("pins", newPinString);
+    } else {
+        removing = true;
+        pins = pins.filter(function notNum(n) {return n != num;}); // this is how you remove elements in js arrays. pain
+        pins.sort();
+        if (pins.length == 0) {
+            localStorage.removeItem("pins");
+        } else {
+            let newPinString = pins.join(", "); // representation of the pins list as a string
+            localStorage.setItem("pins", newPinString);
+        }
+    }
+
     updateTables();
 }
 
