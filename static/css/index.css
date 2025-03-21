@@ -257,7 +257,7 @@ td {
     background-repeat: repeat;
     background-size: 200px 200px;
     z-index: 1;
-    perspective: 80px;
+    perspective: 12vh;
     overflow: hidden;
     font-size: max(min(10vw, 10vh), 30px);
     text-align: center;
@@ -322,7 +322,7 @@ td {
         grid-template-columns: 4fr 9fr 3fr;
     }
 
-    #login-button, #notif-button, .help-button {
+    #login-button, .help-button {
         font-size: 1.8vw;
     }
 
