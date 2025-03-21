@@ -9,6 +9,9 @@
         <li class="nav-item text-center">
           <a class="nav-link button" href="/help">Help</a>
         </li>
+        <li class="nav-item text-center">
+          <a class="nav-link button" style="cursor:pointer;" onclick="toggleCredits()">Credits</a>
+        </li>
       </ul>
     </div>
     <button
@@ -88,24 +91,28 @@
 
 <!-- Main Content /\/\/\ ----------------------------------------------->
 
-<input type="checkbox" id="credits-dropdown" />
-<label class="credits-dropdown-label" for="credits-dropdown"
-  >Show Credits</label
->
-<div class="credits-dropdown">
-  <p
-    style="
-      color: #006678;
-      font-size: 100%;
-      text-align: center;
-      padding: 5px 15px 5px 15px;
-      border-top: 3px solid;
-    "
-  >
-    Credits: Pierre Hanlet, JD Piar, Varun Vaid, Maaz Zubair, Sayee Anand, Wyatt
-    Barnes, Kurt Lovisa, Nolan Yee, Devam Das, Ronith Manikonda, Everett
-    Dombrowski, Rohan Rao, Lucas van Laerhoven, Aidan Malana, Muhammad Yulbarsov
-  </p>
+<div id="credits">
+  <i class="fa-regular fa-circle-xmark" onclick="toggleCredits()" style="position: absolute; z-index: 2; font-size: 50%; right: 10px; top: 10px; cursor: pointer"></i>
+  <div class="spacer"></div>
+  <div class="starWarsContainer">
+    <% for(var i = 0; i < 4; i++) { %>
+      <p>Pierre Hanlet</p>
+      <p>JD Piar</p>
+      <p>Varun Vaid</p>
+      <p>Maaz Zubair</p>
+      <p>Sayee Anand</p>
+      <p>Wyatt Barnes</p>
+      <p>Kurt Lovisa</p>
+      <p>Nolan Yee</p>
+      <p>Devam Das</p>
+      <p>Ronith Manikonda</p>
+      <p>Everett Dombrowski</p>
+      <p>Rohan Rao</p>
+      <p>Lucas van Laerhoven</p>
+      <p>Aidan Malana</p>
+      <p>Muhammad Yulbarsov</p>
+    <% } %>
+  </div>
 </div>
 
 <div id="IOSnotifpopup">

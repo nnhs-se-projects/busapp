@@ -200,54 +200,6 @@ td {
     margin-bottom: 3%;
 }
 
-
-.credits-dropdown {
-    font-family: 'Montserrat', sans-serif;
-    overflow: hidden;
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    /* transform: translateY(0); */
-    position: fixed;
-    bottom: 0;
-    max-height: 0px;
-    transition: clip-path 1s, transform 1s, max-height 1s;
-    background-color: lightgray;
-    z-index: 0;
-    width: 100%;
-}
-#credits-dropdown:checked ~ .credits-dropdown {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-    position: fixed;
-    bottom: 0;
-    max-height: 9999999999999px;
-    transition: clip-path 1s, transform 1s;
-}
-#credits-dropdown {
-    display: none;
-    position: fixed;
-    bottom: 0;
-}
-
-.credits-dropdown-label::before {
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    content: "\f062";
-    padding: 5px;
-    z-index: 1;
-    position: fixed;
-    bottom: 0;
-}
-#credits-dropdown:checked ~ .credits-dropdown-label::before {
-    /* content: "\f063"; */
-    position: absolute;
-    bottom: 0;
-}
-
-.credits-dropdown-label {
-    position: absolute;
-    left: 1vw;
-    bottom: 0;
-}
-
 #networkIndicator {
     position: fixed;
     left: 10px;
@@ -288,6 +240,80 @@ td {
 #networkBlocker:is(.shown){
     height: 100% !important;
     transition: height 0.5s;
+}
+
+#credits {
+    --angle: 12deg;
+    --gap: 20px;
+    border-radius: 15px;
+    display: none;
+    position: fixed;
+    width: calc(100% - calc(var(--gap) * 2));
+    height: calc(100% - calc(var(--gap) * 2));
+    left: var(--gap);
+    top: var(--gap);
+    background-color: black;
+    background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    z-index: 1;
+    perspective: 80px;
+    overflow: hidden;
+    font-size: max(min(10vw, 10vh), 30px);
+    text-align: center;
+    color: yellow;
+    animation-play-state: paused;
+    font-family: sans-serif;
+    font-weight: 900;
+}
+#credits > .spacer {
+    position: relative;
+    height: 100%;
+}
+#credits > .starWarsContainer {
+    transform: rotateX(var(--angle)) translateY(0%);
+    animation: forwards 30s 1 linear startwars, forwards 10s infinite linear starwars;
+    animation-delay: 2s, 32s;
+    animation-play-state: inherit;
+    transform-origin: top;
+    position: relative;
+}
+#credits > .starWarsContainer:before {
+    content: "CREDITS";
+    left: 50%;
+    translate: -50%;
+    display: block;
+    position: absolute;
+    animation: forwards 1.5s ease-in prologue;
+    animation-delay: 0.5s;
+    animation-play-state: inherit;
+    font-size: 200%;
+}
+#credits p {
+    padding-bottom: .75ch;
+    line-height: 1.6ch;
+}
+@keyframes starwars {
+    from {
+        transform: rotateX(var(--angle)) translateY(-75%);
+    } to {
+        transform: rotateX(var(--angle)) translateY(-100%);
+    }
+}
+@keyframes startwars {
+    from {
+        transform: rotateX(var(--angle)) translateY(0%);
+    }
+    to {
+        transform: rotateX(var(--angle)) translateY(-75%);
+    }
+}
+@keyframes prologue {
+    from {
+        transform: translateY(0%);
+    } to {
+        transform: translateY(-100%);
+    }
 }
 
 @media (orientation: landscape) {

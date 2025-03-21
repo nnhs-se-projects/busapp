@@ -40,6 +40,17 @@ function hideWhatsNew(version) {
     localStorage.setItem("whatsNewVersion", String(version));
 }
 
+function toggleCredits() {
+    const elem = document.getElementById('credits')
+    if(elem.style.display==='') {
+        elem.style.display = "block";
+        elem.style.animationPlayState = "running";
+    } else {
+        elem.style.display = '';
+        elem.style.animationPlayState = "paused";
+    }
+}
+
 window.onload = () => {
     var version = +(document.getElementById("whatsNewVersion")).value;
     if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
