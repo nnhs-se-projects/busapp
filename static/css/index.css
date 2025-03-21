@@ -322,7 +322,7 @@ td {
         grid-template-columns: 4fr 9fr 3fr;
     }
 
-    #login-button, #notif-button, .help-button {
+    #login-button, .help-button {
         font-size: 1.8vw;
     }
 
