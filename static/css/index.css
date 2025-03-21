@@ -265,6 +265,7 @@ td {
     animation-play-state: paused;
     font-family: sans-serif;
     font-weight: 900;
+    outline: calc(var(--gap) + 15px) solid rgba(0, 0, 0, 0.8);
 }
 #credits > .spacer {
     position: relative;
