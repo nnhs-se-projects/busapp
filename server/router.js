@@ -56,7 +56,8 @@ router.get("/", async (req, res) => {
         isLocked: false,
         leavingAt: new Date(),
         vapidPublicKey,
-        announcement: (await Announcement.findOne({})).announcement
+        announcement: (await Announcement.findOne({})).announcement,
+        isDev: process.env.DEV === "true"
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
@@ -66,6 +67,13 @@ router.get("/", async (req, res) => {
         render: fs.readFileSync(path.resolve(__dirname, "../views/include/indexContent.ejs"))
     });
 });
+
+router.get("/restartServer", async (req, res) => {
+    if(process.env.DEV === "true") {
+        throw new Error("restarting...");
+    }
+    else {red.sendStatus(404)}
+})
 
 // tv route
 router.get("/tv", async (req, res) => {

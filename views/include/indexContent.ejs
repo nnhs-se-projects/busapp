@@ -79,16 +79,42 @@
         </table>
 </div>    -->
 
-<div class="buttons-container">
-  <div id="notif-container">
-    <a
-      id="notif-button"
-      onclick="enablePushNotifications('<%= data.vapidPublicKey %>')"
-      >Enable Notifications</a
-    >
-  </div>
-</div>
+<% if(data.isDev) { %>
+  <div id="log" style="background-color: black; font-family: monospace; min-height: 1ch; max-height: 20ch; overflow: auto; margin: 10px; margin-bottom: 0; overflow-wrap: break-word;"></div>
+  <input type="text" id="devConsole" style="width: calc(100% - 20px); margin-left: 10px; margin-bottom: 30px;"/>
+  <input type="button" >
+  <script>
+    var escapeHtml = (unsafe) => {
+      unsafe = String(unsafe);
+      return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
 
+    var old = console.log;
+    var logger = document.getElementById('log');
+    console.log = function (message) {
+      if (typeof message == 'object') {
+        logger.innerHTML += escapeHtml(JSON && JSON.stringify ? JSON.stringify(message) : message) + '<br/><hr/>';
+      } else {
+        logger.innerHTML += escapeHtml(message) + '<br/><hr/>';
+      }
+      old(message);
+    }
+    console.error = console.log;
+
+    devConsole = document.getElementById("devConsole");
+    devConsole.onkeyup = function (e) {
+      if (e.key === 'Enter' || e.keyCode === 13) {
+        logger.innerHTML += "> " + escapeHtml(devConsole.value) + "<br>";
+        try {logger.innerHTML += "<-" + eval(devConsole.value) + "<br/>"; eval(devConsole.value)}
+        catch(e) {logger.innerHTML += escapeHtml(e) + "<br/><hr/>";}
+        devConsole.value = "";
+      }
+    };
+    async function restartServer() {
+      return await fetch("/restartServer");
+    }
+  </script>
+<% } %>  
 <!-- Main Content /\/\/\ ----------------------------------------------->
 
 <div id="credits">
