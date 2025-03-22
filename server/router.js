@@ -72,7 +72,7 @@ router.get("/restartServer", async (req, res) => {
     if(process.env.DEV === "true") {
         throw new Error("restarting...");
     }
-    else {red.sendStatus(404)}
+    else {res.sendStatus(404)}
 })
 
 // tv route
