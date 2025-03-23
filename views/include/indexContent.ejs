@@ -105,7 +105,7 @@
     devConsole.onkeyup = function (e) {
       if (e.key === 'Enter' || e.keyCode === 13) {
         logger.innerHTML += "> " + escapeHtml(devConsole.value) + "<br>";
-        try {logger.innerHTML += "<-" + eval(devConsole.value) + "<br/>"; eval(devConsole.value)}
+        try {logger.innerHTML += "<-" + eval.call(window, devConsole.value) + "<br/>"; eval(devConsole.value)}
         catch(e) {logger.innerHTML += escapeHtml(e) + "<br/><hr/>";}
         devConsole.value = "";
       }
