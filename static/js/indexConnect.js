@@ -14,7 +14,7 @@ var panelExpanded = false;
 // end of initializing stuff
 
 indexSocket.on("update", (data) => {
-    // console.log("update received")
+    console.log("update received")
 
     // convert from time strings to dates to allow conversion to local time
     data.buses.forEach((bus) => {
