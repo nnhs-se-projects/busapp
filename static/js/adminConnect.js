@@ -5,8 +5,6 @@ var updatingCount = 0;
 
 var TIMER = (document.getElementById("timerDurationSelector")).value;
 
-var currentWave = [];
-
 adminSocket.on("update", (data) => {
   // convert from time strings to dates to allow conversion to local time
   data.allBuses.forEach((bus) => {
