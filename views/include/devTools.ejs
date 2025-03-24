@@ -74,7 +74,7 @@
                 logger.innerHTML += "<-" + temp + "<br/><hr/>";
             }
             // catch errors in the console and log them
-            catch(e) {logToWebConsole(e, "red", e.stack)}
+            catch(e) {logToWebConsole(String(e), "red", e.stack)}
 
             // clear the input and scroll to the bottom
             devConsole.value = "";
