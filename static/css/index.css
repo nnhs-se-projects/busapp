@@ -129,10 +129,6 @@ td {
     border: solid var(--giants-orange);
 }
 
-.weather-icon {
-    /* filter: grayscale(100%) hue-rotate(166deg) saturate(100%); */
-}
-
 #IOSnotifpopup > div, #whatsNewPopup > div {
     box-sizing: border-box;
     position: fixed; 
