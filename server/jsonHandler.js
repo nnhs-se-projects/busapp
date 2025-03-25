@@ -46,10 +46,10 @@ async function readData() {
 
 async function writeWeather(weather) {
         const doc = await Weather.findOneAndUpdate({}, {
-            status: weather.current.condition.text,
-            icon: weather.current.condition.icon,
-            temperature: weather.current.temp_f,
-            feelsLike: weather.current.feelslike_f
+            status: weather.properties.periods[0].shortForecast,
+            icon: weather.properties.periods[0].icon,
+            temperature: weather.properties.periods[0].temperature,
+            // feelsLike: weather.periods[0].temperature,
         }, {upsert: true, returnDocument: "after"});
     
 }

@@ -331,14 +331,6 @@ td {
         padding: 1%;
     }
     
-    .weather-temperature > *{
-        padding: 5% 0 0;
-    }
-
-    .weather-status > *{
-        padding: 0 0 3%;
-    }
-
     .num-col:not(th) {
         font-size: 2vw;
     }
