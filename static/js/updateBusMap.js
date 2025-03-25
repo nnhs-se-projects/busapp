@@ -1,4 +1,4 @@
-let currentWave = [];
+let currentWave = [0];
 
 async function saveMap() {
     await fetch("/updateBusMap", {

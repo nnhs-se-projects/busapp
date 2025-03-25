@@ -91,7 +91,6 @@ async function sendWave() {
 
 async function addToWave(button) {
   await updateStatus(button, "Loading");
-  currentWave.push(button.parentElement.parentElement.children[0].children[0].value);
 }
 
 async function removeFromWave(button) {
