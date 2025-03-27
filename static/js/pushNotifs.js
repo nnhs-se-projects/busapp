@@ -56,20 +56,20 @@ async function enablePushNotifications(publicKey) {
                     });
                 }
                 
-                // all is well - remove the button
-                document.getElementById("notif-container")?.remove()
+                // update the status of the button
+                updateNotifButton()
         } else {
             alert("You denied notification permission, this will result in push notifications not working");
         }
     } else if('serviceWorker' in navigator) { // If the browser supports service workers but not notifications, I'm like 60% sure it'll be safari on IOS
-        document.getElementById('IOSnotifpopup')!.style.display='block';
+        document.getElementById('IOSnotifpopup').style.display='block';
     } else {
         alert("Your browser is not supported :(");
     }
 }
 
 // checks if notifications are working via a couple of methods and if they are, removes the notification button
-function removeNotifButton() {
+function updateNotifButton() {
     // check if the serviceworker is present and functional/"active"
     var areServiceWorkersWorking = navigator.serviceWorker.getRegistrations().then(e => {
         if(e.length !== 0) {
@@ -87,7 +87,10 @@ function removeNotifButton() {
 
     areServiceWorkersWorking.then(condition => {
         if (Notification.permission === "granted" && condition) {
-            document.getElementById("notif-container")?.remove()
+            const button = document.getElementById("notif-button");
+            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i> Notifications Enabled!";
+            button.onclick = "";
+            button.style.cursor = "not-allowed";
         }
     });
 }

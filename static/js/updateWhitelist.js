@@ -1,14 +1,14 @@
-var admins: string[];   
+var admins;   
 fetch("/getWhitelist").then((data)=>data.json()).then((data) => admins = data);
 
-var newAdminEmptyRow: string;
+var newAdminEmptyRow;
 fetch("/adminEmptyRow").then((res) => res.text()).then((data) => newAdminEmptyRow = data);
  
 
-async function addAdmin_admins(e: HTMLElement) {
+async function addAdmin_admins(e) {
     console.log(e)
-    let row = e.parentElement!.parentElement! as HTMLTableRowElement;
-    let admin = (row.children[0]!.children[0] as HTMLInputElement).value.toLowerCase();
+    let row = e.parentElement.parentElement;
+    let admin = (row.children[0].children[0]).value.toLowerCase();
     if(admin.includes('@') && admin.includes('naperville203.org') && (admin.indexOf('@') < admin.indexOf('naperville203.org'))){
         if (admins.includes(admin)) {
             alert("Duplicate admins are not allowed");
@@ -18,24 +18,24 @@ async function addAdmin_admins(e: HTMLElement) {
             alert("Error adding admin! Try again later");
             return;
         }
-        const newRow = (<HTMLTableElement> document.getElementsByClassName("whitelist-table")[0]).insertRow(2);
+        const newRow = (document.getElementsByClassName("whitelist-table")[0]).insertRow(2);
         const html = ejs.render(newAdminEmptyRow, {newAddress: admin});
         newRow.innerHTML = html;
         admins.splice(0,0, admin);
-        let gleepGlorp = <HTMLInputElement> document.getElementById("gleepGlorp");
+        let gleepGlorp = document.getElementById("gleepGlorp");
         gleepGlorp.value = ""
     }
     else {
         alert("Invalid address entered. Please enter a D203 email address.");
-        let gleepGlorp = <HTMLInputElement> document.getElementById("gleepGlorp");
+        let gleepGlorp = document.getElementById("gleepGlorp");
         gleepGlorp.value = ""
     }
     
 }
 
-async function removeAdmin_admins(secondChild: HTMLElement) {
-    let row = secondChild.parentElement!.parentElement! as HTMLTableRowElement;
-    let admin = row.children[0]!.innerHTML;
+async function removeAdmin_admins(secondChild) {
+    let row = secondChild.parentElement.parentElement;
+    let admin = row.children[0].innerHTML;
     if(await save2(admin)) {
         admins.splice(admins.indexOf(admin), 1);
         row.remove();
@@ -45,7 +45,7 @@ async function removeAdmin_admins(secondChild: HTMLElement) {
 
 
 
-async function  save2(admin: string) {
+async function  save2(admin) {
     const res = await fetch("/updateWhitelist", {
         method: 'POST',
         headers: {

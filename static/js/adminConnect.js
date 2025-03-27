@@ -1,11 +1,9 @@
-/// <reference path="./socket-io-client.d.ts"/>
-
 var adminSocket = window.io("/admin");
 var countDownDate = new Date();
 
 var updatingCount = 0;
 
-var TIMER = (<any>document.getElementById("timerDurationSelector")).value;
+var TIMER = (document.getElementById("timerDurationSelector")).value;
 
 adminSocket.on("update", (data) => {
   // convert from time strings to dates to allow conversion to local time
@@ -16,13 +14,13 @@ adminSocket.on("update", (data) => {
   countDownDate = new Date(data.leavingAt);
   // rerender the page
   const html = ejs.render(
-    document.getElementById("getRender")!.getAttribute("render")!,
+    document.getElementById("getRender").getAttribute("render"),
     { data: data }
   );
-  document.getElementById("content")!.innerHTML = html;
+  document.getElementById("content").innerHTML = html;
 
   // update the timer input to match the actual value
-  var timerValue: any = document.getElementById("timerDurationSelector");
+  var timerValue = document.getElementById("timerDurationSelector");
   if (timerValue !== null) {
     timerValue.value = TIMER;
   }
@@ -42,7 +40,7 @@ async function lockWave() {
 }
 
 async function updateTimer() {
-  var timerValue: any = document.getElementById("timerDurationSelector");
+  var timerValue = document.getElementById("timerDurationSelector");
 
   if (timerValue === null) {
     timerValue = { value: 1 };
@@ -183,10 +181,10 @@ var x = setInterval(async function () {
 // requires global variable updatingcount
 // functions like the fetch command, but shows the loading alert message to show if the app is actually working on it
 async function fetchWithAlert(
-  endpoint: string,
-  method: string,
-  header: HeadersInit,
-  data: object
+  endpoint,
+  method,
+  header,
+  data
 ) {
   updatingCount++;
   setLoadingState(true);
@@ -216,8 +214,8 @@ async function fetchWithAlert(
 }
 
 // sets the loading state for the "Loading" popup
-async function setLoadingState(option: boolean) {
-  var div = document.getElementsByClassName("popup")[0] as HTMLElement;
+async function setLoadingState(option) {
+  var div = document.getElementsByClassName("popup")[0];
   if (div) {
     if (option) {
       div.style.animationName = "slide";
