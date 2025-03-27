@@ -29,6 +29,8 @@ adminSocket.on("update", (data) => {
   }
 
   setIndicatorStatus(lastStatus);
+  orderCounterCurrent = document.getElementById("currentWaveTBody").children.length;
+  orderCounterNext = document.getElementById("nextWaveTBody").children.length;
 });
 
 function update() {
