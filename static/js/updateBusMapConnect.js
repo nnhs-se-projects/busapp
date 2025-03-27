@@ -1,8 +1,8 @@
-var adminSocket = window.io('/admin');
+var busMapSocket = window.io('/busMap');
 
 let currentWave = [];
 
-adminSocket.on("update", (data) => {
+busMapSocket.on("update", (data) => {
 
     window.location.reload();
     
@@ -10,7 +10,7 @@ adminSocket.on("update", (data) => {
 });
 
 function updateBusMap() {
-    adminSocket.emit("updateMain", {
+    busMapSocket.emit("updateMain", {
         type: "update",
     });
 }
