@@ -46,8 +46,8 @@ io.of("/admin").on("connection", async (socket) => {
 
         let data ={
             allBuses: (await readData()).buses,
-            nextWave: await Bus.find({status: "Next Wave"}),
-            loading: await Bus.find({status: "Loading"}),
+            nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
+            loading: await Bus.find({status: "Loading"}).sort("order"),
             isLocked: false, 
             leavingAt: new Date(),
         };

@@ -125,8 +125,8 @@ router.get("/admin", async (req, res) => {
 
     let data = {
         allBuses: await getBuses(),
-        nextWave: await Bus.find({status: "Next Wave"}),
-        loading: await Bus.find({status: "Loading"}),
+        nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
+        loading: await Bus.find({status: "Loading"}).sort("order"),
         isLocked: false, 
         leavingAt: new Date(),
         timer: timer
@@ -189,7 +189,8 @@ router.post("/updateBusStatus", async (req, res) => {
     let busNumber = req.body.number;
     let busStatus = req.body.status;
     let time = req.body.time;
-    await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time});
+    let order = req.body.order;
+    await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order});
     res.send("success");
 });
 

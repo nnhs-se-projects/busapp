@@ -1,6 +1,7 @@
 var adminSocket = window.io("/admin");
 var countDownDate = new Date();
-
+var orderCounterCurrent = document.getElementById("currentWaveTBody").children.length;
+var orderCounterNext = document.getElementById("nextWaveTBody").children.length;
 var updatingCount = 0;
 
 var TIMER = (document.getElementById("timerDurationSelector")).value;
@@ -12,11 +13,13 @@ adminSocket.on("update", (data) => {
   });
 
   countDownDate = new Date(data.leavingAt);
+  console.log(data.loading);
   // rerender the page
   const html = ejs.render(
     document.getElementById("getRender").getAttribute("render"),
     { data: data }
   );
+  
   document.getElementById("content").innerHTML = html;
 
   // update the timer input to match the actual value
@@ -55,7 +58,7 @@ async function updateTimer() {
     { minutes: timerValue.value }
   );
   if (!res.ok) {
-    console.log(`Response status: ${res.status}`);
+    alert(`Response status: ${res.status}`);
   }
 
   TIMER = timerValue.value;
@@ -66,11 +69,18 @@ async function updateStatus(button, status) {
   let number = button.parentElement.parentElement.children[0].children[0].value;
   let time = new Date();
 
+  var orderVar = orderCounterCurrent;
+  if(status === "Next Wave") {
+    orderVar = orderCounterNext;
+  }
+
   let data = {
     number: number,
     time: time,
     status: status,
+    order: orderVar,
   };
+
 
   await fetchWithAlert(
     "/updateBusStatus",
@@ -86,19 +96,25 @@ async function updateStatus(button, status) {
 
 async function sendWave() {
   await fetchWithAlert("/sendWave", "POST", {}, {});
+  orderCounterCurrent = orderCounterNext;
+  orderCounterNext = 0;
   update();
 }
 
 async function addToWave(button) {
   await updateStatus(button, "Loading");
+  orderCounterCurrent++
 }
 
-async function removeFromWave(button) {
+async function removeFromWave(button, current) {
   await updateStatus(button, "");
+  if(current) orderCounterCurrent--;
+  else orderCounterNext--;
 }
 
 async function addToNextWave(button) {
   await updateStatus(button, "Next Wave");
+  orderCounterNext++
 }
 
 async function reset(button) {
