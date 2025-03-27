@@ -22,15 +22,13 @@ body {
     /* backdrop-filter: blur(10px); */
 }
 
-.navbar {
-    transform: translate(1%, 1vh);
+.navbar-div {
     width: 98%;
     background-color: var(--space-cadet);
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
     box-shadow: 0px 0px 10px 0px var(--space-cadet);
-    /* border: solid var(--giants-orange); */
 }
 
 .navbar-toggler {
