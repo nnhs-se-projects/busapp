@@ -14,7 +14,7 @@ var panelExpanded = false;
 // end of initializing stuff
 
 indexSocket.on("update", (data) => {
-    // console.log("update received")
+    console.log("update received")
 
     // convert from time strings to dates to allow conversion to local time
     data.buses.forEach((bus) => {
@@ -33,6 +33,7 @@ indexSocket.on("update", (data) => {
     updatePins();
 
     setIndicatorStatus(lastStatus);
+    updateNotifButton();
 });
 
 function hideWhatsNew(version) {
@@ -60,6 +61,7 @@ window.onload = () => {
     buses = JSON.parse(document.getElementById("getRender").getAttribute("buses"));
     updatePins();
     updateTables();
+    updateNotifButton();
 };
 
 // We can probably remove this function when we rewrite in JS. Basically useless after the UI overhaul

@@ -13,9 +13,11 @@
     </head>
     <body style="background-image: url('<%= data.weather.icon %>'); background-repeat: no-repeat; background-size: cover; backdrop-filter: blur(5px);">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <%- include('include/navBar'); %>
         <div id="content">
             <%- include('include/indexContent'); %>
         </div>
+        <%- include('include/devTools'); %>
         <script src="js/pushNotifs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <!--script src='js/indexConnect.js'></script-->

@@ -56,8 +56,8 @@ async function enablePushNotifications(publicKey) {
                     });
                 }
                 
-                // all is well - remove the button
-                document.getElementById("notif-container")?.remove()
+                // update the status of the button
+                updateNotifButton()
         } else {
             alert("You denied notification permission, this will result in push notifications not working");
         }
@@ -69,7 +69,7 @@ async function enablePushNotifications(publicKey) {
 }
 
 // checks if notifications are working via a couple of methods and if they are, removes the notification button
-function removeNotifButton() {
+function updateNotifButton() {
     // check if the serviceworker is present and functional/"active"
     var areServiceWorkersWorking = navigator.serviceWorker.getRegistrations().then(e => {
         if(e.length !== 0) {
@@ -87,7 +87,10 @@ function removeNotifButton() {
 
     areServiceWorkersWorking.then(condition => {
         if (Notification.permission === "granted" && condition) {
-            document.getElementById("notif-container")?.remove()
+            const button = document.getElementById("notif-button");
+            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i> Notifications Enabled!";
+            button.onclick = "";
+            button.style.cursor = "not-allowed";
         }
     });
 }
