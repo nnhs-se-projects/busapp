@@ -1,0 +1,58 @@
+#table, tr, td, th {
+    border-collapse: collapse;
+    font-family: Verdana, sans-serif;
+    padding: 15px;
+    text-align: center;
+}
+
+button {
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+    background-color: #4a4948;
+    color:aliceblue;
+    width: 200px;
+    font-family: Verdana, sans-serif;
+    border-radius: 15px;
+    border: transparent;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #32a89e;
+    transition: .5s;
+    color: azure;
+}
+
+input {
+    text-align: center;
+    font-family: Verdana, sans-serif;
+    font-size: 15px;
+    border: transparent;
+    width: 50px;
+}
+
+tr, td {
+    border-radius: 15px;
+    background-color: #f7b90c;
+    width: 50px;
+}
+
+td:hover {
+    background-color: #32a89e; /*#facb48;*/
+    transition: .5s;
+    color: azure;
+    cursor: pointer;
+}
+
+th {
+    border-radius: 15px;
+    color: azure;
+    background-image: linear-gradient(to right, #4a4948, #24211f);
+}
+
+input {
+    border: transparent;
+    background-color: transparent;
+}
