@@ -7,7 +7,7 @@
     --crimson: #d7263dff;
     --giants-orange: #f46036ff;
     --space-cadet: #2e294eff;
-    --dark-cyan: #509191ff;
+    --lighter-blue: hsl(250, 31%, 40%);
     --night: #141415ff;
     --gray: #ebebeb
     /* --bs-navbar-brand-color: var(--dark-cyan) !important; */
@@ -22,21 +22,22 @@ body {
     /* backdrop-filter: blur(10px); */
 }
 
-.navbar {
-    transform: translate(1%, 1vh);
+.navbar-div {
     width: 98%;
     background-color: var(--space-cadet);
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
-    border: solid var(--giants-orange);
+    box-shadow: 0px 0px 10px 0px var(--space-cadet);
 }
 
-
+.navbar-toggler {
+    border-bottom: solid var(--crimson); 
+}
 .navbar-text, .navbar-toggler {
     background-color: var(--giants-orange);
     border-radius: 5px;
-    border-bottom: solid var(--crimson); 
+    /* border-bottom: solid var(--crimson);  */
     padding-left: 5px;
     padding-right: 5px;
     margin: 5px;
@@ -97,13 +98,13 @@ button:active{
     overflow: auto;
 }
 
-.announcement-nav {
+.announcement-div {
     width: 98%;
     background-color: var(--space-cadet);
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
-    border: solid var(--giants-orange);
+    box-shadow: 0px 0px 10px 0px var(--space-cadet);
 }
 
 .content-container {
@@ -112,8 +113,7 @@ button:active{
     /* color: var(--dark-cyan); */
     color: white;
     border-radius: 5px;
-    border: solid var(--giants-orange);
-
+    box-shadow: 0px 0px 10px 0px var(--space-cadet);
     padding: 5px;
     padding-left: 5px;
 }
@@ -122,11 +122,15 @@ button:active{
     width: 90%;
     max-width: 90%;
     border-collapse: separate;
+    border-spacing: 15px;
 }
 
 td {
     border-radius: 5px;
-    border: solid var(--giants-orange);
+    /* border: solid var(--giants-orange); */
+    background-color: var(--lighter-blue);
+    padding: 5px;
+    box-shadow: 0px 0px 10px 0px var(--lighter-blue);
 }
 
 #IOSnotifpopup > div, #whatsNewPopup > div {
