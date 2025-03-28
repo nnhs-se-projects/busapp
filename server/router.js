@@ -182,6 +182,22 @@ router.post("/updateBusChange", async (req, res) => {
     res.send("success");
 });
 
+router.post("/updateOrder", async (req, res) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
+    const busOne = req.body.busOne;
+    const busTwo = req.body.busTwo;
+    const orderOne = (await Bus.findOne({busNumber: busOne})).order;
+
+    if (await Bus.findOneAndUpdate({busNumber: busOne}, {order: (await Bus.findOne({busNumber: busTwo})).order}) &&
+        await Bus.findOneAndUpdate({busNumber: busTwo}, {order: orderOne})) {
+        res.send("success");
+    } else {
+        res.sendStatus(500);
+    }
+})
+
 router.post("/updateBusStatus", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
@@ -190,8 +206,20 @@ router.post("/updateBusStatus", async (req, res) => {
     let busStatus = req.body.status;
     let time = req.body.time;
     let order = req.body.order;
-    await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order});
-    res.send("success");
+
+    if((await Bus.find({status: busStatus, order: order})).length > 0 && busStatus == "Loading") {
+        res.sendStatus(400);
+    } else {
+        if(busStatus === "" && (await Bus.findOne({busNumber: busNumber})).status === "Loading") {
+            var bus = await Bus.findOne({busNumber: busNumber})
+
+            await Bus.updateMany({order: { $gt: bus.order }, status: bus.status}, {$inc: { order: -1 }});
+        }
+
+        await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order ? order : -1});
+
+        res.send("success");
+    }
 });
 
 

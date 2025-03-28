@@ -128,6 +128,27 @@ async function resetAllBusses(button) {
   update();
 }
 
+async function updateOrder(elem, isUpArrow) {
+  var busOne = elem.parentElement.parentElement?.children[0].children[0].value;
+  var busTwo;
+  if(isUpArrow) {
+    busTwo = elem.parentElement.parentElement.previousElementSibling?.children[0].children[0].value;
+  } else {
+    busTwo = elem.parentElement.parentElement.nextElementSibling?.children[0].children[0].value;
+  }
+  if(busTwo === undefined) {
+    elem.parentElement.parentElement.animate([
+      { transform: 'translateX(0)' },
+      { transform: 'translateX(7px)' },
+      { transform: 'translateX(-7px)' },
+      { transform: 'translateX(7px)' },
+      { transform: 'translateX(0)' }], { duration: 300, iterations: 1 });
+  } else {
+    await fetchWithAlert("/updateOrder", "POST", {"Content-Type": "application/json"}, {busOne: busOne, busTwo: busTwo});
+    update();
+  }
+}
+
 async function updateBusChange(button) {
   // children are number, change, time, status
   let number = button.parentElement.parentElement.children[0].children[0].value;

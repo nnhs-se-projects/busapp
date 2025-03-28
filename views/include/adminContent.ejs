@@ -34,7 +34,7 @@
         <tr>
             <th>Bus Number</th>
             <th>Bus Change</th>
-            <th>Time</th>
+            <th>Position</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -43,7 +43,9 @@
                 <tr>
                     <td><input class="tableInput numberInput" type="number" value=<%= data.loading[i].busNumber %> readonly></td>
                     <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.loading[i].busChange ? data.loading[i].busChange : "" %> ></td>
-                    <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value= "<%= data.loading[i].time ? (new Date(data.loading[i].time)).toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
+                    <td style="padding: 0; font-size: 1.5em">
+                        <i class="fa-regular fa-circle-up" onclick="updateOrder(this, true)"></i>
+                        <i class="fa-regular fa-circle-down" style="margin-left: 1em" onclick="updateOrder(this, false)"></i></td>
                     <td>
                         <p onclick="removeFromWave(this, true)" class="button-text">Remove</p>
                     </td>
@@ -60,7 +62,7 @@
         <tr>
             <th>Bus Number</th>
             <th>Bus Change</th>
-            <th>Time</th>
+            <th>Position</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -69,7 +71,10 @@
                 <tr>
                     <td><input class="tableInput numberInput" type="number" value=<%= data.nextWave[i].busNumber %> readonly></td>
                     <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.nextWave[i].busChange ? data.nextWave[i].busChange : "" %> ></td>
-                    <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value="<%= data.nextWave[i].time ? (new Date(data.nextWave[i].time)).toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
+                    <td style="padding: 0; font-size: 1.5em">
+                        <i class="fa-regular fa-circle-up" onclick="updateOrder(this, true)"></i>
+                        <i class="fa-regular fa-circle-down" style="margin-left: 1em" onclick="updateOrder(this, false)"></i></td>
+                    </td>
                     <td>
                         <p onclick="removeFromWave(this)" class="button-text">Remove</p>
                     </td>
@@ -92,7 +97,7 @@
                 <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
                 
-                <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
+                <td><input class="tableInput timeInput" type="text" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" readonly></td>
 
                 <td>
                     <% if (data.allBuses[i].status === 'Loading') { %>
