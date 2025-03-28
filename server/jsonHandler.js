@@ -47,7 +47,7 @@ async function readData() {
 async function writeWeather(weather) {
         const doc = await Weather.findOneAndUpdate({}, {
             status: weather.properties.periods[0].shortForecast,
-            icon: weather.properties.periods[0].icon.replace("small", "large"),
+            icon: weather.properties.periods[0].icon.replace(/,.*$/, "?size=500"),
             temperature: weather.properties.periods[0].temperature,
             // feelsLike: weather.periods[0].temperature,
         }, {upsert: true, returnDocument: "after"});

@@ -14,12 +14,11 @@
 }
 
 body {
-    background-color: var(--gray); /* Doesn't work */
-    background-image: url(../img/HuskieBubble.png);
     background-repeat: no-repeat;
     background-position-x: center;
     background-position-y: center;
-    /* backdrop-filter: blur(10px); */
+    background-size: cover; 
+    backdrop-filter: blur(3px);
 }
 
 .navbar-div {
