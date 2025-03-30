@@ -58,7 +58,8 @@ router.get("/", async (req, res) => {
         leavingAt: new Date(),
         vapidPublicKey,
         announcement: (await Announcement.findOne({})).announcement,
-        isDev: process.env.DEV === "true"
+        isDev: process.env.DEV === "true", 
+        timer: timer
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
@@ -458,4 +459,4 @@ router.post("/clearAnnouncement", async (req, res) => {
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
-module.exports = router;
+module.exports = {router,timer};

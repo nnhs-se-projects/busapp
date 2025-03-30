@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-const router = require("./server/router.js");
+const {router,timer} = require("./server/router.js");
 const path = require("path");
 const {createServer} = require("http");
 const {Server} = require("socket.io");
@@ -61,8 +61,11 @@ io.of("/admin").on("connection", async (socket) => {
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: await Weather.findOne({}),
-            announcement: (await Announcement.findOne({})).announcement
+            announcement: (await Announcement.findOne({})).announcement,
+            timer: timer
         }
+
+        console.log(timer);
         
         io.of("/admin").emit("update", data);
         io.of("/").emit("update", indexData);        

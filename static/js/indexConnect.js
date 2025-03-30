@@ -3,6 +3,8 @@ var indexSocket = window.io('/'); // This line and the line above is how you get
 // !!! do NOT import/export anything or ejs will get angry
 
 var countDownDate = new Date();
+var timerDuration = 0;
+var isLocked = false;
 
 var pins = [];
 var notifStatus = {};
@@ -23,16 +25,15 @@ indexSocket.on("update", (data) => {
     });
 
     countDownDate = new Date(data.leavingAt);
-
+    timerDuration = data.timer;
     buses = data.buses;
+    isLocked = data.isLocked;
 
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
     document.getElementById("content").innerHTML = html;
 
 
     updatePins();
-
-    setIndicatorStatus(lastStatus);
     updateNotifButton();
 });
 
@@ -52,23 +53,21 @@ function toggleCredits() {
     }
 }
 
-window.onload = () => {
+window.onload = async () => {
     var version = +(document.getElementById("whatsNewVersion")).value;
     if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
         document.getElementById('whatsNewPopup').style.display='block';
     }
 
-    buses = JSON.parse(document.getElementById("getRender").getAttribute("buses"));
+    var initialData = JSON.parse(document.getElementById("getRender").getAttribute("data"));
+    buses = initialData.buses;
+    isLocked = initialData.isLocked;
+    timerDuration = initialData.timer;
+
     updatePins();
-    updateTables();
     updateNotifButton();
 };
 
-// We can probably remove this function when we rewrite in JS. Basically useless after the UI overhaul
-function updateTables() { // updates what rows show on the pinned list and what buttons show Unpin or Pin on the full list.
-    try { removeNotifButton(); }// comes from pushNotifs.ts, which is loaded before this in the html. Removes the notification button if theyre enabled
-    catch(e) {}
-}
 
 function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
@@ -94,7 +93,12 @@ function updatePins() { // guess what
         const busNumber = parseInt(cell.getAttribute('data-bus-number') || '0');
         const busInfo = buses.find(bus => bus.number === busNumber);
         if (busInfo) {
-            cell.textContent = busInfo.status || ''; // Or whatever property you want to display
+            cell.textContent = busInfo.status || 'Not Here'; // Or whatever property you want to display
+            if(busInfo.status === "Loading") {
+                cell.style.backgroundColor = "green";
+                // dw about removing this class, thatll happen on the next rerender anyway...
+                if(isLocked) cell.classList.add("loading");
+            }
         }
     });
 }
@@ -175,14 +179,13 @@ fetch('/leavingAt')
         const leavingAt = new Date(data);
         
         countDownDate = leavingAt; // Assign the value to countDownDate
-        console.log(leavingAt)
 
     })
     .catch(error => {
         console.error('Error:', error);
     });
 
-// Update the count down every 1 second
+// Update the count down every half second
 var x = setInterval(async function() {
     // Get today's date and time
     var now = new Date().getTime();
@@ -198,17 +201,18 @@ var x = setInterval(async function() {
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
-    document.querySelectorAll("[id=timer]").forEach((element) => {
-        element.innerHTML = "The current wave will leave in " + minutes + "min " + seconds + "sec ";
+    document.querySelectorAll(".loading").forEach((element) => {
+        element.style.backgroundImage = `linear-gradient(90deg, green 49% , red 51%)`;
+        element.style.backgroundPosition = `${Math.min(-distance / 10 / timerDuration + 100, 100)}% 0%`;
     });
 
     // If the count down is over, write some text 
     if (distance < 0) {
-        document.querySelectorAll("[id=timer]").forEach((element) => {
-            element.innerHTML = "The current wave is about to leave!";
+        document.querySelectorAll(".loading").forEach((element) => {
+            element.innerHTML = "About to leave!";
         });
     }
-}, 1000);
+}, 500);
 
 
 // When the app gets put into the background, the browser pauses execution of the code.
