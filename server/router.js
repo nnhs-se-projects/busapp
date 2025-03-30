@@ -459,4 +459,8 @@ router.post("/clearAnnouncement", async (req, res) => {
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
-module.exports = {router,timer};
+function getTimer() {
+    return timer;
+}
+
+module.exports = {router,getTimer};

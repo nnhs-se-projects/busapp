@@ -185,7 +185,7 @@ fetch('/leavingAt')
         console.error('Error:', error);
     });
 
-// Update the count down every half second
+// Update the count down every second
 var x = setInterval(async function() {
     // Get today's date and time
     var now = new Date().getTime();
@@ -201,9 +201,11 @@ var x = setInterval(async function() {
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
+    console.log(distance);
+    console.log(timerDuration);
     document.querySelectorAll(".loading").forEach((element) => {
         element.style.backgroundImage = `linear-gradient(90deg, green 49% , red 51%)`;
-        element.style.backgroundPosition = `${Math.min(-distance / 10 / timerDuration + 100, 100)}% 0%`;
+        element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
     });
 
     // If the count down is over, write some text 
@@ -212,7 +214,7 @@ var x = setInterval(async function() {
             element.innerHTML = "About to leave!";
         });
     }
-}, 500);
+}, 1000);
 
 
 // When the app gets put into the background, the browser pauses execution of the code.
