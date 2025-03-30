@@ -167,8 +167,6 @@ async function pinBus(button) { // pins the bus when the user clicks the button
         }
     }
     updatePins();
-
-    updateTables();
 }
 
 // Set the date we're counting down to
@@ -201,8 +199,6 @@ var x = setInterval(async function() {
     //var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
-    console.log(distance);
-    console.log(timerDuration);
     document.querySelectorAll(".loading").forEach((element) => {
         element.style.backgroundImage = `linear-gradient(90deg, green 49% , red 51%)`;
         element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
