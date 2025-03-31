@@ -2,7 +2,7 @@
 
 const express = require("express");
 const {OAuth2Client, TokenPayload} = require("google-auth-library");
-const { getBuses, readData } = require('./jsonHandler');
+const { getBuses } = require('./DBHandler');
 const path = require("path");
 const fs = require("fs");
 const router = express.Router();
@@ -81,7 +81,7 @@ router.get("/restartServer", async (req, res) => {
 router.get("/tv", async (req, res) => {
     // Reads from data file and displays data
     res.render("tv", {
-        data: await readData(),
+        data: {buses: await getBuses(), weather: await Weather.findOne({})},
         render: fs.readFileSync(path.resolve(__dirname, "../views/include/tvIndexContent.ejs")),                                
         announcement: (await Announcement.findOne({})).tvAnnouncement
     })
@@ -457,6 +457,8 @@ router.post("/clearAnnouncement", async (req, res) => {
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
+
+// this is stupid but in order to get the actual timer to server.js and not just the initial value we need this
 function getTimer() {
     return timer;
 }

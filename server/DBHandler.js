@@ -1,6 +1,4 @@
-const Announcement = require("./model/announcement.js");
 const Bus = require("./model/bus.js");
-const Weather = require("./model/weather.js");
 
 //export type BusData = {number: string, change: string | undefined, time: string | undefined, status: string | undefined};
 //export type adminData = {address: string};
@@ -36,24 +34,6 @@ async function getBuses() {
 }
 
 
-// Load data file. If no file exists creates one
-async function readData() {
 
-    
-    const weather = await Weather.findOne({})
-    let buses = await getBuses();
 
-    return {buses: buses, weather: weather, announcement: (await Announcement.findOne({})).announcement};
-}
-
-async function writeWeather(weather) {
-        const doc = await Weather.findOneAndUpdate({}, {
-            status: weather.properties.periods[0].shortForecast,
-            icon: weather.properties.periods[0].icon.replace(/,.*$/, "").replace("?size=small", "") + "?size=500",
-            temperature: weather.properties.periods[0].temperature,
-            // feelsLike: weather.periods[0].temperature,
-        }, {upsert: true, returnDocument: "after"});
-    
-}
-
-module.exports = {getBuses, readData, writeWeather};
+module.exports = {getBuses};
