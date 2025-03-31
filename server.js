@@ -64,8 +64,6 @@ io.of("/admin").on("connection", async (socket) => {
             announcement: (await Announcement.findOne({})).announcement,
             timer: getTimer()
         }
-
-        console.log(getTimer());
         
         io.of("/admin").emit("update", data);
         io.of("/").emit("update", indexData);        

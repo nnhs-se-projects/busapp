@@ -1,7 +1,3 @@
-const path = require("path");
-const fs = require("fs");
-
-// const whitelistDatafile = path.resolve(__dirname, "../data/whitelist.json");
 const Announcement = require("./model/announcement.js");
 const Bus = require("./model/bus.js");
 const Weather = require("./model/weather.js");
@@ -14,7 +10,13 @@ async function getBuses() {
     const buses = await Bus.find({});
     const busList = [];
     buses.forEach((bus) => {
-        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status});
+        // get the sum of all the minutes since midnight of each bus arrival and average them
+        var sum = 0; for(var i of bus.busTimes.map((e) => e.getHours()*60 + e.getMinutes())) { sum += i; }
+        var avgTime = sum / bus.busTimes.length;
+        // convert back to Date object
+        avgTime = new Date(1970, 0, 1, Math.floor(avgTime/60), avgTime%60, 0);
+        // push data to buslist
+        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, avgTime: avgTime});
     });
     // if change is 0, make it an empty string
     busList.forEach((bus) => {
@@ -53,16 +55,5 @@ async function writeWeather(weather) {
         }, {upsert: true, returnDocument: "after"});
     
 }
-/*
-// Reads a list of users who are allowed access to the admin page
-export function readWhitelist(): {admins} {
-    return {admins: JSON.parse(fs.readFileSync(whitelistDatafile, "utf-8"))};
-}
-
-export function writeWhitelist(data) {
-    let oldWhitelist = readWhitelist().admins;
-    oldWhitelist.push(data)
-    fs.writeFileSync(whitelistDatafile, JSON.stringify(oldWhitelist));
-}*/
 
 module.exports = {getBuses, readData, writeWeather};

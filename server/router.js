@@ -210,14 +210,21 @@ router.post("/updateBusStatus", async (req, res) => {
     let order = req.body.order;
 
     if((await Bus.find({status: busStatus, order: order})).length > 0 && busStatus == "Loading") {
+        // if the order is already present in the loading buses, throw a 400
         res.sendStatus(400);
     } else {
         if(busStatus === "" && (await Bus.findOne({busNumber: busNumber})).status === "Loading") {
             var bus = await Bus.findOne({busNumber: busNumber})
 
             await Bus.updateMany({order: { $gt: bus.order }, status: bus.status}, {$inc: { order: -1 }});
+        } else if (busStatus === "Loading") {
+            if((await Bus.findOne({busNumber: busNumber})).busTimes.length > 5) {
+                await Bus.findOneAndUpdate({busNumber: busNumber}, {$pop: {busTimes: -1}});
+                await Bus.findOneAndUpdate({busNumber: busNumber}, {$push: { busTimes: time }});
+            } else {
+                await Bus.findOneAndUpdate({busNumber: busNumber}, {$push: { busTimes: time }});
+            }
         }
-
         await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order ? order : -1});
 
         res.send("success");
@@ -298,15 +305,6 @@ router.post("/setTimer", async (req, res) => {
     timer = tmpTimer;
     res.send("success");
 });
-
-/*
-// I think this did not exist previously... I added it as an extremely inefficient fix to a minor bug.
-// I have since implemented a better solution but I connot remember if anything else used it
-// Leaving but commented in case theres a thing that still uses it that I forgot
-router.get("/getTimer", async (req: Request, res: Response) => {
-    res.send(JSON.stringify({minutes: timer/60}));
-});
-*/
 
 router.get("/leavingAt", async (req, res) => {
     const leavingAt = (await Wave.findOne({})).leavingAt;

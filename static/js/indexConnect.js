@@ -85,7 +85,7 @@ function updatePins() { // guess what
     // var tmp : string = "";
     tableBody.innerHTML = ""; 
     for (let i = 0; i < pins.length; i++) {
-        tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='status-col' data-bus-number='" + pins[i] + "' colspan='5'></td></tr>";
+        tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='time-col'></td><td class='status-col' data-bus-number='" + pins[i] + "' colspan='5'></td></tr>";
     }
 
     const statusCells = document.querySelectorAll('.status-col');
@@ -98,6 +98,10 @@ function updatePins() { // guess what
                 cell.style.backgroundColor = "green";
                 // dw about removing this class, thatll happen on the next rerender anyway...
                 if(isLocked) cell.classList.add("loading");
+            }
+            cell.parentElement.querySelector(".time-col").innerHTML = busInfo.time ? (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) : "<span style='color: gray'>" + (new Date(busInfo.avgTime)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) + "</span>";
+            if(busInfo.change) {
+                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "&rarr;" + busInfo.change;
             }
         }
     });

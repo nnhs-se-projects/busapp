@@ -22,6 +22,10 @@ const schema = new mongoose.Schema({
         type: Number,
         required: false,
     },
+    busTimes: {
+        type: [Date],
+        required: false,
+    },
 });
 const Bus = mongoose.model("Bus", schema);
 module.exports = Bus;
