@@ -12,17 +12,25 @@
         <link rel="stylesheet" href="/css/index.css">
     </head>
     <body style="background-image: url('<%= data.weather.icon %>')">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <%- include('include/navBar'); %>
-        <div id="content">
-            <%- include('include/indexContent'); %>
+        <div class="pageContainer">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            <div style="height: 0.25rem"></div>
+            <%- include('include/navBar'); %>
+            <div id="content">
+                <%- include('include/indexContent'); %>
+            </div>
+            <%- include('include/devTools'); %>
         </div>
-        <%- include('include/devTools'); %>
+        <div id="networkBlocker">
+            <i class="fa-solid fa-globe" style="font-size: min(30vw, 40vh); clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 100% 0, 80% 0, 0 100%);"></i>
+            <h3 style="font-size: min(5vw, 10vh); font-family: sans-serif; margin-top: 20px;">No Network</h3>
+        </div>
+        <div id="networkIndicator"></div>
         <script src="js/pushNotifs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <!--script src='js/indexConnect.js'></script-->
         <script src="js/ejs.js"></script>
         <script src="js/networkIndicator.js"></script>
-        <script id="getRender" render="<%= render %>" buses="<%= JSON.stringify(data.buses) %>" src='js/indexConnect.js'></script>
+        <script id="getRender" render="<%= render %>" data="<%= JSON.stringify(data) %>" src='js/indexConnect.js'></script>
     </body>
 </html>
