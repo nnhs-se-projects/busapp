@@ -100,6 +100,9 @@ function updatePins() { // guess what
                 cell.style.backgroundColor = "green";
                 // dw about removing this class, thatll happen on the next rerender anyway...
                 if(isLocked) cell.classList.add("loading");
+
+                console.log(busInfo);
+                cell.innerHTML += " @" + (busInfo.order+1);
             }
             cell.parentElement.querySelector(".time-col").innerHTML = busInfo.time ? (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) : "<span style='color: gray'>" + (new Date(busInfo.avgTime)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) + "</span>";
             if(busInfo.change) {
@@ -127,7 +130,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
 
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
-        // change pin icon to loading
+        // add loading icon
         button.parentElement.insertBefore(document.createElement("i"), button);
         button.parentElement.querySelector("i").classList.add("fa-solid", "fa-spinner", "fa-spin");
 

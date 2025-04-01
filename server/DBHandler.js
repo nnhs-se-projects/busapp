@@ -15,7 +15,7 @@ async function getBuses() {
         // convert back to Date object
         avgTime = new Date(1970, 0, 1, Math.floor(avgTime/60), avgTime%60, 0);
         // push data to buslist
-        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, avgTime: avgTime});
+        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, avgTime: avgTime, order: bus.order});
     });
     // if change is 0, make it an empty string
     busList.forEach((bus) => {
