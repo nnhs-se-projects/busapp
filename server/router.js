@@ -401,7 +401,24 @@ router.post("/submitAnnouncement", async (req, res) => {    //overwrites the ann
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
+    // check if the announcement was actually changed
+    if((await Announcement.findOne({})).announcement !== req.body.announcement) {
+        (await Subscription.find().distinct("subscription")).forEach((sub) => {
+            webpush.sendNotification(JSON.parse(sub), JSON.stringify({
+                title: 'Announcement From Bus App',
+                body: req.body.announcement,
+                icon: "/img/Icon-New-512-any.png"
+            })).catch(async (e) => { // if fail, delete endpoint
+                // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
+                if([410, 400, 403, 401].includes(e.statusCode)) {
+                    return Subscription.deleteMany({subscription: sub});
+                }
+            }).then(() => {});
+        });
+    }
+
     await Announcement.findOneAndUpdate({}, {announcement: req.body.announcement, tvAnnouncement: req.body.tvAnnouncement}, {upsert: true});
+
     res.redirect("/admin");
 });
 
