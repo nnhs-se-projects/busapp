@@ -2,7 +2,6 @@
 window.onload = () => { document.getElementById("addInput").value = ""; }
 
 var admins = document.getElementById("adminList").getAttribute("admins")
-console.log(admins)
 
 async function addAdmin_admins(e) {
     console.log(e)

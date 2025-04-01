@@ -14,7 +14,6 @@ adminSocket.on("update", (data) => {
   });
 
   countDownDate = new Date(data.leavingAt);
-  console.log(data.loading);
   // rerender the page
   const html = ejs.render(
     document.getElementById("getRender").getAttribute("render"),
@@ -169,7 +168,6 @@ fetch("/leavingAt")
     const leavingAt = new Date(data);
 
     countDownDate = leavingAt; // Assign the value to countDownDate
-    console.log(leavingAt);
   })
   .catch((error) => {
     console.error("Error:", error);
