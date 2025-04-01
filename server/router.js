@@ -296,7 +296,7 @@ router.post("/sendWave", async (req, res) => {
             (await Subscription.find({bus: bus.busNumber})).forEach((sub) => {
                 webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus Just Left!',
-                    body: `Bus number ${bus.busNumber} just left.`,
+                    body: `Bus number ${bus.busNumber}${bus.busChange ? ` (Changed to ${bus.busChange})` : ""} just left.`,
                     icon: "/img/Icon-New-512-any.png"
                 })).catch(async (e) => { // if fail, delete endpoint
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
@@ -331,7 +331,7 @@ router.post("/lockWave", async (req, res) => {
             (await Subscription.find({bus: bus.busNumber})).forEach((sub) => {
                 webpush.sendNotification(JSON.parse(sub.subscription), JSON.stringify({
                     title: 'Your Bus is Here!',
-                    body: `Bus number ${bus.busNumber} is currently loading, and will leave in ${Math.floor(timer/60)} minutes and ${timer % 60} seconds`,
+                    body: `Bus number ${bus.busNumber}${bus.busChange ? ` (Changed to ${bus.busChange})` : ""} is currently loading, and will leave in ${Math.floor(timer/60)} minutes and ${timer % 60} seconds`,
                     icon: "/img/Icon-New-512-any.png"
                 })).catch(async (e) => { // if fail, delete endpoint
                     // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
@@ -411,6 +411,8 @@ router.post("/submitAnnouncement", async (req, res) => {    //overwrites the ann
             })).catch(async (e) => { // if fail, delete endpoint
                 // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
                 if([410, 400, 403, 401].includes(e.statusCode)) {
+                    // this also serves as a great way to periodically check all our subscriptions
+                    // to make sure we arent storing dead subscriptions on the database forever
                     return Subscription.deleteMany({subscription: sub});
                 }
             }).then(() => {});
