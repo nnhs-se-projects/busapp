@@ -260,28 +260,33 @@ router.post("/updateBusStatus", async (req, res) => {
     let busNumber = req.body.number;
     let busStatus = req.body.status;
     let time = req.body.time;
-    let order = req.body.order;
 
-    if((await Bus.find({status: busStatus, order: order})).length > 0 && busStatus == "Loading") {
-        // if the order is already present in the loading buses, throw a 400
-        res.sendStatus(400);
-    } else {
-        if(busStatus === "" && (await Bus.findOne({busNumber: busNumber})).status === "Loading") {
-            var bus = await Bus.findOne({busNumber: busNumber})
-
-            await Bus.updateMany({order: { $gt: bus.order }, status: bus.status}, {$inc: { order: -1 }});
-        } else if (busStatus === "Loading") {
-            if((await Bus.findOne({busNumber: busNumber})).busTimes.length > 5) {
-                await Bus.findOneAndUpdate({busNumber: busNumber}, {$pop: {busTimes: -1}});
-                await Bus.findOneAndUpdate({busNumber: busNumber}, {$push: { busTimes: time }});
-            } else {
-                await Bus.findOneAndUpdate({busNumber: busNumber}, {$push: { busTimes: time }});
-            }
+    // if we are removing the bus from the wave
+    if(busStatus === "" && (await Bus.findOne({busNumber: busNumber})).status === "Loading") {
+        var bus = await Bus.findOne({busNumber: busNumber})
+        await Bus.updateMany({order: { $gt: bus.order }, status: bus.status}, {$inc: { order: -1 }});
+    } 
+    // if we are adding the bus to the wave
+    else if (busStatus === "Loading") {
+        // update the bus times for prediction
+        if((await Bus.findOne({busNumber: busNumber})).busTimes.length > 5) {
+            await Bus.findOneAndUpdate({busNumber: busNumber}, {$pop: {busTimes: -1}});
         }
-        await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order ? order : -1});
-
-        res.send("success");
+        await Bus.findOneAndUpdate({busNumber: busNumber}, {$push: { busTimes: time }});
     }
+    
+    let order;
+    if(busStatus === "Loading") { 
+        var orders = await Bus.find({status: busStatus});
+        order = orders.length; 
+        // this seems redundant but if there is a duplicate for whatever reason, 
+        // this mitigates any cascading damage that would cause
+        while(orders.includes(order)) { order++ }
+    } else order = -1;
+
+    await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order});
+    
+    res.send("success");
 });
 
 router.post("/sendWave", async (req, res) => {
