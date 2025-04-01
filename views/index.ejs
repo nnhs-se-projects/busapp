@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html data-bs-theme="dark">
     <head>
         <title>Bus App</title>
@@ -15,20 +16,41 @@
         <div class="pageContainer">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
             <div style="height: 0.25rem"></div>
+
             <%- include('include/navBar'); %>
             <div id="content">
                 <%- include('include/indexContent'); %>
             </div>
             <%- include('include/devTools'); %>
         </div>
+
+        <!-- Keep position: fixed elements out of pageContainer, something with backdrop-filter: blur() breaks positioning for some reason...-->
+        <%- include('include/whatsNew'); %>
+        <%- include('include/credits'); %>
+        
+        <div id="IOSnotifpopup">
+            <div>
+                <i class="fa-regular fa-circle-xmark" onclick="document.getElementById('IOSnotifpopup').style.display='none'" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
+                <h2>It appears you may be using IOS</h2>
+                <p> IOS needs you to add the busapp to the homescreen before enabling
+                notifications. If you have already added the Bus App to your homescreen
+                previously, remove it and re-add it. Once you have added the Bus App to
+                your home screen, press the "Enable Notifications" button from within the
+                app.</p>
+                <video autoplay muted loop style="max-width: 100%; max-height: 100vh; width: 100%">
+                    <source src="img/ios-instructions.mp4" type="video/mp4" />
+                </video>
+            </div>
+        </div>
+
         <div id="networkBlocker">
             <i class="fa-solid fa-globe" style="font-size: min(30vw, 40vh); clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 100% 0, 80% 0, 0 100%);"></i>
             <h3 style="font-size: min(5vw, 10vh); font-family: sans-serif; margin-top: 20px;">No Network</h3>
         </div>
         <div id="networkIndicator"></div>
+
         <script src="js/pushNotifs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <!--script src='js/indexConnect.js'></script-->
         <script src="js/ejs.js"></script>
         <script src="js/networkIndicator.js"></script>
         <script id="getRender" render="<%= render %>" data="<%= JSON.stringify(data) %>" src='js/indexConnect.js'></script>

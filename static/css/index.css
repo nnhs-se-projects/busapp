@@ -3,6 +3,7 @@
     margin: 0;
     max-width: 100vw;
     scrollbar-width: none;
+    overscroll-behavior: none;
 }
 :root {
     --crimson: #d7263dff;
@@ -27,7 +28,7 @@ body {
 }
 
 .status-col {
-    transition: background-position 1s;
+    transition: background-position 1s linear;
     background-size: 210%;
 }
 
@@ -36,7 +37,7 @@ body {
     background-color: var(--space-cadet);
     border-radius: 5px;
     color: white;
-    box-shadow: 0px 0px 10px 0px var(--space-cadet);
+    box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
     margin-top: 0px !important;
 }
 
@@ -82,9 +83,7 @@ button:not(.navbar-toggler) {
     border-radius: 5px;
     background-color: var(--giants-orange);
     border: none;
-    padding: 5%;
-    /* padding-left: 30%;
-    padding-right: 30%; */
+    padding: 20px;
     width: 80%;
     border-bottom: solid var(--crimson); 
 }
@@ -95,8 +94,7 @@ button:active{
 }
 
 .dropdown-toggle {
-    padding: 10px;
-    max-width: 90%;
+    max-width: 15em;
     margin-bottom: 5px;
 }
 
@@ -121,7 +119,7 @@ button:active{
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
-    box-shadow: 0px 0px 10px 0px var(--space-cadet);
+    box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
 }
 
 .content-container {
@@ -130,7 +128,7 @@ button:active{
     /* color: var(--dark-cyan); */
     color: white;
     border-radius: 5px;
-    box-shadow: 0px 0px 10px 0px var(--space-cadet);
+    box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
     padding: 5px;
     padding-left: 5px;
 }
@@ -158,8 +156,8 @@ td {
     transform: translateX(-50%) translateY(-50%); 
     width: calc(100% - min(10%, 50px)); 
     max-height: calc(100% - min(10%, 50px));
-    background-color: lightgray;
-    border: 5px solid #327fa8;
+    background-color: var(--space-cadet);
+    border: 5px solid var(--giants-orange);
     border-radius: 10px;
     padding: 1em;
     overflow: auto;
@@ -175,6 +173,11 @@ td {
     backdrop-filter: blur(5px);
     font-family: 'Montserrat', sans-serif;
     font-size: calc(1vw + 1em);
+}
+
+a {
+    color: var(--giants-orange);
+    cursor: pointer;
 }
 
 .button2 {
@@ -294,7 +297,7 @@ td {
 }
 #credits > .starWarsContainer {
     transform: rotateX(var(--angle)) translateY(0%);
-    animation: forwards 30s 1 linear startwars, forwards 10s infinite linear starwars;
+    animation: forwards 40s 1 linear startwars, forwards 10s infinite linear starwars;
     animation-delay: 2s, 32s;
     animation-play-state: inherit;
     transform-origin: top;
@@ -317,7 +320,7 @@ td {
 }
 @keyframes starwars {
     from {
-        transform: rotateX(var(--angle)) translateY(-75%);
+        transform: rotateX(var(--angle)) translateY(-80%);
     } to {
         transform: rotateX(var(--angle)) translateY(-100%);
     }
@@ -327,7 +330,7 @@ td {
         transform: rotateX(var(--angle)) translateY(0%);
     }
     to {
-        transform: rotateX(var(--angle)) translateY(-75%);
+        transform: rotateX(var(--angle)) translateY(-80%);
     }
 }
 @keyframes prologue {

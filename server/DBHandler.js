@@ -1,6 +1,5 @@
-const Announcement = require("./model/announcement.js");
+"use strict";
 const Bus = require("./model/bus.js");
-const Weather = require("./model/weather.js");
 
 //export type BusData = {number: string, change: string | undefined, time: string | undefined, status: string | undefined};
 //export type adminData = {address: string};
@@ -16,7 +15,7 @@ async function getBuses() {
         // convert back to Date object
         avgTime = new Date(1970, 0, 1, Math.floor(avgTime/60), avgTime%60, 0);
         // push data to buslist
-        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, avgTime: avgTime});
+        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, avgTime: avgTime, order: bus.order});
     });
     // if change is 0, make it an empty string
     busList.forEach((bus) => {
@@ -36,24 +35,6 @@ async function getBuses() {
 }
 
 
-// Load data file. If no file exists creates one
-async function readData() {
 
-    
-    const weather = await Weather.findOne({})
-    let buses = await getBuses();
 
-    return {buses: buses, weather: weather, announcement: (await Announcement.findOne({})).announcement};
-}
-
-async function writeWeather(weather) {
-        const doc = await Weather.findOneAndUpdate({}, {
-            status: weather.properties.periods[0].shortForecast,
-            icon: weather.properties.periods[0].icon.replace(/,.*$/, "").replace("?size=small", "") + "?size=500",
-            temperature: weather.properties.periods[0].temperature,
-            // feelsLike: weather.periods[0].temperature,
-        }, {upsert: true, returnDocument: "after"});
-    
-}
-
-module.exports = {getBuses, readData, writeWeather};
+module.exports = {getBuses};

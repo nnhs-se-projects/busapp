@@ -1,3 +1,4 @@
+"use strict";
 // npx web-push generate-vapid-keys
 
 // this was part of some example code

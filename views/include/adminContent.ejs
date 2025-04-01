@@ -48,7 +48,11 @@
                     <% if(i > 0) { %> <i class="fa-solid fa-arrows-up-down" onclick="updateOrder(this)"></i> <% } %>
                 </td>
                 <td>
-                    <p onclick="removeFromWave(this, true)" class="button-text">Remove</p>
+                    <% if(!data.isLocked) { %>
+                        <p onclick="removeFromWave(this, true)" class="button-text">Remove</p>
+                    <% } else { %>
+                        <p>Locked</p>
+                    <% } %>
                 </td>
             </tr>
             <% if(i === data.loading.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>

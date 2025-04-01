@@ -1,3 +1,4 @@
+"use strict";
 var pinButtons = document.getElementsByClassName("pin-button");
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry
@@ -74,10 +75,11 @@ function updatePins() { // guess what
     pins = [];
     if (pinString != null) {
         let pinArrayString = pinString.split(", ");
+        var busNumberArray = buses.map(e => e.number);
         for (let i = 0; i < pinArrayString.length; i++) {
             let n = parseInt(pinArrayString[i]);
-            // I'm going to leave this in here, but I don't know why we should need to check for duplicates there should never be any duplicates of busses
-            if (!pins.includes(n)) { pins.push(n); }
+            // check for duplicate pins and make sure pinned bus actually exists
+            if (!pins.includes(n) && busNumberArray.includes(n)) { pins.push(n); }
         }
     }
 
@@ -98,6 +100,8 @@ function updatePins() { // guess what
                 cell.style.backgroundColor = "green";
                 // dw about removing this class, thatll happen on the next rerender anyway...
                 if(isLocked) cell.classList.add("loading");
+
+                cell.innerHTML += " @" + (busInfo.order+1);
             }
             cell.parentElement.querySelector(".time-col").innerHTML = busInfo.time ? (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) : "<span style='color: gray'>" + (new Date(busInfo.avgTime)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) + "</span>";
             if(busInfo.change) {
@@ -105,6 +109,15 @@ function updatePins() { // guess what
             }
         }
     });
+
+    for(const i of document.querySelector(".dropdown-menu").children) {
+        // if there is a bus change we need to strip that extra stuff
+        if(pins.includes(+i.querySelector("button").innerHTML.replace(/→(.*)/, ""))) {
+            i.style.filter = "grayscale(1)";
+        } else {
+            i.style.filter = "";
+        }
+    }
 }
 
 async function pinBus(button) { // pins the bus when the user clicks the button
@@ -117,9 +130,9 @@ async function pinBus(button) { // pins the bus when the user clicks the button
 
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
-        // change pin icon to loading
-        // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
-        // button.querySelector("i")!.classList.remove("fa-thumbtack");
+        // add loading icon
+        button.parentElement.insertBefore(document.createElement("i"), button);
+        button.parentElement.querySelector("i").classList.add("fa-solid", "fa-spinner", "fa-spin");
 
         // temporary function to do recursion 'n such
         async function temp(wait) {
@@ -148,8 +161,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
-            // button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
-            // button.querySelector("i")!.classList.add("fa-thumbtack");
+            button.parentElement.querySelector("i").remove();
         }
 
     }

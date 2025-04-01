@@ -1,11 +1,10 @@
 "use strict";
 
 const express = require("express");
-const {router,getTimer} = require("./server/router.js");
+const {router, getTimer} = require("./server/router.js");
 const path = require("path");
 const {createServer} = require("http");
 const {Server} = require("socket.io");
-const {readData} = require("./server/jsonHandler.js");
 const startWeather = require("./server/weatherController.js");
 const session = require("express-session");
 const dotenv = require("dotenv");
@@ -14,6 +13,7 @@ const Bus = require("./server/model/bus.js");
 const Wave = require("./server/model/wave.js");
 const Weather = require("./server/model/weather.js");
 const Announcement = require("./server/model/announcement.js");
+const { getBuses } = require("./server/DBHandler.js");
 
 const app = express();
 const httpServer = createServer(app);
@@ -23,13 +23,6 @@ dotenv.config({ path: ".env" });
 connectDB();
 
 const PORT = process.env.PORT || 5182;
-/*
-type BusCommand = {
-    type: string
-    data: BusData
-}
-*/
-// let buses: BusData[];
 
 //root socket
 io.of("/").on("connection", (socket) => {
@@ -45,7 +38,7 @@ io.of("/admin").on("connection", async (socket) => {
 
 
         let data ={
-            allBuses: (await readData()).buses,
+            allBuses: await getBuses(),
             nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
             loading: await Bus.find({status: "Loading"}).sort("order"),
             isLocked: false, 
@@ -57,7 +50,7 @@ io.of("/admin").on("connection", async (socket) => {
         // console.log("updateMain called")
 
         let indexData = {
-            buses: (await readData()).buses,
+            buses: await getBuses(),
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: await Weather.findOne({}),

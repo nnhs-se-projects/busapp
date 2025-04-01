@@ -5,9 +5,14 @@
     <script>
         // escapes any text and makes it safe to display in an HTML page
         // this is needed because otherwise if we console.log a button, for example, it would just display the button
+        // also puts URLs into anchor tags
         var escapeHtml = (unsafe) => {
-            unsafe = String(unsafe);
-            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            return String(unsafe).replace(/&/g, "&amp;")
+                                 .replace(/</g, "&lt;")
+                                 .replace(/>/g, "&gt;")
+                                 .replace(/"/g, "&quot;")
+                                 .replace(/'/g, "&#039;")
+                                 .replace(/(https?:\/\/[^\s]+)/g, "<a target='_blank' href='$1'>$1</a>");
         }
 
         function showStack(elem) {
@@ -86,5 +91,7 @@
         async function restartServer() {
             return await fetch("/restartServer");
         }
+
+        console.log("Welcome to the Bus App integrated dev tools! for more info you can go to https://github.com/nnhs-se-projects/busapp/wiki/05.-Dev-Tools")
     </script>
 <% } %>
