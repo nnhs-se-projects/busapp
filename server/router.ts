@@ -46,21 +46,6 @@ router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
 });
 */
 
-router.get("/aprilFools", async (req, res) => {
-    for(const joke of [["Was there ever a bus that crossed the ocean?", "Colum-bus... Oh I'm wheely sorry, that joke was bus-par. I can seat why you'd think that way, but I wheel continue to swerve some of my best puns."], 
-        ["What does a bus put on its sandwiches?", "traffic jam"],
-        ["I was the first one to install trampolines on musician's tour buses", "Now everybody is jumping on the bandwagon"],
-        ["How do bees get to school?", "They take the school buzz"]])
-    (await Subscription.find().distinct("subscription")).forEach((sub) => {
-        webpush.sendNotification(JSON.parse(sub), JSON.stringify({
-            title: joke[0],
-            body: joke[1],
-            icon: "/img/blueLobster.jpeg"
-        })).catch(async (e) => {}).then(() => {});
-    });
-    res.send("fool");
-});
-
 // Homepage. This is where students will view bus information from. 
 router.get("/", async (req: Request, res: Response) => {
     // Reads from data file and displays data
