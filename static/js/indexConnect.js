@@ -111,7 +111,8 @@ function updatePins() { // guess what
     });
 
     for(const i of document.querySelector(".dropdown-menu").children) {
-        if(pins.includes(+i.querySelector("button").innerHTML)) {
+        // if there is a bus change we need to strip that extra stuff
+        if(pins.includes(+i.querySelector("button").innerHTML.replace(/→(.*)/, ""))) {
             i.style.filter = "grayscale(1)";
         } else {
             i.style.filter = "";
