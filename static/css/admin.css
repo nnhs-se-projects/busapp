@@ -1,5 +1,3 @@
-
-
 body {
     background-color: #a1b5be;
 }
@@ -48,6 +46,10 @@ body {
 * {
     padding: 0;
     margin: 0;
+}
+
+select { 
+    cursor: pointer;
 }
 
 .weather-container {
@@ -169,6 +171,7 @@ body {
 .button-text {
     color: #225875;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .remove-col {
@@ -228,6 +231,11 @@ body {
     padding: 0 !important; 
     font-size: 1.75em; 
     transform: translateY(-50%)
+}
+.swapButton > i {
+    cursor: pointer;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 @keyframes horizontal-shaking {

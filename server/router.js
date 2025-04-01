@@ -135,23 +135,7 @@ router.get("/beans", async (req, res) => {
 router.get("/manifest.json", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
 });
-/*
-router.get("/updateBusListEmptyRow", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
-});
 
-router.get("/updateBusListPopulatedRow", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListPopulatedRow.ejs"));
-});
-
-router.get("/adminEmptyRow", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../views/sockets/adminEmptyRow.ejs"));
-});
-
-router.get("/busList", async (req, res) => {
-    res.type("json").send(await Bus.find().distinct("busNumber"));
-});
-*/
 router.get('/help',(req, res)=>{
     res.render('help');
 });
@@ -166,7 +150,7 @@ router.get('/help',(req, res)=>{
 */
 
 async function checkLogin(req, res) {
-    return true;
+    // return true; // uncomment for easier debugging - don't forget to recomment!
     if(!req.session.userEmail) {
         res.redirect("/login");
         return false;
@@ -208,7 +192,6 @@ router.get("/updateBusList", async (req, res) => {
 
     res.render("updateBusList", { busList });
 });
-
 
 router.post("/updateBusList", async (req, res) => {
     // Check if user is logged in and is an admin
