@@ -1,3 +1,4 @@
+"use strict";
 var pinButtons = document.getElementsByClassName("pin-button");
 var indexSocket = window.io('/'); // This line and the line above is how you get ts types to work on clientside... cursed
 // !!! do NOT import/export anything or ejs will get angry

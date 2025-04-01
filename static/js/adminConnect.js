@@ -1,3 +1,4 @@
+"use strict";
 var adminSocket = window.io("/admin");
 var countDownDate = new Date();
 var orderCounterCurrent = document.getElementById("currentWaveTBody").children.length;

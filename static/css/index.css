@@ -27,7 +27,7 @@ body {
 }
 
 .status-col {
-    transition: background-position 1s;
+    transition: background-position 1s linear;
     background-size: 210%;
 }
 

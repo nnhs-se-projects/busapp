@@ -1,3 +1,4 @@
+"use strict";
 window.onload = () => { document.getElementById("addInput").value = ""; }
 
 var admins = document.getElementById("adminList").getAttribute("admins")

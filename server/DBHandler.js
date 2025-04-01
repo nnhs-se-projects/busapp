@@ -1,3 +1,4 @@
+"use strict";
 const Bus = require("./model/bus.js");
 
 //export type BusData = {number: string, change: string | undefined, time: string | undefined, status: string | undefined};

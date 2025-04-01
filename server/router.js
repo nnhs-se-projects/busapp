@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 const express = require("express");
 const {OAuth2Client, TokenPayload} = require("google-auth-library");

@@ -50,7 +50,7 @@ io.of("/admin").on("connection", async (socket) => {
         // console.log("updateMain called")
 
         let indexData = {
-            buses: getBuses(),
+            buses: await getBuses(),
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: await Weather.findOne({}),

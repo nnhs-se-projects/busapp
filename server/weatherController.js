@@ -1,3 +1,4 @@
+"use strict";
 const fetch = require ("node-fetch");
 const Weather = require("./model/weather.js");
 

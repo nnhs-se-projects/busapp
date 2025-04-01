@@ -1,3 +1,4 @@
+"use strict";
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 

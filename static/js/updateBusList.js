@@ -1,3 +1,4 @@
+"use strict";
 window.onload = () => { document.getElementById("addInput").value = ""; }
 
 async function save(elem, del) {
