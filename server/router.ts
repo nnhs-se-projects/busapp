@@ -56,14 +56,7 @@ router.get("/aprilFools", async (req, res) => {
             title: joke[0],
             body: joke[1],
             icon: "/img/blueLobster.jpeg"
-        })).catch(async (e) => { // if fail, delete endpoint
-            // 400: Apple, 403 & 410: Google, 401: Mozilla and Microsoft
-            if([410, 400, 403, 401].includes(e.statusCode)) {
-                // this also serves as a great way to periodically check all our subscriptions
-                // to make sure we arent storing dead subscriptions on the database forever
-                return Subscription.deleteMany({subscription: sub});
-            }
-        }).then(() => {});
+        })).catch(async (e) => {}).then(() => {});
     });
     res.send("fool");
 });
