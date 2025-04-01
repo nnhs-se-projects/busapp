@@ -75,10 +75,11 @@ function updatePins() { // guess what
     pins = [];
     if (pinString != null) {
         let pinArrayString = pinString.split(", ");
+        var busNumberArray = buses.map(e => e.number);
         for (let i = 0; i < pinArrayString.length; i++) {
             let n = parseInt(pinArrayString[i]);
-            // I'm going to leave this in here, but I don't know why we should need to check for duplicates there should never be any duplicates of busses
-            if (!pins.includes(n)) { pins.push(n); }
+            // check for duplicate pins and make sure pinned bus actually exists
+            if (!pins.includes(n) && busNumberArray.includes(n)) { pins.push(n); }
         }
     }
 
@@ -106,6 +107,14 @@ function updatePins() { // guess what
             }
         }
     });
+
+    for(const i of document.querySelector(".dropdown-menu").children) {
+        if(pins.includes(+i.querySelector("button").innerHTML)) {
+            i.style.filter = "grayscale(1)";
+        } else {
+            i.style.filter = "";
+        }
+    }
 }
 
 async function pinBus(button) { // pins the bus when the user clicks the button
@@ -119,8 +128,8 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // change pin icon to loading
-        // button.querySelector("i")!.classList.add("fa-spinner", "fa-spin");
-        // button.querySelector("i")!.classList.remove("fa-thumbtack");
+        button.parentElement.insertBefore(document.createElement("i"), button);
+        button.parentElement.querySelector("i").classList.add("fa-solid", "fa-spinner", "fa-spin");
 
         // temporary function to do recursion 'n such
         async function temp(wait) {
@@ -149,8 +158,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             alert("Bus failed to pin/unpin due to network error! Please ensure network connectivity.");
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
-            // button.querySelector("i")!.classList.remove("fa-spinner", "fa-spin");
-            // button.querySelector("i")!.classList.add("fa-thumbtack");
+            button.parentElement.querySelector("i").remove();
         }
 
     }
