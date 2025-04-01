@@ -1,9 +1,7 @@
-var admins;   
-fetch("/getWhitelist").then((data)=>data.json()).then((data) => admins = data);
+window.onload = () => { document.getElementById("addInput").value = ""; }
 
-var newAdminEmptyRow;
-fetch("/adminEmptyRow").then((res) => res.text()).then((data) => newAdminEmptyRow = data);
- 
+var admins = document.getElementById("adminList").getAttribute("admins")
+console.log(admins)
 
 async function addAdmin_admins(e) {
     console.log(e)
@@ -14,16 +12,11 @@ async function addAdmin_admins(e) {
             alert("Duplicate admins are not allowed");
             return;
         }
-        if(!(await save2(admin))) {
+        if(!(await save(admin))) {
             alert("Error adding admin! Try again later");
             return;
         }
-        const newRow = (document.getElementsByClassName("whitelist-table")[0]).insertRow(2);
-        const html = ejs.render(newAdminEmptyRow, {newAddress: admin});
-        newRow.innerHTML = html;
-        admins.splice(0,0, admin);
-        let gleepGlorp = document.getElementById("gleepGlorp");
-        gleepGlorp.value = ""
+        window.location.reload();
     }
     else {
         alert("Invalid address entered. Please enter a D203 email address.");
@@ -36,16 +29,16 @@ async function addAdmin_admins(e) {
 async function removeAdmin_admins(secondChild) {
     let row = secondChild.parentElement.parentElement;
     let admin = row.children[0].innerHTML;
-    if(await save2(admin)) {
-        admins.splice(admins.indexOf(admin), 1);
-        row.remove();
+    if(!(await save(admin))) {
+        alert("Cannot remove this admin. If you are trying to remove yourself, this is not permitted. If this is not what you are trying to do, please try again later."); 
+    } else {
+        window.location.reload();
     }
-    else { alert("Cannot remove this admin. If you are trying to remove yourself, this is not permitted. If this is not what you are trying to do, please try again later."); }
 }
 
 
 
-async function  save2(admin) {
+async function  save(admin) {
     const res = await fetch("/updateWhitelist", {
         method: 'POST',
         headers: {

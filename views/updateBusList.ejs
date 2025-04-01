@@ -13,11 +13,7 @@
         <div class="header">
             <div class="back-button-div">
                 <a class="button back-button" href="/admin">Back to Admin Page</a>
-            </div>
-            <div class="options-div">
-                <button class="button save-reset-button" onclick="save()">Save and Update</button>
-                <button class="button discard-changes-button" onclick="discardChanges()">Discard Changes</button>
-            </div>            
+            </div>         
         </div>
         <table class="buslist-table">
             <thead> 
@@ -27,19 +23,19 @@
                 </tr>                
             </thead>
             <tr class="add-bus-row">
-                <td class="bus-input-cell"><input type="text" id="gleepGlorp" placeholder="Add"></td>
-                <td class="add-bus-cell"><i class="fa-solid fa-check confirm-button table-button" onclick="addBus_busList(this)"></i></td>
+                <td class="bus-input-cell"><input type="number" id="addInput" placeholder="Add"></td>
+                <td class="add-bus-cell"><i class="fa-solid fa-check confirm-button table-button" onclick="save(this, false)"></i></td>
             </tr>
-            <% for(i = 0; i <data.busList.length; i++) { %>
+            <% for(i = 0; i < busList.length; i++) { %>
                 <tr>
-                    <td><%= data.busList[i]%></td>
-                    <td class="remove-col"><i class="fas fa-times remove-button table-button" onclick="removeBus_busList(this)"></i></td>
+                    <td><input type="number" readonly value="<%=busList[i]%>"></td>
+                    <td class="remove-col"><i value="<%=busList[i]%>" class="fas fa-times remove-button table-button" onclick="save(this, true)"></i></td>
                 </tr>
             <% } %> 
         </table>
         <script src="js/ejs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/updateBusListConnect.js"></script>
-        <script src="js/updateBusList.js"></script>
+        <script id="data" src="js/updateBusList.js"></script>
     </body>
 </html>

@@ -25,7 +25,7 @@ const vapidPrivateKey = process.env.VAPID_PRIVATE;
 const vapidPublicKey = process.env.VAPID_PUBLIC;
 
 webpush.setVapidDetails(
-    'mailto:test@test.com',
+    'mailto:busappdevs@proton.me',
     vapidPublicKey,
     vapidPrivateKey,
 );
@@ -37,32 +37,19 @@ Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
 let timer = 30;
 
-// this was to migrate the admins from the file to the database when on the production server
-// no longer needed but keeping it commented for the time being in case something went wrong with the migration
-/*
-router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
-    readWhitelist().admins.forEach(async e => {
-        if(!(await Admin.findOne({Email: e.toLowerCase()}))) await (new Admin({Email: e.toLowerCase()})).save();
-    });
-    res.send("all done!");
-});
-*/
-
 // Homepage. This is where students will view bus information from. 
 router.get("/", async (req, res) => {
     // Reads from data file and displays data
     let data = {
         buses: await getBuses(), 
         weather: await Weather.findOne({}),
-        isLocked: false,
-        leavingAt: new Date(),
+        isLocked: (await Wave.findOne({})).locked,
+        leavingAt: (await Wave.findOne({})).leavingAt,
         vapidPublicKey,
         announcement: (await Announcement.findOne({})).announcement,
         isDev: process.env.DEV === "true", 
         timer: timer
     };
-    data.isLocked = (await Wave.findOne({})).locked;
-    data.leavingAt = (await Wave.findOne({})).leavingAt;
 
     res.render("index", {
         data: data,
@@ -70,14 +57,8 @@ router.get("/", async (req, res) => {
     });
 });
 
-router.get("/restartServer", async (req, res) => {
-    if(process.env.DEV === "true") {
-        throw new Error("restarting...");
-    }
-    else {res.sendStatus(404)}
-})
-
 // tv route
+// TODO: improve this
 router.get("/tv", async (req, res) => {
     // Reads from data file and displays data
     res.render("tv", {
@@ -104,42 +85,14 @@ router.post("/auth/v1/google", async (req, res) => {
     res.status(201).end();
 });
 
-// check the login, return false if user cannot continue and true if user can.
-// renders appropriate login or unauthorized page accordingly
-async function checkLogin(req, res) {
-    if(!req.session.userEmail) {
-        res.redirect("/login");
-        return false;
-    }
-    
-    if(req.session.isAdmin === false) {
-        res.render("unauthorized");
-        return false;
-    }
-    return true;
-}
 
-/* Admin page. This is where bus information can be updated from
-Reads from data file and displays data */
-router.get("/admin", async (req, res) => {
-    // Check if user is logged in and is an admin
-    if(!(await checkLogin(req, res))) { return; }
-
-    let data = {
-        allBuses: await getBuses(),
-        nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
-        loading: await Bus.find({status: "Loading"}).sort("order"),
-        isLocked: false, 
-        leavingAt: new Date(),
-        timer: timer
-    };
-    data.isLocked = (await Wave.findOne({})).locked;
-    data.leavingAt = (await Wave.findOne({})).leavingAt;
-    res.render("admin", {
-        data: data,
-        render: fs.readFileSync(path.resolve(__dirname, "../views/include/adminContent.ejs")),
-    });
-});
+// only works if the server is in dev mode, throws an error to crash the server and be automatically restarted
+router.get("/restartServer", async (req, res) => {
+    if(process.env.DEV === "true") {
+        throw new Error("restarting...");
+    }
+    else {res.sendStatus(404)}
+})
 
 // https://save418.com/ 
 router.get("/teapot", (req, res) => { res.sendStatus(418); });
@@ -172,6 +125,123 @@ router.get("/waveStatus", async (req, res) => {
     const wave = await Wave.findOne({});
     res.send(wave.locked);
 });
+
+router.get("/beans", async (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../static/img/beans.jpg"));
+});
+
+// manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
+// not serving in static because iirc it is necessary to have it at the root for scope reasons
+router.get("/manifest.json", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
+});
+/*
+router.get("/updateBusListEmptyRow", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
+});
+
+router.get("/updateBusListPopulatedRow", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListPopulatedRow.ejs"));
+});
+
+router.get("/adminEmptyRow", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../views/sockets/adminEmptyRow.ejs"));
+});
+
+router.get("/busList", async (req, res) => {
+    res.type("json").send(await Bus.find().distinct("busNumber"));
+});
+*/
+router.get('/help',(req, res)=>{
+    res.render('help');
+});
+
+
+
+
+
+/* 
+    ADMIN AUTHENTICATED ROUTES GO HERE!
+    PUT `if(!(await checkLogin(req, res))) { return; }` AT THE BEGINNING OF EVERY ENDPOINT
+*/
+
+async function checkLogin(req, res) {
+    return true;
+    if(!req.session.userEmail) {
+        res.redirect("/login");
+        return false;
+    } else if(req.session.isAdmin === false) {
+        res.render("unauthorized");
+        return false;
+    } 
+    return true;
+}
+
+/* Admin page. This is where bus information can be updated from
+Reads from data file and displays data */
+router.get("/admin", async (req, res) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
+    let data = {
+        allBuses: await getBuses(),
+        nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
+        loading: await Bus.find({status: "Loading"}).sort("order"),
+        isLocked: false, 
+        leavingAt: new Date(),
+        timer: timer
+    };
+    data.isLocked = (await Wave.findOne({})).locked;
+    data.leavingAt = (await Wave.findOne({})).leavingAt;
+    res.render("admin", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/include/adminContent.ejs")),
+    });
+});
+
+router.get("/updateBusList", async (req, res) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
+    // get all the bus numbers of all the buses from the database and make a list of them
+    const busList = await Bus.find().distinct("busNumber");
+
+    res.render("updateBusList", { busList });
+});
+
+
+router.post("/updateBusList", async (req, res) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
+    // use the posted bus list to update the database, removing any buses that are not in the list, and adding any buses that are in the list but not in the database
+    const bus = req.body.bus;
+    const del = req.body.del;
+    
+    if(del) await Bus.findOneAndDelete({ busNumber: bus }); // remove the bus from the database
+    else if(!(await Bus.findOne({ busNumber: bus }))) await (new Bus({ busNumber: bus, busChange: 0, status: "normal", time: new Date(),})).save();
+    
+    res.status(201).end();
+});
+
+router.get("/makeAnnouncement", async (req, res) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+    
+    res.render("makeAnnouncement", {
+        currentAnnouncement: (await Announcement.findOne({})).announcement,
+        currentTvAnnouncement: (await Announcement.findOne({})).tvAnnouncement
+    });
+});
+
+router.get('/whitelist', async (req, res)=>{
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+    
+    res.render("updateWhitelist", {
+        whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email).reverse()}
+    });
+})
 
 router.post("/updateBusChange", async (req, res) => {
     // Check if user is logged in and is an admin
@@ -230,7 +300,6 @@ router.post("/updateBusStatus", async (req, res) => {
         res.send("success");
     }
 });
-
 
 router.post("/sendWave", async (req, res) => {
     // Check if user is logged in and is an admin
@@ -309,7 +378,6 @@ router.post("/setTimer", async (req, res) => {
 router.get("/leavingAt", async (req, res) => {
     const leavingAt = (await Wave.findOne({})).leavingAt;
     res.send(leavingAt);
-
 });
 
 router.post("/resetAllBusses", async (req, res) => {
@@ -321,106 +389,11 @@ router.post("/resetAllBusses", async (req, res) => {
 
 });
 
-router.get("/beans", async (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../static/img/beans.jpg"));
-});
-
-// manifest - necessary for making the busapp behave like a proper PWA when added to the homescreen
-// not serving in static because iirc it is necessary to have it at the root for scope reasons
-router.get("/manifest.json", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
-});
-
-/* Admin page. This is where bus information can be updated from
-Reads from data file and displays data */
-router.get("/updateBusList", async (req, res) => {
-    // Check if user is logged in and is an admin
-    if(!(await checkLogin(req, res))) { return; }
-
-    // get all the bus numbers of all the buses from the database and make a list of them
-    const busList = await Bus.find().distinct("busNumber");
-
-    let data = { busList: busList };
-
-    res.render("updateBusList", { data: data });
-});
-
-router.get("/makeAnnouncement", async (req, res) => {
-    // Check if user is logged in and is an admin
-    if(!(await checkLogin(req, res))) { return; }
-    
-    res.render("makeAnnouncement", {
-        currentAnnouncement: (await Announcement.findOne({})).announcement,
-        currentTvAnnouncement: (await Announcement.findOne({})).tvAnnouncement
-    });
-});
-
-router.get('/whitelist', async (req, res)=>{
-    // Check if user is logged in and is an admin
-    if(!(await checkLogin(req, res))) { return; }
-    
-    res.render("updateWhitelist", {
-        whitelist: {admins: (await Admin.find({}).exec()).map((e) => e.Email).reverse()}
-    });
-})
-
-
-router.get("/updateBusListEmptyRow", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListEmptyRow.ejs"));
-});
-
-router.get("/updateBusListPopulatedRow", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../views/sockets/updateBusListPopulatedRow.ejs"));
-});
-
-router.get("/adminEmptyRow", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../views/sockets/adminEmptyRow.ejs"));
-});
-
-router.get("/busList", async (req, res) => {
-    res.type("json").send(await Bus.find().distinct("busNumber"));
-});
-
 router.get("/getWhitelist", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
     res.type("json").send((await Admin.find({}).exec()).map((e) => e.Email).reverse());
-});
-
-router.post("/updateBusList", async (req, res) => {
-    // Check if user is logged in and is an admin
-    if(!(await checkLogin(req, res))) { return; }
-
-    // use the posted bus list to update the database, removing any buses that are not in the list, and adding any buses that are in the list but not in the database
-    const busList = req.body.busList;
-    
-    let buses = await Bus.find({});
-    buses.forEach((bus) => { // for each bus in the database
-        if (!busList.includes(bus.busNumber)) { // if the bus is not in the list
-            Bus.findOneAndDelete({ busNumber: bus.busNumber }).exec(); // remove the bus from the database
-        }
-    });
-    busList.forEach(async (busNumber) => { // for each bus in the list
-        if (!buses.map( (bus) => bus.busNumber).includes(busNumber)) { // if the bus is not in the database
-            try {
-                const newBus = new Bus({ // add the bus to the database
-                    busNumber: busNumber,
-                    busChange: 0,
-                    status: "normal",
-                    time: new Date(),
-                });
-                await newBus.save();
-            } catch (error) {
-                console.log("bus creation failed");
-            }
-        }
-    });
-    res.status(201).end();
-});
-
-router.get('/help',(req, res)=>{
-    res.render('help');
 });
 
 router.post("/updateWhitelist", async (req, res) => {
@@ -449,18 +422,14 @@ router.post("/submitAnnouncement", async (req, res) => {    //overwrites the ann
     res.redirect("/admin");
 });
 
-
 router.post("/clearAnnouncement", async (req, res) => {
     // Check if user is logged in and is an admin
-    if(!(await checkLogin(req, res))) { return; }
     
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
 
-// this is stupid but in order to get the actual timer to server.js and not just the initial value we need this
-function getTimer() {
-    return timer;
-}
 
-module.exports = {router,getTimer};
+// this is stupid but in order to get the actual timer to server.js and not just the initial value we need this
+function getTimer() { return timer; }
+module.exports = {router, getTimer};
