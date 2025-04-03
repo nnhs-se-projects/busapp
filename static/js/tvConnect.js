@@ -57,7 +57,7 @@ var x = setInterval(async function() {
             // dw abt removing this, next rerender will take care of that
             timer.classList.add("shake");
         } else {
-            timer.innerHTML = `${minutes ? `${minutes} Minutes` : ""} ${seconds && minutes ? `and ${seconds} Seconds` : `${seconds} Seconds`} Left In Wave`;
+            timer.innerHTML = `${minutes ? `${minutes} Minute${ minutes > 1 ? "s" : "" }` : ""} ${seconds && minutes ? `and ${seconds} Seconds` : `${seconds} Seconds`} Left In Wave`;
         }
     }
 }, 1000);

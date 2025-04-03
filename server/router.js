@@ -73,6 +73,18 @@ router.get("/tv", async (req, res) => {
     })
 })
 
+router.get("/extension", async (req, res) => {
+    // Reads from data file and displays data
+    res.render("extension", {
+        data: {
+            buses: await getBuses(),
+            isLocked: (await Wave.findOne({})).locked,
+            timer: timer
+        },
+        render: fs.readFileSync(path.resolve(__dirname, "../views/include/extensionContent.ejs")),                                
+    })
+})
+
 // Login page. User authenticates here and then is redirected to admin (where they will be authorized)
 router.get("/login", (req, res) => {
     res.render("login");
