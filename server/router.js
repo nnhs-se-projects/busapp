@@ -378,7 +378,7 @@ router.post("/resetAllBusses", async (req, res) => {
     if(!(await checkLogin(req, res))) { return; }
 
     await Bus.updateMany({}, { $set: { status: "", order: 0 } }); 
-    await Wave.updateMany({}, { $set: { locked: false } })
+    await Wave.updateMany({}, { $set: { locked: false } });
     res.send("success");
 
 });
