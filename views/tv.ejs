@@ -11,11 +11,11 @@
         
     </head>
     <body>
-        <div id="content">
+        <div id="content" style="background-image: url('<%= data.weather.icon %>')">
             <%- include("include/tvIndexContent") %>
         </div>
         <script src="js/ejs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script id="getRender" render="<%= render %>" src='js/indexConnect.js'></script>
+        <script id="getRender" data="<%= JSON.stringify(data) %>" render="<%= render %>" src='js/tvConnect.js'></script>
     </body>
 </html>

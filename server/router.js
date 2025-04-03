@@ -62,9 +62,14 @@ router.get("/", async (req, res) => {
 router.get("/tv", async (req, res) => {
     // Reads from data file and displays data
     res.render("tv", {
-        data: {buses: await getBuses(), weather: await Weather.findOne({})},
+        data: {
+            buses: await getBuses(), 
+            weather: await Weather.findOne({}),
+            announcement: (await Announcement.findOne({})).tvAnnouncement,
+            isLocked: (await Wave.findOne({})).locked,
+            timer: timer
+        },
         render: fs.readFileSync(path.resolve(__dirname, "../views/include/tvIndexContent.ejs")),                                
-        announcement: (await Announcement.findOne({})).tvAnnouncement
     })
 })
 
