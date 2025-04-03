@@ -36,23 +36,26 @@ io.of("/").on("connection", (socket) => {
 io.of("/admin").on("connection", async (socket) => {
     socket.on("updateMain", async (command) => {
 
+        const wave = await Wave.findOne({});
 
         let data ={
             allBuses: await getBuses(),
             nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
             loading: await Bus.find({status: "Loading"}).sort("order"),
-            isLocked: (await Wave.findOne({})).locked, 
-            leavingAt: (await Wave.findOne({})).leavingAt,
+            isLocked: wave.locked, 
+            leavingAt: wave.leavingAt,
         };
         
         // console.log("updateMain called")
+        const announce = (await Announcement.findOne({}));
 
         let indexData = {
-            buses: await getBuses(),
-            isLocked: data.isLocked,
-            leavingAt: data.leavingAt,
+            buses: data.allBuses,
+            isLocked: wave.locked,
+            leavingAt: wave.leavingAt,
             weather: await Weather.findOne({}),
-            announcement: (await Announcement.findOne({})).announcement,
+            announcement: announce.announcement,
+            tvAnnouncement: announce.tvAnnouncement,
             timer: getTimer()
         }
         
@@ -104,12 +107,8 @@ async function resetBusChanges() {
         busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
     }
 
-    let buses = await Bus.find({});
-    buses.forEach((bus) => { // for each bus in the database
-        bus.busChange = 0; // reset the bus change
-        bus.status = "normal"; // reset the bus status
-        bus.save(); // save the bus
-    });
+    await Bus.updateMany({}, { $set: { status: "", order: 0, busChange: 0 } }); 
+    await Wave.updateMany({}, { $set: { locked: false } })
 
     console.log("reset bus changes: " + new Date().toLocaleString());
 }

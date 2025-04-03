@@ -65,7 +65,7 @@ router.get("/tv", async (req, res) => {
         data: {
             buses: await getBuses(), 
             weather: await Weather.findOne({}),
-            announcement: (await Announcement.findOne({})).tvAnnouncement,
+            tvAnnouncement: (await Announcement.findOne({})).tvAnnouncement,
             isLocked: (await Wave.findOne({})).locked,
             timer: timer
         },
@@ -174,7 +174,7 @@ router.get("/admin", async (req, res) => {
 
     let data = {
         allBuses: await getBuses(),
-        nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
+        nextWave: await Bus.find({status: "Next Wave"}),
         loading: await Bus.find({status: "Loading"}).sort("order"),
         isLocked: false, 
         leavingAt: new Date(),
@@ -281,7 +281,7 @@ router.post("/updateBusStatus", async (req, res) => {
     }
     
     let order;
-    if(busStatus === "Loading") { 
+    if(busStatus === "Loading" || busStatus === "Next Wave") { 
         var orders = await Bus.find({status: busStatus});
         order = orders.length; 
         // this seems redundant but if there is a duplicate for whatever reason, 
@@ -377,7 +377,8 @@ router.post("/resetAllBusses", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    await Bus.updateMany({}, { $set: { status: "" } }); 
+    await Bus.updateMany({}, { $set: { status: "", order: 0 } }); 
+    await Wave.updateMany({}, { $set: { locked: false } });
     res.send("success");
 
 });

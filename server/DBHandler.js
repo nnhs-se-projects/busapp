@@ -6,7 +6,7 @@ const Bus = require("./model/bus.js");
 
 async function getBuses() {
     // get all the buses and create a list of objects like the following {number:,change:,time:,status:}
-    const buses = await Bus.find({});
+    const buses = await Bus.find({}).sort("order");
     const busList = [];
     buses.forEach((bus) => {
         // get the sum of all the minutes since midnight of each bus arrival and average them
