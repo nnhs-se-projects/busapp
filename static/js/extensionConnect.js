@@ -93,7 +93,6 @@ fetch('/leavingAt')
         const leavingAt = new Date(data);
         
         countDownDate = leavingAt; // Assign the value to countDownDate
-
     })
     .catch(error => {
         console.error('Error:', error);
@@ -106,13 +105,10 @@ var x = setInterval(async function() {
 
     // Find the distance between now and the count down date
     var distance = countDownDate.getTime() - now;
-    // console.log("distance: " + distance);
 
-    // Time calculations for days, hours, minutes and seconds
-    //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    //var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    //var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    // Time calculations for minutes and seconds
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
     document.querySelectorAll(".loading").forEach((element) => {
@@ -120,6 +116,9 @@ var x = setInterval(async function() {
         element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
         if (distance < 0) { 
             element.innerHTML = "About to leave!"; 
+            document.querySelector(".timer").innerHTML = "Wave is about to leave!";
+        } else {
+            document.querySelector(".timer").innerHTML = `${minutes ? `${minutes} Minute${ minutes > 1 ? "s" : "" }` : ""} ${seconds && minutes ? `and ${seconds} Seconds` : `${seconds} Seconds`} Left In Wave`;
         }
     });
 }, 1000);
