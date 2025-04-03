@@ -41,11 +41,9 @@ io.of("/admin").on("connection", async (socket) => {
             allBuses: await getBuses(),
             nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
             loading: await Bus.find({status: "Loading"}).sort("order"),
-            isLocked: false, 
-            leavingAt: new Date(),
+            isLocked: (await Wave.findOne({})).locked, 
+            leavingAt: (await Wave.findOne({})).leavingAt,
         };
-        data.isLocked = (await Wave.findOne({})).locked;
-        data.leavingAt = (await Wave.findOne({})).leavingAt;
         
         // console.log("updateMain called")
 
