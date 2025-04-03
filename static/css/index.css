@@ -103,7 +103,7 @@ button:active{
 }
 
 .dropdown-menu {
-    max-width: 90%;
+    max-width: min(300px, 90%);
     height: 50vh;
     scrollbar-width: auto;
     overflow: scroll;
