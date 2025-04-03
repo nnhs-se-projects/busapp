@@ -44,9 +44,7 @@
             <tr>
                 <td><input class="tableInput numberInput" type="number" value=<%= data.loading[i].busNumber %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.loading[i].busChange ? data.loading[i].busChange : "" %> ></td>
-                <td class="swapButton">
-                    <% if(i > 0 && !data.isLocked) { %> <i class="fa-solid fa-arrows-up-down" onclick="updateOrder(this)"></i> <% } %>
-                </td>
+                <% if(!data.isLocked) { if(i > 0) { %> <td class="swapButton"><i class="fa-solid fa-arrows-up-down" onclick="updateOrder(this)"></i></td> <% } else { %> <td class="swapButton"></td> <% } } else { %><td><%= i + 1 %></td><% } %>
                 <td>
                     <% if(!data.isLocked) { %>
                         <p onclick="removeFromWave(this, true)" class="button-text">Remove</p>

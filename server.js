@@ -46,13 +46,15 @@ io.of("/admin").on("connection", async (socket) => {
         };
         
         // console.log("updateMain called")
+        const announce = (await Announcement.findOne({}));
 
         let indexData = {
             buses: await getBuses(),
             isLocked: data.isLocked,
             leavingAt: data.leavingAt,
             weather: await Weather.findOne({}),
-            announcement: (await Announcement.findOne({})).announcement,
+            announcement: announce.announcement,
+            tvAnnouncement: announce.tvAnnouncement,
             timer: getTimer()
         }
         

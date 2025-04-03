@@ -65,7 +65,7 @@ router.get("/tv", async (req, res) => {
         data: {
             buses: await getBuses(), 
             weather: await Weather.findOne({}),
-            announcement: (await Announcement.findOne({})).tvAnnouncement,
+            tvAnnouncement: (await Announcement.findOne({})).tvAnnouncement,
             isLocked: (await Wave.findOne({})).locked,
             timer: timer
         },
