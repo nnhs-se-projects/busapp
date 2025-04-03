@@ -83,6 +83,12 @@ function updatePins() { // guess what
             }
         }
     });
+    if(pins.length === 0) {
+        const content = document.getElementById("content");
+        const noPins = document.createElement('p');
+        noPins.innerHTML = "<div style='text-align: center; padding: 15px;'>You have no buses pinned :( <br/><a href='/' target='_blank'>Pin Some</a></div>";
+        content.insertBefore(noPins, content.querySelector(".pins"));
+    }
 }
 
 // Set the date we're counting down to
@@ -116,11 +122,18 @@ var x = setInterval(async function() {
         element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
         if (distance < 0) { 
             element.innerHTML = "About to leave!"; 
-            document.querySelector(".timer").innerHTML = "Wave is about to leave!";
-        } else {
-            document.querySelector(".timer").innerHTML = `${minutes ? `${minutes} Minute${ minutes > 1 ? "s" : "" }` : ""} ${seconds && minutes ? `and ${seconds} Seconds` : `${seconds} Seconds`} Left In Wave`;
         }
     });
+    const timer = document.querySelector(".timer");
+    if(timer) {
+        if (distance < 0 && isLocked) { 
+            timer.innerHTML = "Wave is about to leave!";
+        } else if(isLocked) {
+            timer.innerHTML = `${minutes ? `${minutes} Minute${ minutes > 1 ? "s" : "" }` : ""} ${seconds && minutes ? `and ${seconds} Seconds` : `${seconds} Seconds`} Left In Wave`;
+        } else {
+            timer.parentElement.removeChild(timer);
+        }
+    }
 }, 1000);
 
 var y = setInterval(async function() {

@@ -124,9 +124,8 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     // updatePins();
     // const busRow = button.parentElement!.parentElement; // this is the overarching <tr> element of the bus row
     const busNumber = button.innerText; // this is the stringification of the number of the bus
-    var removing = false;
-
     const num = parseInt(busNumber); // this is the number of the bus
+    var removing = pins.includes(num);
 
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
