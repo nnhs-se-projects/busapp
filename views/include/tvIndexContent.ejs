@@ -4,7 +4,7 @@
             <div class="weather section"><div class="temp"><%= data.weather.temperature %>&deg;F</div><div class="stat"><%= data.weather.status %></div></div>
             <div class="announcement section"><h2>Announcement</h2><div><%= data.tvAnnouncement %></div></div>
         </div>
-        <% if(data.isLocked) { %> <div class="timer"> Loading... </div> <% } %>
+        <% if(data.isLocked) { %> <div class="timer section"> Loading... </div> <% } %>
     </div>
     <div class="bottom">
         <div class="section">

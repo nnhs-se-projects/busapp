@@ -70,10 +70,10 @@ h2 {
     background-color: green;
     transition: background-position 1s linear;
     height: var(--height);
-    border-radius: var(--corner-rad);
     display: grid; align-items: center; justify-content: center;
     font-size: calc(var(--height) * 0.75);
     line-height: 1em;
+    color: black;
 }
 
 .bottom {
@@ -85,6 +85,7 @@ h2 {
 
 .busNumber {
     font-size: 120%;
+    font-weight: 900;
 }
 
 .busNumber.loading {
@@ -102,7 +103,7 @@ h2 {
     background-color: var(--lighter-blue);
     padding: 5px;
     padding-inline: 15px;
-    font-size: min(2.5vw, 4vh);
+    font-size: min(2.5vw, 3.8vh);
     border-radius: var(--corner-rad);
     box-shadow: 0px 0px 5px 5px var(--lighter-blue);
     flex-grow: 1;
@@ -114,6 +115,8 @@ h2 {
     max-height: 27.5vh;
     max-width: 27.5vh;
     flex-shrink: 1;
+    display: grid;
+    align-items: center;
 }
 
 .weather > .temp {

@@ -377,7 +377,8 @@ router.post("/resetAllBusses", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    await Bus.updateMany({}, { $set: { status: "" } }); 
+    await Bus.updateMany({}, { $set: { status: "", order: 0 } }); 
+    await Wave.updateMany({}, { $set: { locked: false } })
     res.send("success");
 
 });
