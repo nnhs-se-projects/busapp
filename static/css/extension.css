@@ -1,0 +1,50 @@
+* {
+    padding: 0;
+    margin: 0;
+    max-width: unset;
+    scrollbar-width: none;
+    height: auto;
+    box-sizing: border-box;
+    overscroll-behavior: none;
+}
+:root {
+    --crimson: #d7263dff;
+    --giants-orange: #f46036ff;
+    --space-cadet: #2e294eff;
+    --lighter-blue: hsl(250, 31%, 40%);
+    --night: #141415ff;
+    --gray: #ebebeb;
+}
+
+html, body {
+    min-height: auto;
+}
+
+#content {
+    background-color: var(--space-cadet);
+    color: white;
+    font-size: 16px !important;
+}
+
+.pins {
+    width: 100%;
+}
+
+.pinned-bus-table {
+    width: 100%;
+    max-width: unset;
+}
+
+thead {
+    display: none;
+}
+
+.num-col {
+    font-size: 16px !important;
+}
+
+#networkIndicator {
+    left: unset;
+    bottom: 7.5px;
+    right: 7.5px
+}
