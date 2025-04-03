@@ -174,7 +174,7 @@ router.get("/admin", async (req, res) => {
 
     let data = {
         allBuses: await getBuses(),
-        nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
+        nextWave: await Bus.find({status: "Next Wave"}),
         loading: await Bus.find({status: "Loading"}).sort("order"),
         isLocked: false, 
         leavingAt: new Date(),
@@ -281,7 +281,7 @@ router.post("/updateBusStatus", async (req, res) => {
     }
     
     let order;
-    if(busStatus === "Loading") { 
+    if(busStatus === "Loading" || busStatus === "Next Wave") { 
         var orders = await Bus.find({status: busStatus});
         order = orders.length; 
         // this seems redundant but if there is a duplicate for whatever reason, 
