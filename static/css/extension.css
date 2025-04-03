@@ -49,3 +49,8 @@ thead {
     padding: 1em;
     padding-top: 0;
 }
+
+#networkIndicator {
+    right: 10px;
+    left: unset;
+}
