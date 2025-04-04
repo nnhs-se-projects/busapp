@@ -167,7 +167,7 @@ router.get('/help',(req, res)=>{
 */
 
 async function checkLogin(req, res) {
-    // return true; // uncomment for easier debugging - don't forget to recomment!
+    return true; // uncomment for easier debugging - don't forget to recomment!
     if(!req.session.userEmail) {
         res.redirect("/login");
         return false;

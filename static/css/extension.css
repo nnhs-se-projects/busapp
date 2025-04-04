@@ -54,3 +54,11 @@ thead {
     right: 10px;
     left: unset;
 }
+
+.num-col {
+    width: 3em;
+}
+
+.time-col {
+    width: 6em;
+}

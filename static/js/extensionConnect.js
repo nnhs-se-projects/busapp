@@ -77,7 +77,21 @@ function updatePins() { // guess what
 
                 cell.innerHTML += " @" + (busInfo.order+1);
             }
-            cell.parentElement.querySelector(".time-col").innerHTML = busInfo.time ? (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) : "<span style='color: gray'>" + (new Date(busInfo.avgTime)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) + "</span>";
+
+            if(busInfo.time) {
+                cell.parentElement.querySelector(".time-col").innerHTML = (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'})
+            } else {
+                var avgTime = "Unknown";
+                if(busInfo.busTimes.length !== 0) {
+                    // get the sum of all the minutes since midnight of each bus arrival and average them
+                    var sum = 0; for(var i of busInfo.busTimes.map((e) => {e = new Date(e); return e.getHours()*60 + e.getMinutes()})) { sum += i; }
+                    const avgMinutes = sum / busInfo.busTimes.length;
+                    // convert back to Date object
+                    avgTime = (new Date(1970, 0, 1, Math.floor(avgMinutes/60), avgMinutes%60, 0)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'});
+                }
+                cell.parentElement.querySelector(".time-col").innerHTML = "<span style='color: gray'>" + avgTime + "</span>";
+            }
+
             if(busInfo.change) {
                 cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "&rarr;" + busInfo.change;
             }

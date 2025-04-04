@@ -9,13 +9,8 @@ async function getBuses() {
     const buses = await Bus.find({}).sort("order");
     const busList = [];
     buses.forEach((bus) => {
-        // get the sum of all the minutes since midnight of each bus arrival and average them
-        var sum = 0; for(var i of bus.busTimes.map((e) => e.getHours()*60 + e.getMinutes())) { sum += i; }
-        var avgTime = sum / bus.busTimes.length;
-        // convert back to Date object
-        avgTime = new Date(1970, 0, 1, Math.floor(avgTime/60), avgTime%60, 0);
         // push data to buslist
-        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, avgTime: avgTime, order: bus.order});
+        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, busTimes: bus.busTimes, order: bus.order});
     });
     // if change is 0, make it an empty string
     busList.forEach((bus) => {
