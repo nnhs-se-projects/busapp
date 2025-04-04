@@ -1,0 +1,15 @@
+{
+  "name": "Bus App",
+  "description": "NNHS Bus App web extension",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "pins.html",
+    "default_icon": "icon.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "busappdevs@proton.me"
+    }
+  }
+}

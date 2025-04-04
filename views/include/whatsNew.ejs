@@ -1,0 +1,32 @@
+<!-- Update the value of <% version = 3 %> in this comment when updating the what's new popup to make it appear again on launch -->
+<input type="hidden" id="whatsNewVersion" value="<%=version%>"/>
+<div id="whatsNewPopup"><div> <i class="fa-regular fa-circle-xmark" onclick="hideWhatsNew(<%=version%>)" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
+    <h2>What's New</h2>
+    <ul>
+        <li><p>UI Redesign! 🖌️</p>
+            <ul>
+                <li>New user interface!</li>
+            </ul>
+        </li>
+        <li><p>Arrival Time Predictions</p>
+            <ul>
+                <li>if your bus has not yet arrived, a predicted arrival time is shown</li>
+            </ul>
+        </li>
+        <li><p>Bus Map & Bus Position</p>
+            <ul>
+                <li>Bus Map shows where your bus is parked in the bus lot on half days</li>
+                <li>Position of your bus in the bus lot is now displayed</li>
+            </ul>
+        </li>
+        <li><p>Bug Fixes</p>
+            <ul>
+                <li>Fixed &quot;Your bus just left!&quot; notifications not sending</li>
+            </ul>
+        </li>
+        <li>Have feedback or ideas? Send us an email at <a href="mailto:busappdevs@proton.me">busappdevs@proton.me</a> or fill out <a target="_blank" href="https://forms.gle/ffekcnoKTtAUMBic6">this feedback form</a></li>
+    </ul>
+    <br />
+    <p>- 🚍 The Bus App Team</p>
+    <br /><a class="generic-button" onclick="hideWhatsNew(<%=version%>)">Got It!</a>
+</div></div>
