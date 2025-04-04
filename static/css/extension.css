@@ -55,10 +55,10 @@ thead {
     left: unset;
 }
 
-.num-col {
-    width: 3em;
+.num-col, .time-col {
+    width: 0;
 }
 
 .time-col {
-    width: 6em;
+    text-wrap: nowrap;
 }
