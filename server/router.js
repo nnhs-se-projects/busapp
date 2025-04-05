@@ -117,6 +117,8 @@ router.get("/teapot", (req, res) => { res.sendStatus(418); });
 // used for networkIndicator
 router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 
+router.get("/getWeather", async (req, res) => { res.send(JSON.stringify(await Weather.findOne({}))); });
+
 // this needs to be served from the root of the server to work properly - used for push notifications
 router.get("/serviceWorker.js", async (req, res) => {
     res.sendFile("serviceWorker.js", { root: path.join(__dirname, '../static/js/') });
