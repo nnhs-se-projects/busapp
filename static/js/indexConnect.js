@@ -6,6 +6,7 @@ var indexSocket = window.io('/'); // This line and the line above is how you get
 var countDownDate = new Date();
 var timerDuration = 0;
 var isLocked = false;
+var weather;
 
 var pins = [];
 var notifStatus = {};
@@ -29,6 +30,7 @@ indexSocket.on("update", (data) => {
     timerDuration = data.timer;
     buses = data.buses;
     isLocked = data.isLocked;
+    weather = data.weather;
 
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
     document.getElementById("content").innerHTML = html;
@@ -36,6 +38,7 @@ indexSocket.on("update", (data) => {
 
     updatePins();
     updateNotifButton();
+    updateWeather();
 });
 
 function hideWhatsNew(version) {
@@ -130,6 +133,11 @@ function updatePins() { // guess what
             i.style.filter = "";
         }
     }
+}
+
+function updateWeather() {
+    document.body.style.backgroundImage = `url("${weather.icon}")`;
+    document.getElementById("weather").innerHTML = `${weather.temperature}&deg;F ${weather.status}`;
 }
 
 async function pinBus(button) { // pins the bus when the user clicks the button
@@ -258,3 +266,9 @@ const reloadChecker = setInterval(async function() {
     }
     lastTime = currentTime;
 }, 30000);
+
+
+const checkWeather = setInterval(async function() {
+    weather = await (await fetch("/getWeather")).json();
+    updateWeather();
+}, 1000 * 60 * 30);
