@@ -136,7 +136,6 @@ function updatePins() { // guess what
 }
 
 function updateWeather() {
-    console.log("ae");
     document.body.style.backgroundImage = `url("${weather.icon}")`;
     document.getElementById("weather").innerHTML = `${weather.temperature}&deg;F ${weather.status}`;
 }
