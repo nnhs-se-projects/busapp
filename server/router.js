@@ -117,6 +117,21 @@ router.get("/teapot", (req, res) => { res.sendStatus(418); });
 // used for networkIndicator
 router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 
+// NOT FOR INTERNAL USE
+// this is for other students making discord bots or other integrations with apps to make it easier.
+// also reduces load on the server as we dont have to render the EJS for automated requests.
+router.get("/api", (req, res) => { 
+    const wav = await Wave.findOne({});
+    data = {
+        buses: await getBuses(),
+        isLocked: wav.locked,
+        leavingAt: wav.leavingAt,
+        announcement: (await Announcement.findOne({})).announcement,
+        timer: timer
+    };
+    res.send(JSON.stringify(data));
+});
+
 router.get("/getWeather", async (req, res) => { res.send(JSON.stringify(await Weather.findOne({}))); });
 
 // this needs to be served from the root of the server to work properly - used for push notifications
