@@ -1,6 +1,7 @@
 <form action="/updateBusMap" method="POST">
 <div class="buttons">
         <button class="button back-button" onclick="saveMap()" href="/admin">Back to Admin Page</a>
+        <button class="map-change" onclick="changeMap()">Change Map</button>
 </div>
 
     <div>
@@ -16,9 +17,22 @@
             </th>
         </table>
         
+    <!-- </div>
+    <div>
+
+        <table style="width:100%">
+            <th colspan="100%">Current Wave
+                <tr style="height: 100px">
+                    <% for (let i = 0; i < 8; i++) { %>
+                        <td class="current"><input placeholder="enter"></td>
+                    <% } %>
+                </tr>
+            </th>
+        </table>
+        
     </div>
 
-    <!-- <div>
+    <div>
 
         <table style="width:100%">
             <th colspan="100%">Bus Lots
@@ -30,20 +44,6 @@
                 <tr style="height: 100px">
                     <% for (let i = 0; i < 14; i++) { %>
                         <td class="row2"><input placeholder="enter"></td>
-                    <% } %>
-                </tr>
-            </th>
-        </table>
-        
-    </div>
-
-    <div>
-
-        <table style="width:100%">
-            <th colspan="100%">Current Wave
-                <tr style="height: 100px">
-                    <% for (let i = 0; i < 8; i++) { %>
-                        <td class="current"><input placeholder="enter"></td>
                     <% } %>
                 </tr>
             </th>
