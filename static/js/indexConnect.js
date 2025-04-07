@@ -125,9 +125,11 @@ function updatePins() { // guess what
     for(const i of document.querySelector(".dropdown-menu").children) {
         // if there is a bus change we need to strip that extra stuff
         if(pins.includes(+i.querySelector("button").innerHTML.replace(/→(.*)/, ""))) {
-            i.style.filter = "grayscale(1)";
+            i.style.filter = "grayscale(0.5)";
+            // button.textContent += " - Pinned";
         } else {
             i.style.filter = "";
+            // button.textContent = button.textContent.split(" ")[0];
         }
     }
 }
@@ -142,7 +144,6 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // add loading icon
-        // button.textContent += " loading";
         button.appendChild(document.createElement("i"));
         button.querySelector("i").classList.add("fa-solid", "fa-spinner", "fa-spin");
 
@@ -174,7 +175,6 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
             button.parentElement.querySelector("i").remove();
-            // button.textContent = button.textContent.split(" ")[0];
         }
 
     }
