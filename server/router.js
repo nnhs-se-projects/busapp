@@ -120,16 +120,13 @@ router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 // NOT FOR INTERNAL USE
 // this is for other students making discord bots or other integrations with apps to make it easier.
 // also reduces load on the server as we dont have to render the EJS for automated requests.
-router.get("/api", (req, res) => { 
-    const wav = await Wave.findOne({});
-    data = {
+router.get("/api", async (req, res) => {
+    res.send(JSON.stringify({
         buses: await getBuses(),
-        isLocked: wav.locked,
-        leavingAt: wav.leavingAt,
+        wave: await Wave.findOne({}),
         announcement: (await Announcement.findOne({})).announcement,
-        timer: timer
-    };
-    res.send(JSON.stringify(data));
+        timerDuration: timer
+    }));
 });
 
 router.get("/getWeather", async (req, res) => { res.send(JSON.stringify(await Weather.findOne({}))); });
