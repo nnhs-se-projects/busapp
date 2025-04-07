@@ -142,8 +142,9 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     // subscribe to the bus
     if(localStorage.getItem("pushObject") && Notification.permission === "granted") {
         // add loading icon
-        button.parentElement.insertBefore(document.createElement("i"), button);
-        button.parentElement.querySelector("i").classList.add("fa-solid", "fa-spinner", "fa-spin");
+        // button.textContent += " loading";
+        button.appendChild(document.createElement("i"));
+        button.querySelector("i").classList.add("fa-solid", "fa-spinner", "fa-spin");
 
         // temporary function to do recursion 'n such
         async function temp(wait) {
@@ -173,6 +174,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             return; 
         } finally { // looks awful but finally actually runs before the return in the catch so it's totally fine
             button.parentElement.querySelector("i").remove();
+            // button.textContent = button.textContent.split(" ")[0];
         }
 
     }

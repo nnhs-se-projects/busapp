@@ -9,13 +9,13 @@
 
 <div class="content-container nav-item container-fluid text-center mt-1">
   <div class="row justify-content-center dropdown-center">
-    <button class="dropdown-toggle" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false">
+    <button class="dropdown-toggle" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false" style="color: white">
     <i class="fa-solid fa-thumbtack"></i> 
     </button>
     <ul class="dropdown-menu">
       <% for(let i = 0; i < data.buses.length; i++) { %> 
           <li class = "bus-row p-1 text-center">
-              <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
+              <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
           </li>
       <% } %> 
     </ul>
