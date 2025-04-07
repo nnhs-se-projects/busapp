@@ -120,13 +120,31 @@ router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 // NOT FOR INTERNAL USE
 // this is for other students making discord bots or other integrations with apps to make it easier.
 // also reduces load on the server as we dont have to render the EJS for automated requests.
+var limiter = {};
 router.get("/api", async (req, res) => {
-    res.send(JSON.stringify({
-        buses: await getBuses(),
-        wave: await Wave.findOne({}),
-        announcement: (await Announcement.findOne({})).announcement,
-        timerDuration: timer
-    }));
+    const now = Date.now();
+
+    // go over every ip and remove everything from more than 500ms ago
+    for(const key of Object.keys(limiter)) {
+        if(now - limiter[key] > 500) { limiter.remove(key) }
+    }
+
+    // check if it has been < 500 ms since last request from this IP
+    // by seeing if the IP is still in the map
+    if(req.ip in limiter) {
+        // 429 = too many requests
+        res.sendStatus(429);
+    } else {
+        // Client is being nice and isnt spamming our server.
+        // We express our gratitude by sending over the API data
+        limiter[req.ip] = now;
+        res.send(JSON.stringify({
+            buses: await getBuses(),
+            wave: await Wave.findOne({}, {_id: 0, __v: 0}),
+            announcement: await Announcement.findOne({}, {_id: 0, __v: 0}),
+            timerDuration: timer
+        }));
+    }
 });
 
 router.get("/getWeather", async (req, res) => { res.send(JSON.stringify(await Weather.findOne({}))); });
