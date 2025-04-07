@@ -70,6 +70,7 @@ window.onload = async () => {
 
     updatePins();
     updateNotifButton();
+    navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
 };
 
 

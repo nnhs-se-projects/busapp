@@ -24,8 +24,7 @@ async function enablePushNotifications(publicKey) {
     if ('Notification' in window && 'serviceWorker' in navigator) {
         let permission = await Notification.requestPermission();
         if(permission === "granted") {
-            // Register the serviceworker and wait until it's ready before continuing
-                navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
+                // wait until it's ready before continuing
                 var registration = await navigator.serviceWorker.ready;
 
                 // subscribe the service worker to the push API
