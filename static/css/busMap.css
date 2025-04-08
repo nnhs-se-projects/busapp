@@ -1,3 +1,7 @@
+body {
+    background-color: #636363;
+}
+
 #table, tr, td, th {
     border-collapse: collapse;
     font-family: Verdana, sans-serif;
@@ -7,21 +11,19 @@
 
 button {
     text-align: center;
-    margin: 10px;
     padding: 10px;
-    background-color: #4a4948;
+    background-color: #f7b90c; /* #F46036; */
     color:aliceblue;
-    width: 200px;
+    width: 30%;
     font-family: Verdana, sans-serif;
-    border-radius: 15px;
     border: transparent;
+    border-collapse: collapse;
     font-size: 15px;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #32a89e;
-    transition: .5s;
+    background-color: #bd9426;
     color: azure;
 }
 
@@ -40,16 +42,18 @@ tr, td {
 }
 
 td:hover {
-    background-color: #32a89e; /*#facb48;*/
-    transition: .5s;
+    border-width: 2px; /* Makes the border more visible on hover */
+    border-style: solid; /* Ensures the border is solid on hover */
+    border-color: azure; /* Color of the border on hover */
+    background-color: #f7b90c; /* #32a89e; #facb48;*/
     color: azure;
     cursor: pointer;
 }
 
 th {
     border-radius: 15px;
-    color: azure;
-    background-image: linear-gradient(to right, #4a4948, #24211f);
+    color: black;
+    background-color: aliceblue;
 }
 
 input {

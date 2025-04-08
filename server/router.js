@@ -437,10 +437,10 @@ router.post("/updateBusMap", async (req, res) => {
         res.redirect("/login");
         return;
     }
+    
+    let busesInWave = req.body.currentWave;
 
-    let currentWave = req.body.currentWave;
-
-    await Bus.findOneAndUpdate({}, {currentWave: currentWave}, {upsert: true});
+    await Wave.findOneAndUpdate({}, {busesInWave: busesInWave}, {upsert: true});
 });
 
 

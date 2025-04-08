@@ -1,54 +1,53 @@
-<form action="/updateBusMap" method="POST">
+<body>
 <div class="buttons">
-        <button class="button back-button" onclick="saveMap()" href="/admin">Back to Admin Page</a>
-        <button class="map-change" onclick="changeMap()">Change Map</button>
+        <button id="button back-button" onclick="saveMap()" href="/admin">Back to Admin Page</button>
+        <button id="map-change-button" onclick="changeMap()">Change Map</button>
 </div>
 
-    <div>
+<div>
 
-        <table style="width:100%" id="next-wave">
-            <th colspan="100%">Next Waves
-                <tr style="height: 100px">
-                    <% for (let i = 0; i < 8; i++) { %>
-                        <td class="test"><%= data.currentWave %></td>
-                        </td>
-                    <% } %>
-                </tr>
-            </th>
-        </table>
+    <table style="width:100%" id="next-wave">
+        <th colspan="100%">Next Wave
+            <tr style="height: 100px">
+                <% for (let i = 0; i < 8; i++) { %>
+                    <td class="next"><%= data.currentWave%></td>
+                <% } %>
+            </tr>
+        </th>
+    </table>
         
-    <!-- </div>
-    <div>
+</div>
 
-        <table style="width:100%">
-            <th colspan="100%">Current Wave
-                <tr style="height: 100px">
-                    <% for (let i = 0; i < 8; i++) { %>
-                        <td class="current"><input placeholder="enter"></td>
-                    <% } %>
-                </tr>
-            </th>
-        </table>
+<div>
+
+    <table style="width:100%" id="current-wave">
+        <th colspan="100%">Current Wave
+            <tr style="height: 100px">
+                <% for (let i = 0; i < 8; i++) { %>
+                    <td class="current"></td>
+                <% } %>
+            </tr>
+        </th>
+    </table>
         
-    </div>
+</div>
 
-    <div>
+<div>
 
-        <table style="width:100%">
-            <th colspan="100%">Bus Lots
-                <tr style="height: 100px">
-                    <% for (let i = 0; i < 14; i++) { %>
-                        <td class="row1"><input placeholder="enter"></td>
-                    <% } %>
-                </tr>
-                <tr style="height: 100px">
-                    <% for (let i = 0; i < 14; i++) { %>
-                        <td class="row2"><input placeholder="enter"></td>
-                    <% } %>
-                </tr>
-            </th>
-        </table>
+    <table style="width:100%" id="bus-lots">
+        <th colspan="100%">Bus Lots
+            <tr style="height: 100px">
+                <% for (let i = 0; i < 14; i++) { %>
+                    <td class="rowA"><input placeholder="enter"></td>
+                <% } %>
+            </tr>
+            <tr style="height: 100px">
+                <% for (let i = 0; i < 14; i++) { %>
+                    <td class="rowB"><input placeholder="enter"></td>
+                <% } %>
+            </tr>
+        </th>
+    </table>
         
-    </div> -->
-
-</form>
+</div>
+</body>
