@@ -31,3 +31,16 @@
     </table>
   </div>
 </div>
+
+<div class="content-container nav-item container-fluid text-center mt-1">
+  <h2>Now Loading</h2>
+  <div class="busContainer">
+    <% const loading = data.buses.filter(e => e.status === "Loading");
+    for(const bus of loading) { %>
+      <p>Bus <b><span class="busNumber"><%= bus.number %></span><% if(bus.change) { %> &rarr; <span style="color: #ff8080" class="busNumber"><%= bus.change %></span><% } %></b> @ <%= bus.order + 1 %></p>
+    <% }
+    if(loading.length === 0) { %> 
+      <span>No buses currently loading.</span> 
+    <% } %>
+  </div>
+</div>
