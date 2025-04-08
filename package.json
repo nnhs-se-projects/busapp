@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon --exec \"node --require ts-node/register --inspect server.ts\"",
-    "build": "tsc -p .",
-    "devstart": "tsc -p . && nodemon --exec \"node --require ts-node/register --inspect server.ts\"",
-    "buildStart": "tsc -p . && node server.js"
+    "dev": "nodemon --exec \"node --inspect server.js\"",
+    "buildStart": "echo buildStart is no longer necessary, use 'npm run start'",
+    "devStart": "echo devStart is no longer necessary, use 'npm run dev'"
   },
   "author": "",
   "license": "ISC",
