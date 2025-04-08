@@ -1,27 +1,44 @@
 <!-- Update the value of <% version = 3 %> in this comment when updating the what's new popup to make it appear again on launch -->
 <input type="hidden" id="whatsNewVersion" value="<%=version%>"/>
-<div id="whatsNewPopup"><div> <i class="fa-regular fa-circle-xmark" onclick="hideWhatsNew(<%=version%>)" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
+<div id="whatsNewPopup"><div> <i class="fa-regular fa-circle-xmark" onclick="hideWhatsNew(1)//<%=version%>)" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
     <h2>What's New</h2>
     <ul>
-        <li><p>UI Redesign! 🖌️</p>
+        <li><p>Interface Redesign! 🖌️</p>
             <ul>
-                <li>New user interface!</li>
+                <li>New user interface! 📱</li>
+                <li>Pin your bus to show it on the screen 📌</li>
+                <li>The current wave is displayed on the bottom of the screen 🌊</li>
+                <li>Open the dropdown menu at the top right ↗️</li>
+                <li>When a wave is locked, the timer is now a progress bar ⌛</li>
             </ul>
         </li>
-        <li><p>Arrival Time Predictions</p>
+        <li><p>Arrival Time Predictions 🕰️</p>
             <ul>
-                <li>if your bus has not yet arrived, a predicted arrival time is shown</li>
+                <li>If your bus has not yet arrived, a predicted arrival time is shown in gray text ⏱️</li>
+                <li>The time is replaced with actual time once your bus has arrived 🎳</li>
+                <li>This time is an average of the last 5 days, it may be off if your bus time varies often ❗</li>
             </ul>
         </li>
-        <li><p>Bus Map & Bus Position</p>
+        <li><p>Bus Map & Bus Position 🧭</p>
             <ul>
-                <li>Bus Map shows where your bus is parked in the bus lot on half days</li>
-                <li>Position of your bus in the bus lot is now displayed</li>
+                <li>Bus Map shows where your bus is parked in the bus lot 🗺️</li>
+                <li>Position is displayed next to your bus status ⚓</li>
+                <li>1 is at the front, larger numbers are further back ↔️</li>
             </ul>
         </li>
-        <li><p>Bug Fixes</p>
+        <li><p>Other Changes ⁉️</p>
             <ul>
-                <li>Fixed &quot;Your bus just left!&quot; notifications not sending</li>
+                <li>Announcement changes now send a notification 📣</li>
+                <li>Chrome extension! Get it <a href="https://chromewebstore.google.com/detail/bus-app/cgceeklcikhpejkbldnppbbnnjibokok">here</a> 🪀</li>
+                <li>Dynamic background depending on weather 🌦️</li>
+            </ul>
+        </li>
+        <li><p>Bug Fixes 🐞</p>
+            <ul>
+                <li>Fixed &quot;Your bus just left!&quot; notifications not sending 🔕</li>
+                <li>Improved reliability of notifications, clicking the notification now opens the bus app 📳</li>
+                <li>Fixed many loading indicators 🎺</li>
+                <li>Notice a bug? Fill out the feedback form! it helps us a lot ✅</li>
             </ul>
         </li>
         <li>Have feedback or ideas? Send us an email at <a href="mailto:busappdevs@proton.me">busappdevs@proton.me</a> or fill out <a target="_blank" href="https://forms.gle/ffekcnoKTtAUMBic6">this feedback form</a></li>
