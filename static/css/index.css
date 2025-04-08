@@ -64,7 +64,8 @@ body {
 #notif-button > i {
     width: 1.5em;
     line-height: 1.5em;
-}
+    cursor: inherit;
+} #notif-button { cursor: inherit; }
 
 .navbar-brand:hover, .navbar-toggler:hover, .nav-link:hover {
     transform: translateY(2px);

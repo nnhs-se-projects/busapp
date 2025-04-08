@@ -90,7 +90,7 @@ function updateNotifButton() {
             const button = document.getElementById("notif-button");
             button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
             button.parentElement.onclick = "";
-            button.style.cursor = "not-allowed";
+            button.parentElement.style.cursor = "not-allowed";
         }
     });
 }
