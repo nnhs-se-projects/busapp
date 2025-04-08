@@ -126,7 +126,7 @@ router.get("/api", async (req, res) => {
 
     // go over every ip and remove everything from more than 500ms ago
     for(const key of Object.keys(limiter)) {
-        if(now - limiter[key] > 500) { limiter.remove(key) }
+        if(now - limiter[key] > 500) { delete limiter[key] }
     }
 
     // check if it has been < 500 ms since last request from this IP
