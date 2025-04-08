@@ -8,7 +8,7 @@
 :root {
     --crimson: #d7263dff;
     --giants-orange: #f46036ff;
-    --space-cadet: #2e294eff;
+    --space-cadet: #2e294eee;
     --lighter-blue: hsl(250, 31%, 40%);
     --night: #141415ff;
     --gray: #ebebeb
@@ -17,8 +17,7 @@
 
 body {
     background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: center;
+    background-position: center;
     background-size: cover; 
 }
 .pageContainer {
@@ -41,8 +40,9 @@ body {
     margin-top: 0px !important;
 }
 
-.navbar-toggler {
+.navbar-toggler, .nav-link {
     box-shadow: inset 0px -3px 0px 0px var(--crimson);
+    line-height: 1.5em; 
 }
 .navbar-text, .navbar-toggler {
     background-color: var(--giants-orange);
@@ -54,29 +54,27 @@ body {
 }
 
 .navbar-text {
-    max-width: calc(88vw - 80px); 
+    max-width: calc(88vw - 120px); 
     display: inline-block; 
     text-overflow: ellipsis; 
     overflow: hidden; 
     white-space: nowrap;
 }
 
-.navbar-brand:hover, .navbar-toggler:hover {
-    transform: translateY(1px);
-    border-bottom: none; 
+#notif-button > i {
+    width: 1.5em;
+    line-height: 1.5em;
+}
+
+.navbar-brand:hover, .navbar-toggler:hover, .nav-link:hover {
+    transform: translateY(2px);
     box-shadow: unset;
 }
 
 .nav-item a {
     border-radius: 5px;
     background-color: var(--giants-orange);
-    border-bottom: solid var(--crimson); 
     margin: 5px;
-}
-
-.nav-item:active a {
-    transform: translateY(2px);
-    border-bottom: none; 
 }
 
 button:not(.navbar-toggler) {
@@ -90,16 +88,11 @@ button:not(.navbar-toggler) {
 
 button:active{
     transform: translateY(1px);
-    border-bottom: none; 
 }
 
 .dropdown-toggle {
     max-width: 15em;
     margin-bottom: 5px;
-}
-
-.dropdown-toggle:active {
-    margin-top: 3px;
 }
 
 .dropdown-menu {

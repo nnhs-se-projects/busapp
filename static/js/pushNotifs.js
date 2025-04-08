@@ -88,8 +88,8 @@ function updateNotifButton() {
     areServiceWorkersWorking.then(condition => {
         if (Notification.permission === "granted" && condition) {
             const button = document.getElementById("notif-button");
-            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i> Notifications Enabled!";
-            button.onclick = "";
+            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
+            button.parentElement.onclick = "";
             button.style.cursor = "not-allowed";
         }
     });
