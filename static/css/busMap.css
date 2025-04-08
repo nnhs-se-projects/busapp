@@ -1,5 +1,14 @@
 body {
-    background-color: #636363;
+    background-color: #363434;
+}
+
+.buttons {
+    display: flex;
+    background-color: #2E294E;
+    padding: 20px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: #F46036;
 }
 
 #table, tr, td, th {
@@ -13,19 +22,21 @@ button, a {
     text-align: center;
     text-decoration: none;
     padding: 10px;
-    background-color: #f7b90c; /* #F46036; */
+    margin: 5px;
+    border-radius: 5px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+    background-color: #F46036;
     color:aliceblue;
-    width: 30%;
+    width: 200px;
     font-family: Verdana, sans-serif;
-    border: transparent;
-    border-collapse: collapse;
-    font-size: 15px;
+    font-size: 20px;
     cursor: pointer;
 }
 
 a:hover, button:hover {
-    background-color: #bd9426;
-    color: azure;
+    border-color: azure;
 }
 
 input {

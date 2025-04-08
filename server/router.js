@@ -57,7 +57,8 @@ router.get("/migrateAdminsDotJsonToDB", async (req: Request, res: Response) => {
 router.get("/", async (req, res) => {
     // Reads from data file and displays data
     let data = {
-        buses: await getBuses(), weather: await Weather.findOne({}),
+        buses: await getBuses(),
+        weather: await Weather.findOne({}),
         isLocked: false,
         leavingAt: new Date(),
         vapidPublicKey,
