@@ -1,12 +1,10 @@
-let currentWave = [1,2,3,4];
-
 /*
 This is a very scuffed way to do this but basically changeMap() will toggle between the bus lots and the usual waves.
 Stores the html of each one and swaps them out when the button is pressed.
 */
-let nextContent = document.getElementById("next-wave").innerHTML;
-let currentContent = document.getElementById("current-wave").innerHTML;
-let lotsContent = document.getElementById("bus-lots").innerHTML;
+const nextContent = document.getElementById("next-wave").innerHTML;
+const currentContent = document.getElementById("current-wave").innerHTML;
+const lotsContent = document.getElementById("bus-lots").innerHTML;
 
 document.getElementById("bus-lots").innerHTML = "";
 
@@ -26,8 +24,9 @@ function changeMap() {
     }
 }
 
-function returnCurrent() {
-    return currentWave;
+function getStuff() {
+    const current = document.getElementsByClassName("current");
+    
 }
 
 async function saveMap() {

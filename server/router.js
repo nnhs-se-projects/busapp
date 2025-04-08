@@ -426,8 +426,12 @@ router.post("/clearAnnouncement", async (req, res) => {
 });
 
 router.get("/busMap", async (req, res) => {
+    let data = {
+        currentWave: await Bus.find({status: "Loading"}),
+        nextWave: await Bus.find({status: "Next Wave"}),
+    }
     res.render("busMap", {
-        data: await readData(),
+        data: data,
         render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
     });
 });
@@ -437,10 +441,9 @@ router.post("/updateBusMap", async (req, res) => {
         res.redirect("/login");
         return;
     }
-    
-    let busesInWave = req.body.currentWave;
 
-    await Wave.findOneAndUpdate({}, {busesInWave: busesInWave}, {upsert: true});
+    await Wave.findOneAndUpdate({}, { locked: locked }, { upsert: true });
+    res.redirect("/admin");
 });
 
 

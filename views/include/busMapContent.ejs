@@ -1,6 +1,6 @@
 <body>
 <div class="buttons">
-        <button id="button back-button" onclick="saveMap()" href="/admin">Back to Admin Page</button>
+        <a id="button back-button" onclick="saveMap()" href="/admin">Back to Admin Page</a>
         <button id="map-change-button" onclick="changeMap()">Change Map</button>
 </div>
 
@@ -9,8 +9,8 @@
     <table style="width:100%" id="next-wave">
         <th colspan="100%">Next Wave
             <tr style="height: 100px">
-                <% for (let i = 0; i < 8; i++) { %>
-                    <td class="next"><%= data.currentWave%></td>
+                <% for (let i = 0; i < data.nextWave.length; i++) { %>
+                    <td class="next"><%= data.nextWave[i].busNumber %></td>
                 <% } %>
             </tr>
         </th>
@@ -23,8 +23,8 @@
     <table style="width:100%" id="current-wave">
         <th colspan="100%">Current Wave
             <tr style="height: 100px">
-                <% for (let i = 0; i < 8; i++) { %>
-                    <td class="current"></td>
+                <% for (let i = 0; i < data.currentWave.length; i++) { %>
+                    <td class="current"><%= data.currentWave[i].busNumber %></td>
                 <% } %>
             </tr>
         </th>

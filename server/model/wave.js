@@ -9,10 +9,6 @@ const schema = new mongoose.Schema({
     leavingAt: {
         type: Date,
         required: true,
-    },
-    busesInWave: {
-        type: Array,
-        required: true,
     }
 });
 const Wave = mongoose.model("Wave", schema);

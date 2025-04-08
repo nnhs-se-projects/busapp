@@ -9,8 +9,9 @@ body {
     text-align: center;
 }
 
-button {
+button, a {
     text-align: center;
+    text-decoration: none;
     padding: 10px;
     background-color: #f7b90c; /* #F46036; */
     color:aliceblue;
@@ -22,7 +23,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+a:hover, button:hover {
     background-color: #bd9426;
     color: azure;
 }
