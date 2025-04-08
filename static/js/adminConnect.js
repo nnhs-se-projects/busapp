@@ -104,6 +104,7 @@ async function addToNextWave(button) {
 }
 
 async function reset(button) {
+  if(!confirm("Are you sure you want to reset this bus?")) return;
   await updateStatus(button, "");
 }
 
