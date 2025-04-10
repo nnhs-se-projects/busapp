@@ -142,10 +142,12 @@ function updatePins() { // guess what
         tableBody.innerHTML += "<tr class='bus-row'><td class='num-col' colspan='1'>" + pins[i] + "</td><td class='time-col'></td><td class='status-col' data-bus-number='" + pins[i] + "' colspan='5'></td></tr>";
     }
 
-    const statusCells = document.querySelectorAll('.status-col');
+    const statusCells = document.querySelectorAll('.status-col')
+    
     statusCells.forEach(cell => {
         const busNumber = parseInt(cell.getAttribute('data-bus-number') || '0');
-        const busInfo = buses.find(bus => bus.number === busNumber);
+        const busInfo = buses.find(bus => bus.number === busNumber)
+        
         if (busInfo) {
             cell.textContent = busInfo.status || 'Not Here'; // Or whatever property you want to display
             if(busInfo.status === "Loading") {
@@ -154,6 +156,11 @@ function updatePins() { // guess what
                 if(isLocked) cell.classList.add("loading");
 
                 cell.innerHTML += " @" + (busInfo.order+1);
+
+                cell.parentElement.parentElement.prepend(cell.parentElement);
+            } else if(busInfo.status === "Gone") {
+                cell.parentElement.style.filter = "brightness(0.75) grayscale(0.75) ";
+                cell.parentElement.parentElement.append(cell.parentElement);
             }
             if(busInfo.time) {
                 cell.parentElement.querySelector(".time-col").innerHTML = (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'})
