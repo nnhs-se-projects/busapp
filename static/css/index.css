@@ -115,7 +115,6 @@ button:active{
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
-    padding-top: 10px;
     box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
 }
 
@@ -128,8 +127,9 @@ button:active{
     box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
     padding: 5px;
     padding-left: 5px;
-    padding-top: 15px;
     margin-bottom: 5px;
+    overflow: hidden;
+    padding-top: 0px;
 }
 
 .pinned-bus-table {
