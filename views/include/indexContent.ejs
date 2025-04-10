@@ -1,15 +1,16 @@
-<div class="announcement-div d-flex justify-content-center container-fluid mt-1">
+<div class="announcement-div  container-fluid mt-1">
+  <div class="ribbon" id="announcementRibbon">New!</div>
   <div class="row text-center align-items-center justify-content-center">
-      <!-- <i class="fa-solid fa-bullhorn"></i> -->
-      <h3>Announcements:</h3>
-      <!-- <hr> -->
-      <p id="announcement-text"><%= data.announcement %></p>
+    <!-- <i class="fa-solid fa-bullhorn"></i> -->
+    <h3>Announcement</h3>
+    <!-- <hr> -->
+    <p id="announcement-text"><%= data.announcement %></p>
   </div>
 </div>
 
-<div class="content-container nav-item container-fluid text-center mt-1">
+<div class="content-container nav-item container-fluid text-center mt-1 has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
   <div class="row justify-content-center dropdown-center">
-    <button class="dropdown-toggle" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false">
+    <button class="dropdown-toggle has-tooltip" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false" tooltip-text="Pin a bus to get started!">
     <i class="fa-solid fa-thumbtack"></i> 
     </button>
     <ul class="dropdown-menu">
@@ -33,14 +34,25 @@
 </div>
 
 <div class="content-container nav-item container-fluid text-center mt-1">
+  <div class="row justify-content-center dropdown-center">
   <h2>Now Loading</h2>
-  <div class="busContainer">
-    <% const loading = data.buses.filter(e => e.status === "Loading");
-    for(const bus of loading) { %>
-      <p>Bus <b><span class="busNumber"><%= bus.number %></span><% if(bus.change) { %> &rarr; <span style="color: #ff8080" class="busNumber"><%= bus.change %></span><% } %></b> @ <%= bus.order + 1 %></p>
-    <% }
-    if(loading.length === 0) { %> 
-      <span>No buses currently loading.</span> 
-    <% } %>
+  <% const loading = data.buses.filter(e => e.status === "Loading"); 
+  if(loading.length === 0) { %> 
+    <span>No buses currently loading.</span> 
+  <% } else { %>
+    <table class="pinned-bus-table text-center">
+      <thead>
+          <th style="width: 3em">Bus #</th>
+          <th style="width: 6em">Time</th>
+          <th>Status @Position</th>
+      <tbody>
+        <% for(const bus of loading) {%>
+          <tr>
+            <td><%= bus.number %><% if(bus.change) { %>&rarr;<%= bus.change %><% } %></td> <td><%= (new Date(bus.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'}) %></td> <td class="status-col<%- data.isLocked ? " loading" : "" %>" style="filter: grayscale(0.75); background-color: green;"><%= bus.status %> @<%= bus.order + 1 %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } %>
   </div>
 </div>
