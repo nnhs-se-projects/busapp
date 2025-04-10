@@ -85,13 +85,15 @@ window.onload = async () => {
     announcementAlert(initialData.announcement);
 };
 
+var lastUpdateAnnouncement;
 function announcementAlert(announcement) {
     if(announcement !== oldAnnouncement) {
         localStorage.setItem("lastAnnouncement", announcement);
-        document.querySelector(".announcement-div").animate(
+        if(lastUpdateAnnouncement !== announcement)document.querySelector(".announcement-div").animate(
             [{ backgroundColor: 'var(--lighter-blue)' }, { backgroundColor: 'var(--space-cadet)' }],
             { duration: 200, iterations: 11, direction: 'alternate' }
           );
+          lastUpdateAnnouncement = announcement;
     } else {
         const ribbon = document.getElementById("announcementRibbon");
         ribbon.parentElement.removeChild(ribbon);
@@ -279,8 +281,8 @@ var x = setInterval(async function() {
     // Time calculations for days, hours, minutes and seconds
     //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     //var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    //var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
     document.querySelectorAll(".loading").forEach((element) => {
@@ -290,6 +292,8 @@ var x = setInterval(async function() {
             element.innerHTML = "About to leave!"; 
         }
     });
+
+    if(isLocked)document.getElementById("timer").innerHTML = minutes + seconds > 0 ? ` - ${minutes}:${String(seconds).padStart(2, "0")}` : "";
 }, 1000);
 
 
