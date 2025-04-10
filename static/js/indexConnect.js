@@ -12,6 +12,7 @@ var pins = [];
 var notifStatus = {};
 var buses;
 
+const oldAnnouncement = localStorage.getItem("lastAnnouncement");
 
 var panelExpanded = false;
 
@@ -35,15 +36,15 @@ indexSocket.on("update", (data) => {
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
     document.getElementById("content").innerHTML = html;
 
-
+    announcementAlert(data.announcement)
     updatePins();
-    updateNotifButton();
     updateWeather();
 });
 
 function hideWhatsNew(version) {
     document.getElementById('whatsNewPopup').style.display='none'
     localStorage.setItem("whatsNewVersion", String(version));
+    localStorage.setItem("firstLoad", "ae");
 }
 
 function toggleCredits() {
@@ -59,9 +60,6 @@ function toggleCredits() {
 
 window.onload = async () => {
     var version = +(document.getElementById("whatsNewVersion")).value;
-    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
-        document.getElementById('whatsNewPopup').style.display='block';
-    }
 
     var initialData = JSON.parse(document.getElementById("getRender").getAttribute("data"));
     buses = initialData.buses;
@@ -71,7 +69,57 @@ window.onload = async () => {
     updatePins();
     updateNotifButton();
     navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
+
+    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
+        document.getElementById('whatsNewPopup').style.display='block';
+    }
+    if(!localStorage.getItem("firstLoad")) {
+        document.querySelectorAll(".has-tooltip")
+            .forEach(e => addToolTip(e, e.getAttribute("tooltip-text")));
+
+        window.setInterval((e) => {
+            document.querySelectorAll(".tool-tip").forEach(tooltip => setToolTipPosition(tooltip));
+        }, 100);    
+    }
+
+    announcementAlert(initialData.announcement);
 };
+
+var lastUpdateAnnouncement;
+function announcementAlert(announcement) {
+    if(announcement !== oldAnnouncement) {
+        localStorage.setItem("lastAnnouncement", announcement);
+        if(lastUpdateAnnouncement !== announcement)document.querySelector(".announcement-div").animate(
+            [{ backgroundColor: 'var(--lighter-blue)' }, { backgroundColor: 'var(--space-cadet)' }],
+            { duration: 200, iterations: 11, direction: 'alternate' }
+          );
+          lastUpdateAnnouncement = announcement;
+    } else {
+        const ribbon = document.getElementById("announcementRibbon");
+        ribbon.parentElement.removeChild(ribbon);
+    }
+}
+
+var tooltips = {};
+function addToolTip(elem, text) {
+    const tooltip = document.createElement("div");
+    tooltip.innerHTML = text;
+    tooltip.classList.add("tool-tip")
+    const uuid = crypto.randomUUID();
+    tooltips[uuid] = elem;
+    tooltip.setAttribute("elem", uuid);
+    elem.appendChild(tooltip);
+    setToolTipPosition(tooltip);
+    elem.addEventListener("click", (e) => {tooltip.style.display='none'; e.stopPropagation() })
+    return tooltip;
+}
+
+function setToolTipPosition(tooltip) {
+    const boundingBox = tooltips[tooltip.getAttribute("elem")].getBoundingClientRect();
+    tooltip.style.top = boundingBox.bottom + window.scrollY + 5 + "px";
+    tooltip.style.left = Math.max(0, boundingBox.left + window.scrollX - ((tooltip.getBoundingClientRect().width - boundingBox.width) / 2)) + "px";
+    tooltip.style.right = 0;
+}
 
 
 function updatePins() { // guess what
@@ -118,7 +166,9 @@ function updatePins() { // guess what
                     // convert back to Date object
                     avgTime = (new Date(1970, 0, 1, Math.floor(avgMinutes/60), avgMinutes%60, 0)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'});
                 }
-                cell.parentElement.querySelector(".time-col").innerHTML = "<span style='color: gray'>" + avgTime + "</span>";
+                const timeCol = cell.parentElement.querySelector(".time-col");
+                timeCol.innerHTML = "<span style='color: gray;'>" + avgTime + "</span>";
+                timeCol.style.setProperty("--text-shadow-color", "#69696969");
             }
             if(busInfo.change) {
                 cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "&rarr;" + busInfo.change;
@@ -231,8 +281,8 @@ var x = setInterval(async function() {
     // Time calculations for days, hours, minutes and seconds
     //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     //var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    //var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    //var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
     document.querySelectorAll(".loading").forEach((element) => {
@@ -242,6 +292,8 @@ var x = setInterval(async function() {
             element.innerHTML = "About to leave!"; 
         }
     });
+
+    if(isLocked)document.getElementById("timer").innerHTML = minutes + seconds > 0 ? ` - ${minutes}:${String(seconds).padStart(2, "0")}` : "";
 }, 1000);
 
 

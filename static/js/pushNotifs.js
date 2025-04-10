@@ -86,11 +86,17 @@ function updateNotifButton() {
     });
 
     areServiceWorkersWorking.then(condition => {
+        const button = document.getElementById("notif-button");
         if (Notification.permission === "granted" && condition) {
-            const button = document.getElementById("notif-button");
-            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i> Notifications Enabled!";
-            button.onclick = "";
-            button.style.cursor = "not-allowed";
+            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
+            button.parentElement.onclick = "";
+            button.parentElement.style.cursor = "not-allowed";
+        } else {
+            const tooltip = addToolTip(button.parentElement, "Enable Notifications");
+            setToolTipPosition(tooltip);
+            window.setInterval((e) => {
+                setToolTipPosition(tooltip);
+            }, 100); 
         }
     });
 }
