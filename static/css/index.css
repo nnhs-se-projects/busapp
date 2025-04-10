@@ -23,13 +23,13 @@ body {
 }
 html {
     min-height: 100%;
-    min-height: calc(100% + env(safe-area-inset-top));
+    min-height: calc(100% + env(safe-area-inset-top, 45px));
 }
 
 .pageContainer {
     backdrop-filter: blur(4px);
     min-height: 100%;
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    padding: env(safe-area-inset-top, 45px) env(safe-area-inset-right) env(safe-area-inset-bottom, 45px) env(safe-area-inset-left);
 }
 
 .status-col {
