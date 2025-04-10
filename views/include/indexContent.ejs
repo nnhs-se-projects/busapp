@@ -38,7 +38,7 @@
   <h2>Now Loading</h2>
   <% const loading = data.buses.filter(e => e.status === "Loading"); 
   if(loading.length === 0) { %> 
-    <span>No buses currently loading.</span> 
+    <span style="padding-bottom: 15px">No buses currently loading.</span>
   <% } else { %>
     <table class="pinned-bus-table text-center">
       <thead>

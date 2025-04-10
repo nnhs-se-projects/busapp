@@ -444,3 +444,8 @@ a {
 
 }
 
+@media (display-mode: standalone) {
+    body {
+        user-select: none; 
+    }
+}
