@@ -92,7 +92,7 @@
       }
     ],
 
-    "theme_color": "#f46036",
+    "theme_color": "#2e294e",
     "background_color": "#2e294e",
     "display_override": ["standalone", "fullscreen", "minimal-ui"],
     "display": "standalone",
