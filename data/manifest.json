@@ -93,8 +93,8 @@
 
     "theme_color": "#a1b5be",
     "background_color": "#a1b5be",
-    "display_override": ["standalone", "fullscreen", "minimal-ui"],
-    "display": "standalone",
+    "display_override": ["fullscreen", "minimal-ui"],
+    "display": "fullscreen",
     "shortcuts": [
       {
         "name": "Open admin page",
