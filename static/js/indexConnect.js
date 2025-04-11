@@ -153,7 +153,12 @@ function updatePins() { // guess what
             if(busInfo.status === "Loading") {
                 cell.style.backgroundColor = "green";
                 // dw about removing this class, thatll happen on the next rerender anyway...
-                if(isLocked) cell.classList.add("loading");
+                if(isLocked) {
+                    cell.classList.add("loading");
+                    if(pins.includes(busInfo.number) && window.navigator.vibrate) {
+                        console.log(navigator.vibrate(1000));
+                    }
+                }
 
                 cell.innerHTML += " @" + (busInfo.order+1);
 
