@@ -37,7 +37,7 @@ body {
     background-color: var(--space-cadet);
     border-radius: 5px;
     color: white;
-    box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
     margin-top: 0px !important;
 }
 
@@ -104,7 +104,7 @@ button:active{
     scrollbar-width: auto;
     overflow: scroll;
     background-color: var(--space-cadet);
-    border: solid var(--giants-orange);
+    border: solid 2px var(--giants-orange);
     border-radius: 5px;
     overflow: auto;
 }
@@ -115,7 +115,7 @@ button:active{
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
-    box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
 }
 
 .content-container {
@@ -124,11 +124,9 @@ button:active{
     /* color: var(--dark-cyan); */
     color: white;
     border-radius: 5px;
-    box-shadow: 0px 0px 10px 0px rgb(80, 80, 80);
-    padding: 5px;
-    padding-left: 5px;
-    margin-bottom: 5px;
-    padding-top: 0px;
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
+    /* padding: 5px;
+    padding-left: 5px; */
 }
 
 .pinned-bus-table {

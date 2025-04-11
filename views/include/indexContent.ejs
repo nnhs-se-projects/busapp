@@ -1,22 +1,23 @@
-<div class="announcement-div  container-fluid mt-1">
+<div class="announcement-div d-flex justify-content-center container-fluid mt-1">
   <div class="ribbon" id="announcementRibbon">New!</div>
-  <div class="row text-center align-items-center justify-content-center">
-    <!-- <i class="fa-solid fa-bullhorn"></i> -->
-    <h3>Announcement</h3>
-    <!-- <hr> -->
-    <p id="announcement-text"><%= data.announcement %></p>
+  <div class="row text-center align-items-center justify-content-center" style="width: 98vw;">
+      <!-- <i class="fa-solid fa-bullhorn"></i> -->
+      <h2 style="background-color: var(--giants-orange); width: 100%; border-top-left-radius: 5px; border-top-right-radius: 5px;">Announcements:</h2>
+      <!-- <hr> -->
+      <p id="announcement-text"><%= data.announcement %></p>
   </div>
 </div>
 
 <div class="content-container nav-item container-fluid text-center mt-1 has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
   <div class="row justify-content-center dropdown-center">
-    <button class="dropdown-toggle has-tooltip" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false" tooltip-text="Pin a bus to get started!">
+    <h2 style="background-color: var(--giants-orange); border-top-left-radius: 5px; border-top-right-radius: 5px;">Buses</h2>
+    <button class="dropdown-toggle has-tooltip" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" aria-expanded="false" style="color: white" tooltip-text="Pin a bus to get started!">
     <i class="fa-solid fa-thumbtack"></i> 
     </button>
     <ul class="dropdown-menu">
       <% for(let i = 0; i < data.buses.length; i++) { %> 
           <li class = "bus-row p-1 text-center">
-              <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
+              <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
           </li>
       <% } %> 
     </ul>
