@@ -33,7 +33,7 @@ async function checkNetworkConnectivity() {
         const response = await fetch("/getConnectivity", {cache: "no-store"});
         ping = performance.now() - ping;
         if(response.ok) {
-            if(ping < 450) { return "connected"; }
+            if(ping < 500) { return "connected"; }
             return "slow";
         }
     } catch(e) {
@@ -54,8 +54,13 @@ async function checkAndChange() {
     }
 }
 
+async function checkAndChangeRecursive() {
+    await checkAndChange();
+    setTimeout(checkAndChangeRecursive, 5000);
+}
+
 // run checkAndChange whenever the network status changes and periodically in case the other events dont fire
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
-checkAndChange();
-setInterval(checkAndChange, 10000); // check connection every 10 seconds
+checkAndChangeRecursive();
+//setInterval(checkAndChange, 10000); // check connection every 10 seconds
