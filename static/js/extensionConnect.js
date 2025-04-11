@@ -45,7 +45,9 @@ window.onload = async () => {
 
 
 function updatePins() { // guess what
-    const pinString = localStorage.getItem("pins");  // retrieves "pins" item
+    //const pinString = localStorage.getItem("pins");  // retrieves "pins" item
+    const pinString = document.cookie.split("pins=")[1].split(";")[0];
+
     pins = [];
     if (pinString != null) {
         let pinArrayString = pinString.split(", ");

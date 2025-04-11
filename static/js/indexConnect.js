@@ -136,6 +136,9 @@ function updatePins() { // guess what
         }
     }
 
+    // update in the cookie as well for the extension
+    document.cookie = "pins=" + pins.join(", ") + "; SameSite=None; Secure=true; Max-Age=31536000";
+
     var tableBody = document.getElementsByClassName("pinned-bus-table")[0].getElementsByTagName("tbody")[0];
     // var tmp : string = "";
     tableBody.innerHTML = ""; 
@@ -173,7 +176,7 @@ function updatePins() { // guess what
                 cell.parentElement.parentElement.append(cell.parentElement);
             }
             if(busInfo.time) {
-                cell.parentElement.querySelector(".time-col").innerHTML = (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'})
+                cell.parentElement.querySelector(".time-col").innerHTML = (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: 'numeric', minute:'2-digit'})
             } else {
                 var avgTime = "Unknown";
                 if(busInfo.busTimes.length !== 0) {
@@ -181,7 +184,7 @@ function updatePins() { // guess what
                     var sum = 0; for(var i of busInfo.busTimes.map((e) => {e = new Date(e); return e.getHours()*60 + e.getMinutes()})) { sum += i; }
                     const avgMinutes = sum / busInfo.busTimes.length;
                     // convert back to Date object
-                    avgTime = (new Date(1970, 0, 1, Math.floor(avgMinutes/60), avgMinutes%60, 0)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'});
+                    avgTime = (new Date(1970, 0, 1, Math.floor(avgMinutes/60), avgMinutes%60, 0)).toLocaleTimeString("en-US", {hour: 'numeric', minute:'2-digit'});
                 }
                 const timeCol = cell.parentElement.querySelector(".time-col");
                 timeCol.innerHTML = "<span style='color: gray;'>" + avgTime + "</span>";
@@ -271,6 +274,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             localStorage.setItem("pins", newPinString);
         }
     }
+
     updatePins();
 }
 

@@ -27,9 +27,15 @@ body {
     min-height: 100dvh;
 }
 
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
 .container-fluid {
     padding-left: 0;
     padding-right: 0;
+    max-width: max(80vh, 40vw);
 }
 
 .status-col {
@@ -77,6 +83,11 @@ body {
 .navbar-brand:hover, .navbar-toggler:hover, .nav-link:hover {
     transform: translateY(2px);
     box-shadow: unset;
+}
+
+.navbar > .container-fluid {
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * .5);
 }
 
 .nav-item a {
@@ -136,10 +147,11 @@ button:active{
 }
 
 .pinned-bus-table {
-    width: 90%;
-    max-width: 90%;
+    width: 100%;
     border-collapse: separate;
     border-spacing: 15px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 td, .busContainer > p {
