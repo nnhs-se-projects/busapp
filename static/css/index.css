@@ -27,13 +27,18 @@ body {
     min-height: 100dvh;
 }
 
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
 .status-col {
     transition: background-position 1s linear;
     background-size: 210%;
 }
 
 .navbar-div {
-    width: 98%;
+    width: calc(100% - 10px);
     background-color: var(--space-cadet);
     border-radius: 5px;
     color: white;
@@ -110,7 +115,7 @@ button:active{
 }
 
 .announcement-div {
-    width: 98%;
+    width: calc(100% - 10px);
     background-color: var(--space-cadet);
     border-radius: 5px;
     /* color: var(--dark-cyan); */
@@ -119,7 +124,7 @@ button:active{
 }
 
 .content-container {
-    width: 98%;
+    width: calc(100% - 10px);
     background-color: var(--space-cadet);
     /* color: var(--dark-cyan); */
     color: white;
@@ -127,6 +132,7 @@ button:active{
     box-shadow: 0px 1px 10px 0px var(--space-cadet);
     /* padding: 5px;
     padding-left: 5px; */
+    margin-bottom: 5px;
 }
 
 .pinned-bus-table {
@@ -175,6 +181,16 @@ td, .busContainer > p {
 	border-top: 0;
 	margin-left: -7px;
 	margin-top: -7px;
+}
+
+.section-header {
+    background-color: var(--giants-orange); 
+    width: 100%; 
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px;
+    padding: 0px;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
 }
 
 .busContainer > p {
