@@ -121,6 +121,7 @@ function setToolTipPosition(tooltip) {
     tooltip.style.right = 0;
 }
 
+var alreadyVibrated = [];
 
 function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
@@ -155,9 +156,13 @@ function updatePins() { // guess what
                 // dw about removing this class, thatll happen on the next rerender anyway...
                 if(isLocked) {
                     cell.classList.add("loading");
-                    if(pins.includes(busInfo.number) && window.navigator.vibrate) {
-                        console.log(navigator.vibrate(1000));
+                    if(!alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate) {
+                        if(navigator.vibrate(5000)) {
+                            alreadyVibrated.push(busInfo.number);
+                        }
                     }
+                } else {
+                    alreadyVibrated.pop(busInfo.number);
                 }
 
                 cell.innerHTML += " @" + (busInfo.order+1);
