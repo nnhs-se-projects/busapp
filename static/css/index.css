@@ -155,10 +155,13 @@ td, .busContainer > p {
     border-radius: 5px;
     transition: top 0.1s linear, left 0.1s linear;
     border: 2px solid var(--giants-orange);
-    font-size: 20px;
+    pointer-events: none;
+    font-size: 16px;
     text-align: center;
     text-wrap: initial;
 }
+
+.tool-tip > i { pointer-events: auto; }
 
 .tool-tip:after {
 	content: '';

@@ -318,16 +318,18 @@ const reloadChecker = setInterval(async function() {
     //console.log(currentTime - lastTime);
     // check if it has been significantly more than 30 seconds, this would indicate code execution was paused or throttled
     // also check if the page is visible - if it already is then a reload wont help it
-    if (currentTime > (lastTime + 40000) && document.visibilityState !== "visible") {
+    console.log(currentTime - lastTime);
+    if (currentTime > (lastTime + 4000) && document.visibilityState !== "visible") {
         document.addEventListener("visibilitychange", (event) => {
             // once the page is visible again, we reload it!
             if (document.visibilityState === "visible") { window.location.reload(); }
         });
+        if (document.visibilityState === "visible") { window.location.reload(); }
         // clear the interval, the reload is primed and there is nothing more to be done
         clearInterval(reloadChecker);
     }
     lastTime = currentTime;
-}, 30000);
+}, 2000);
 
 
 const checkWeather = setInterval(async function() {
