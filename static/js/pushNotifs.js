@@ -24,8 +24,7 @@ async function enablePushNotifications(publicKey) {
     if ('Notification' in window && 'serviceWorker' in navigator) {
         let permission = await Notification.requestPermission();
         if(permission === "granted") {
-            // Register the serviceworker and wait until it's ready before continuing
-                navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
+                // wait until it's ready before continuing
                 var registration = await navigator.serviceWorker.ready;
 
                 // subscribe the service worker to the push API
@@ -87,11 +86,17 @@ function updateNotifButton() {
     });
 
     areServiceWorkersWorking.then(condition => {
+        const button = document.getElementById("notif-button");
         if (Notification.permission === "granted" && condition) {
-            const button = document.getElementById("notif-button");
-            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i> Notifications Enabled!";
-            button.onclick = "";
-            button.style.cursor = "not-allowed";
+            button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
+            button.parentElement.onclick = "";
+            button.parentElement.style.cursor = "not-allowed";
+        } else {
+            const tooltip = addToolTip(button.parentElement, "Enable Notifications");
+            setToolTipPosition(tooltip);
+            window.setInterval((e) => {
+                setToolTipPosition(tooltip);
+            }, 100); 
         }
     });
 }

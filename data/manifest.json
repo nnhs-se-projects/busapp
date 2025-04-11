@@ -86,19 +86,25 @@
       },
       {
         "src": "/img/busapp-optimisedsvg.svg",
+        "sizes": "any",
         "type": "image/svg",
         "purpose": "any"
       }
     ],
 
-    "theme_color": "#a1b5be",
-    "background_color": "#a1b5be",
+    "theme_color": "#2e294e",
+    "background_color": "#2e294e",
     "display_override": ["standalone", "fullscreen", "minimal-ui"],
     "display": "standalone",
     "shortcuts": [
       {
         "name": "Open admin page",
-        "url": "/admin"
+        "url": "/admin",
+        "icons": [{
+          "src": "/img/Icon-New-96-any.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }]
       }
     ],
 
