@@ -319,7 +319,7 @@ const reloadChecker = setInterval(async function() {
     // check if it has been significantly more than 30 seconds, this would indicate code execution was paused or throttled
     // also check if the page is visible - if it already is then a reload wont help it
     console.log(currentTime - lastTime);
-    if (currentTime > (lastTime + 5000) && document.visibilityState !== "visible") {
+    if (currentTime > (lastTime + 4500) && document.visibilityState !== "visible") {
         document.addEventListener("visibilitychange", (event) => {
             // once the page is visible again, we reload it!
             if (document.visibilityState === "visible") { window.location.reload(); }
