@@ -33,7 +33,7 @@ indexSocket.on("update", (data) => {
     isLocked = data.isLocked;
     weather = data.weather;
 
-    const menuOpen = $(".dropdown-toggle").classList.contains("show");
+    const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
     const menuScroll = $(".dropdown-menu").scrollTop();
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
     document.getElementById("content").innerHTML = html;
@@ -372,7 +372,7 @@ async function forceUpdatePage() {
     data.announcement = apiData.announcement.announcement;
     data.timer = apiData.timerDuration;
 
-    const menuOpen = $(".dropdown-toggle").classList.contains("show");
+    const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
     const menuScroll = $(".dropdown-menu").scrollTop();
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
     document.getElementById("content").innerHTML = html;
