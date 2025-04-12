@@ -49,7 +49,7 @@
       <tbody>
         <% for(const bus of loading) {%>
           <tr>
-            <td><%= bus.number %><% if(bus.change) { %>&rarr;<%= bus.change %><% } %></td> <td class="time-col"></td> <td data-bus-number="<%= bus.number %>" class="status-col<%- data.isLocked ? " loading" : "" %>" style="filter: grayscale(0.75); background-color: green;"><%= bus.status %> @<%= bus.order + 1 %></td>
+            <td class="num-col"><%= bus.number %><% if(bus.change) { %>&rarr;<%= bus.change %><% } %></td> <td class="time-col"></td> <td data-bus-number="<%= bus.number %>" class="status-col<%- data.isLocked ? " loading" : "" %>" style="filter: grayscale(0.75); background-color: green;"><%= bus.status %> @<%= bus.order + 1 %></td>
           </tr>
         <% } %>
       </tbody>
