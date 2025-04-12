@@ -7,6 +7,7 @@ var countDownDate = new Date();
 var timerDuration = 0;
 var isLocked = false;
 var weather;
+var firstUpdateHappened = false;
 
 var pins = [];
 var notifStatus = {};
@@ -14,7 +15,7 @@ var buses;
 
 const oldAnnouncement = localStorage.getItem("lastAnnouncement");
 
-var panelExpanded = false;
+// var panelExpanded = false;
 
 // end of initializing stuff
 
@@ -32,6 +33,7 @@ indexSocket.on("update", (data) => {
     buses = data.buses;
     isLocked = data.isLocked;
     weather = data.weather;
+    firstUpdateHappened = true;
 
     const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
     const menuScroll = $(".dropdown-menu").scrollTop();
@@ -165,8 +167,8 @@ function updatePins() { // guess what
                 // dw about removing this class, thatll happen on the next rerender anyway...
                 if(isLocked) {
                     cell.classList.add("loading");
-                    if(!alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate) {
-                        if(navigator.vibrate(5000)) {
+                    if(firstUpdateHappened && !alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate) {
+                        if(navigator.vibrate(3000)) {
                             alreadyVibrated.push(busInfo.number);
                         }
                     }
