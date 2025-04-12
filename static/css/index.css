@@ -25,6 +25,7 @@ body {
     backdrop-filter: blur(4px);
     min-height: 100vh;
     min-height: 100dvh;
+    overflow-x: hidden; /* ribbon on the announcement causes horizontal overflow, prevent that */
 }
 
 .row {
@@ -132,6 +133,7 @@ button:active{
     /* color: var(--dark-cyan); */
     color: white;
     box-shadow: 0px 1px 10px 0px var(--space-cadet);
+    line-height: 1.2em;
 }
 
 .content-container {
@@ -149,7 +151,7 @@ button:active{
 .pinned-bus-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 15px;
+    border-spacing: 10px;
     padding-left: 0;
     padding-right: 0;
 }
@@ -177,6 +179,7 @@ td, .busContainer > p {
     font-size: 16px;
     text-align: center;
     text-wrap: initial;
+    box-shadow: 1px 1px 3px 1.5px rgba(0,0,0,0.75);
 }
 
 .tool-tip > i { pointer-events: auto; }
@@ -298,7 +301,7 @@ a {
     position: relative;
 }
 .ribbon {
-    --f: .5em; /* control the folded part */
+    --f: .35em; /* control the folded part */
     color: white;
     font-weight: bold;
     position: absolute;

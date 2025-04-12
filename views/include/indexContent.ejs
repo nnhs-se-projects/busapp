@@ -37,7 +37,7 @@
 <div class="content-container nav-item container-fluid text-center mt-1">
   <div class="row justify-content-center dropdown-center">
   <h2 class="section-header">Now Loading<span id="timer"></span></h2>
-  <% const loading = data.buses.filter(e => e.status === "Loading"); 
+  <% const loading = data.buses.filter(e => e.status === "Loading").sort((a, b) => +a.order - +b.order); 
   if(loading.length === 0) { %> 
     <span style="padding-bottom: 15px">No buses currently loading.</span>
   <% } else { %>
