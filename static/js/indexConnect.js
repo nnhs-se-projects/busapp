@@ -172,7 +172,6 @@ function updatePins() { // guess what
                             alreadyVibrated.push(busInfo.number);
                         }
                     }
-                    console.log(firstUpdateHappened && !alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate)
                 } else {
                     alreadyVibrated.pop(busInfo.number);
                 }
