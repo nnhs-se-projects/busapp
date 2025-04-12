@@ -6,8 +6,6 @@ self.addEventListener('install', async () => {
     // get the offline page
     const cache = await caches.open("offline");
     await cache.add(new Request("/html/offline.html", {cache: 'reload'}));
-    await cache.add(new Request("/img/404_background.webp", {cache: 'reload'}));
-    await cache.add(new Request("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css", {cache: 'reload'}));
 });
   
 

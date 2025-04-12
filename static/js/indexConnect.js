@@ -33,8 +33,14 @@ indexSocket.on("update", (data) => {
     isLocked = data.isLocked;
     weather = data.weather;
 
+    const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
+    const menuScroll = $(".dropdown-menu").scrollTop();
     const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
     document.getElementById("content").innerHTML = html;
+    if(menuOpen) {
+        $('.dropdown-toggle').dropdown("toggle");
+        $(".dropdown-menu").scrollTop(menuScroll);
+    };
 
     announcementAlert(data.announcement)
     updatePins();
@@ -121,6 +127,7 @@ function setToolTipPosition(tooltip) {
     tooltip.style.right = 0;
 }
 
+var alreadyVibrated = [];
 
 function updatePins() { // guess what
     const pinString = localStorage.getItem("pins");  // retrieves "pins" item
@@ -134,6 +141,9 @@ function updatePins() { // guess what
             if (!pins.includes(n) && busNumberArray.includes(n)) { pins.push(n); }
         }
     }
+
+    // update in the cookie as well for the extension
+    document.cookie = "pins=" + pins.join(", ") + "; SameSite=None; Secure=true; Max-Age=31536000";
 
     var tableBody = document.getElementsByClassName("pinned-bus-table")[0].getElementsByTagName("tbody")[0];
     // var tmp : string = "";
@@ -153,17 +163,27 @@ function updatePins() { // guess what
             if(busInfo.status === "Loading") {
                 cell.style.backgroundColor = "green";
                 // dw about removing this class, thatll happen on the next rerender anyway...
-                if(isLocked) cell.classList.add("loading");
+                if(isLocked) {
+                    cell.classList.add("loading");
+                    if(!alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate) {
+                        if(navigator.vibrate(5000)) {
+                            alreadyVibrated.push(busInfo.number);
+                        }
+                    }
+                } else {
+                    alreadyVibrated.pop(busInfo.number);
+                }
 
                 cell.innerHTML += " @" + (busInfo.order+1);
 
-                cell.parentElement.parentElement.prepend(cell.parentElement);
+                const container = cell.parentElement.parentElement;
+                if(container === document.querySelector(".pinned-bus-table")) container.prepend(cell.parentElement);
             } else if(busInfo.status === "Gone") {
                 cell.parentElement.style.filter = "brightness(0.75) grayscale(0.75) ";
                 cell.parentElement.parentElement.append(cell.parentElement);
             }
             if(busInfo.time) {
-                cell.parentElement.querySelector(".time-col").innerHTML = (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'})
+                cell.parentElement.querySelector(".time-col").innerHTML = (new Date(busInfo.time)).toLocaleTimeString("en-US", {hour: 'numeric', minute:'2-digit'})
             } else {
                 var avgTime = "Unknown";
                 if(busInfo.busTimes.length !== 0) {
@@ -171,7 +191,7 @@ function updatePins() { // guess what
                     var sum = 0; for(var i of busInfo.busTimes.map((e) => {e = new Date(e); return e.getHours()*60 + e.getMinutes()})) { sum += i; }
                     const avgMinutes = sum / busInfo.busTimes.length;
                     // convert back to Date object
-                    avgTime = (new Date(1970, 0, 1, Math.floor(avgMinutes/60), avgMinutes%60, 0)).toLocaleTimeString("en-US", {hour: '2-digit', minute:'2-digit'});
+                    avgTime = (new Date(1970, 0, 1, Math.floor(avgMinutes/60), avgMinutes%60, 0)).toLocaleTimeString("en-US", {hour: 'numeric', minute:'2-digit'});
                 }
                 const timeCol = cell.parentElement.querySelector(".time-col");
                 timeCol.innerHTML = "<span style='color: gray;'>" + avgTime + "</span>";
@@ -261,6 +281,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
             localStorage.setItem("pins", newPinString);
         }
     }
+
     updatePins();
 }
 
@@ -298,39 +319,69 @@ var x = setInterval(async function() {
         element.style.backgroundImage = `linear-gradient(90deg, green 49% , red 51%)`;
         element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
         if (distance < 0) { 
-            element.innerHTML = "About to leave!"; 
+            element.innerHTML = element.innerHTML.replace("Loading", "About to leave!"); // keeps position (About to leave! @1,2,3...)
+        }
+        if(pins.includes(+element.getAttribute("data-bus-number"))) {
+            element.style.filter = "";
+        } else {
+            element.style.filter = "grayscale(0.75)";
         }
     });
 
     if(isLocked)document.getElementById("timer").innerHTML = minutes + seconds > 0 ? ` - ${minutes}:${String(seconds).padStart(2, "0")}` : "";
-}, 1000);
+}, 500);
 
 
 // When the app gets put into the background, the browser pauses execution of the code.
 // This frequently causes the bus app to miss updates, and means it has to be reloaded or restarted.
-// This code checks if there is a significant discrepancy in how long since the code last ran,
-// if there is a discrepancy, reload the page once it regains focus.
+// rerender the page once it regains focus to prevent this issue.
 
-var lastTime = (new Date()).getTime();
-// set the interval for every 30 seconds
-const reloadChecker = setInterval(async function() {
-    var currentTime = (new Date()).getTime();
-    //console.log(currentTime - lastTime);
-    // check if it has been significantly more than 30 seconds, this would indicate code execution was paused or throttled
-    // also check if the page is visible - if it already is then a reload wont help it
-    if (currentTime > (lastTime + 40000) && document.visibilityState !== "visible") {
-        document.addEventListener("visibilitychange", (event) => {
-            // once the page is visible again, we reload it!
-            if (document.visibilityState === "visible") { window.location.reload(); }
-        });
-        // clear the interval, the reload is primed and there is nothing more to be done
-        clearInterval(reloadChecker);
-    }
-    lastTime = currentTime;
-}, 30000);
-
+document.addEventListener("visibilitychange", async (event) => {
+    // once the page is visible again, we reload it!
+    if (document.visibilityState === "visible") { await forceUpdatePage(); }
+});
 
 const checkWeather = setInterval(async function() {
     weather = await (await fetch("/getWeather")).json();
     updateWeather();
 }, 1000 * 60 * 30);
+
+
+async function forceUpdatePage() {
+    console.log("Force update called!");
+
+    const apiData = await (await fetch("/api", {cache: "no-store"})).json()
+
+    // convert from time strings to dates to allow conversion to local time
+    apiData.buses.forEach((bus) => {
+        if (bus.time != "")
+            bus.time = new Date(bus.time);
+    });
+
+    countDownDate = new Date(apiData.wave.leavingAt);
+    timerDuration = apiData.timerDuration;
+    buses = apiData.buses;
+    isLocked = apiData.wave.locked;
+    weather = await (await fetch("/getWeather")).json();
+
+    const data = {};
+    data.buses = apiData.buses;
+    data.weather = weather;
+    data.isLocked = apiData.wave.locked;
+    data.leavingAt = apiData.wave.leavingAt;
+    data.announcement = apiData.announcement.announcement;
+    data.timer = apiData.timerDuration;
+
+    const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
+    const menuScroll = $(".dropdown-menu").scrollTop();
+    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
+    document.getElementById("content").innerHTML = html;
+    if(menuOpen) {
+        $('.dropdown-toggle').dropdown("toggle");
+        $(".dropdown-menu").scrollTop(menuScroll);
+    };
+
+    announcementAlert(data.announcement);
+    updateWeather();
+    updatePins();
+}

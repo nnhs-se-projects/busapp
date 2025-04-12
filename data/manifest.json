@@ -4,6 +4,7 @@
     "description": "App for displaying bus information",
     "start_url": "/",
     "scope": "/",
+    "orientation": "portrait",
     "categories": ["utilities", "travel", "navigation"],
     "icons": [
       {

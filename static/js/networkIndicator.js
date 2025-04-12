@@ -2,7 +2,7 @@
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
-function setIndicatorStatus(stat) {
+async function setIndicatorStatus(stat) {
     const indicator = document.getElementById("networkIndicator");
     const blocker = document.getElementById("networkBlocker");
     const content = document.getElementById("content");
@@ -20,7 +20,7 @@ function setIndicatorStatus(stat) {
         blocker?.classList.add("shown");
     }
     if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
-        window.location.reload();
+        await forceUpdatePage();
     }
     lastStatus = stat;
 }
@@ -33,7 +33,7 @@ async function checkNetworkConnectivity() {
         const response = await fetch("/getConnectivity", {cache: "no-store"});
         ping = performance.now() - ping;
         if(response.ok) {
-            if(ping < 450) { return "connected"; }
+            if(ping < 500) { return "connected"; }
             return "slow";
         }
     } catch(e) {
@@ -48,14 +48,19 @@ async function checkAndChange() {
     if(stat === "offline") {
         // double check before blocking stuff
         await new Promise(resolve => setTimeout(resolve, 3000));
-        if(stat === await checkNetworkConnectivity()) { setIndicatorStatus(stat); }
+        if(stat === await checkNetworkConnectivity()) { await setIndicatorStatus(stat); }
     } else {
-        setIndicatorStatus(stat);
+        await setIndicatorStatus(stat);
     }
+}
+
+async function checkAndChangeRecursive() {
+    await checkAndChange();
+    setTimeout(checkAndChangeRecursive, 5000);
 }
 
 // run checkAndChange whenever the network status changes and periodically in case the other events dont fire
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
-checkAndChange();
-setInterval(checkAndChange, 10000); // check connection every 10 seconds
+checkAndChangeRecursive();
+//setInterval(checkAndChange, 10000); // check connection every 10 seconds

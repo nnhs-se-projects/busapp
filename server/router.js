@@ -117,7 +117,6 @@ router.get("/teapot", (req, res) => { res.sendStatus(418); });
 // used for networkIndicator
 router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 
-// NOT FOR INTERNAL USE
 // this is for other students making discord bots or other integrations with apps to make it easier.
 // also reduces load on the server as we dont have to render the EJS for automated requests.
 var limiter = {};

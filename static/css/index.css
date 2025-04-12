@@ -25,6 +25,18 @@ body {
     backdrop-filter: blur(4px);
     min-height: 100vh;
     min-height: 100dvh;
+    overflow-x: hidden; /* ribbon on the announcement causes horizontal overflow, prevent that */
+}
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: max(80vh, 40vw);
 }
 
 .status-col {
@@ -33,7 +45,7 @@ body {
 }
 
 .navbar-div {
-    width: 98%;
+    width: calc(100% - 10px);
     background-color: var(--space-cadet);
     border-radius: 5px;
     color: white;
@@ -74,6 +86,11 @@ body {
     box-shadow: unset;
 }
 
+.navbar > .container-fluid {
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * .5);
+}
+
 .nav-item a {
     border-radius: 5px;
     background-color: var(--giants-orange);
@@ -110,16 +127,17 @@ button:active{
 }
 
 .announcement-div {
-    width: 98%;
+    width: calc(100% - 10px);
     background-color: var(--space-cadet);
     border-radius: 5px;
     /* color: var(--dark-cyan); */
     color: white;
     box-shadow: 0px 1px 10px 0px var(--space-cadet);
+    line-height: 1.2em;
 }
 
 .content-container {
-    width: 98%;
+    width: calc(100% - 10px);
     background-color: var(--space-cadet);
     /* color: var(--dark-cyan); */
     color: white;
@@ -127,13 +145,15 @@ button:active{
     box-shadow: 0px 1px 10px 0px var(--space-cadet);
     /* padding: 5px;
     padding-left: 5px; */
+    margin-bottom: 5px;
 }
 
 .pinned-bus-table {
-    width: 90%;
-    max-width: 90%;
+    width: 100%;
     border-collapse: separate;
-    border-spacing: 15px;
+    border-spacing: 10px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 td, .busContainer > p {
@@ -155,10 +175,14 @@ td, .busContainer > p {
     border-radius: 5px;
     transition: top 0.1s linear, left 0.1s linear;
     border: 2px solid var(--giants-orange);
-    font-size: 20px;
+    pointer-events: none;
+    font-size: 16px;
     text-align: center;
     text-wrap: initial;
+    box-shadow: 1px 1px 3px 1.5px rgba(0,0,0,0.75);
 }
+
+.tool-tip > i { pointer-events: auto; }
 
 .tool-tip:after {
 	content: '';
@@ -172,6 +196,16 @@ td, .busContainer > p {
 	border-top: 0;
 	margin-left: -7px;
 	margin-top: -7px;
+}
+
+.section-header {
+    background-color: var(--giants-orange); 
+    width: 100%; 
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px;
+    padding: 0px;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
 }
 
 .busContainer > p {
@@ -267,7 +301,7 @@ a {
     position: relative;
 }
 .ribbon {
-    --f: .5em; /* control the folded part */
+    --f: .35em; /* control the folded part */
     color: white;
     font-weight: bold;
     position: absolute;

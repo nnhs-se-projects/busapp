@@ -1,8 +1,8 @@
 <div class="announcement-div d-flex justify-content-center container-fluid mt-1">
   <div class="ribbon" id="announcementRibbon">New!</div>
-  <div class="row text-center align-items-center justify-content-center" style="width: 98vw;">
+  <div class="row text-center align-items-center justify-content-center" style="width: 100%">
       <!-- <i class="fa-solid fa-bullhorn"></i> -->
-      <h2 style="background-color: var(--giants-orange); width: 100%; border-top-left-radius: 5px; border-top-right-radius: 5px;">Announcements:</h2>
+      <h2 class="section-header">Announcement</h2>
       <!-- <hr> -->
       <p id="announcement-text"><%= data.announcement %></p>
   </div>
@@ -10,7 +10,7 @@
 
 <div class="content-container nav-item container-fluid text-center mt-1 has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
   <div class="row justify-content-center dropdown-center">
-    <h2 style="background-color: var(--giants-orange); border-top-left-radius: 5px; border-top-right-radius: 5px;">Buses</h2>
+    <h2 class="section-header">Pinned Buses</h2>
     <button class="dropdown-toggle has-tooltip" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" aria-expanded="false" style="color: white" tooltip-text="Pin a bus to get started!">
     <i class="fa-solid fa-thumbtack"></i> 
     </button>
@@ -25,8 +25,8 @@
   <div class="row justify-content-center">
     <table class="pinned-bus-table text-center">
       <thead>
-          <th style="width: 3em">Bus #</th>
-          <th style="width: 6em">Time</th>
+          <th style="width: 5ch">Bus #</th>
+          <th style="width: 8ch">Time</th>
           <th>Status @Position</th>
       <tbody>
       </tbody>
@@ -34,17 +34,17 @@
   </div>
 </div>
 
-<div class="content-container nav-item container-fluid text-center mt-1" style="overflow: hidden;">
+<div class="content-container nav-item container-fluid text-center mt-1">
   <div class="row justify-content-center dropdown-center">
-  <h2 style="background-color: var(--giants-orange);">Now Loading<span id="timer"></span></h2>
-  <% const loading = data.buses.filter(e => e.status === "Loading"); 
+  <h2 class="section-header">Now Loading<span id="timer"></span></h2>
+  <% const loading = data.buses.filter(e => e.status === "Loading").sort((a, b) => +a.order - +b.order); 
   if(loading.length === 0) { %> 
     <span style="padding-bottom: 15px">No buses currently loading.</span>
   <% } else { %>
     <table class="pinned-bus-table text-center">
       <thead>
-          <th style="width: 3em">Bus #</th>
-          <th style="width: 6em">Time</th>
+          <th style="width: 5ch">Bus #</th>
+          <th style="width: 8ch">Time</th>
           <th>Status @Position</th>
       <tbody>
         <% for(const bus of loading) {%>
