@@ -2,7 +2,7 @@
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
-function setIndicatorStatus(stat) {
+async function setIndicatorStatus(stat) {
     const indicator = document.getElementById("networkIndicator");
     const blocker = document.getElementById("networkBlocker");
     const content = document.getElementById("content");
@@ -20,7 +20,7 @@ function setIndicatorStatus(stat) {
         blocker?.classList.add("shown");
     }
     if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
-        window.location.reload();
+        await forceUpdatePage();
     }
     lastStatus = stat;
 }
@@ -48,9 +48,9 @@ async function checkAndChange() {
     if(stat === "offline") {
         // double check before blocking stuff
         await new Promise(resolve => setTimeout(resolve, 3000));
-        if(stat === await checkNetworkConnectivity()) { setIndicatorStatus(stat); }
+        if(stat === await checkNetworkConnectivity()) { await setIndicatorStatus(stat); }
     } else {
-        setIndicatorStatus(stat);
+        await setIndicatorStatus(stat);
     }
 }
 
