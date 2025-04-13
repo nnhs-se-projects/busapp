@@ -32,9 +32,9 @@ var gap = 20;
 ctx.font = `bold ${fontSize}px Roboto`;
 
 
-var PiPinterval;
+var PiPinterval = false;
 function startPopout() {
-    PiPinterval = window.setInterval(() => {
+    if(!PiPinterval) PiPinterval = window.setInterval(() => {
         const bus = buses.filter(e => +e.number === pins[activePin])[0];
         ctx.clearRect(0, 0, canWidth, canHeight);
     
@@ -82,4 +82,5 @@ function startPopout() {
 vid.addEventListener("leavepictureinpicture", () => {
     console.log("left pip");
     window.clearInterval(PiPinterval);
+    PiPinterval = false;
 })
