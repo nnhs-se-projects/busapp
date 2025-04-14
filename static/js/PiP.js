@@ -34,7 +34,7 @@ ctx.font = `bold ${fontSize}px Roboto`;
 
 var PiPinterval = false;
 function startPopout() {
-    if(!(mediaSession in navigator && 
+    if(!("mediaSession" in navigator && 
         document.pictureInPictureEnabled && 
         !!document.createElement("canvas").getContext)) {
         console.log("Browser not supported (Hey iPhone users, get a phone that doesn't suck)");

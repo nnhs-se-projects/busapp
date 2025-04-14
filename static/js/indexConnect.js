@@ -386,3 +386,8 @@ if(!localStorage.getItem("firstLoad")) {
 }
 
 announcementAlert(initialData.announcement);
+if("mediaSession" in navigator && 
+    document.pictureInPictureEnabled && 
+    !!document.createElement("canvas").getContext) {
+    document.getElementById("popoutToggler").style.display = "block";
+}
