@@ -331,40 +331,44 @@ const checkWeather = setInterval(async function() {
 async function forceUpdatePage() {
     console.log("Force update called!");
 
-    const apiData = await (await fetch(`/api?key=${initialData.apiKey}`, {cache: "no-store"})).json()
+    try {
+        const apiData = await (await fetch(`/api?key=${initialData.apiKey}`, {cache: "no-store"})).json()
 
-    // convert from time strings to dates to allow conversion to local time
-    apiData.buses.forEach((bus) => {
-        if (bus.time != "")
-            bus.time = new Date(bus.time);
-    });
+        // convert from time strings to dates to allow conversion to local time
+        apiData.buses.forEach((bus) => {
+            if (bus.time != "")
+                bus.time = new Date(bus.time);
+        });
 
-    countDownDate = new Date(apiData.wave.leavingAt);
-    timerDuration = apiData.timerDuration;
-    buses = apiData.buses;
-    isLocked = apiData.wave.locked;
-    weather = await (await fetch("/getWeather")).json();
+        countDownDate = new Date(apiData.wave.leavingAt);
+        timerDuration = apiData.timerDuration;
+        buses = apiData.buses;
+        isLocked = apiData.wave.locked;
+        weather = await (await fetch("/getWeather")).json();
 
-    const data = {};
-    data.buses = apiData.buses;
-    data.weather = weather;
-    data.isLocked = apiData.wave.locked;
-    data.leavingAt = apiData.wave.leavingAt;
-    data.announcement = apiData.announcement.announcement;
-    data.timer = apiData.timerDuration;
+        const data = {};
+        data.buses = apiData.buses;
+        data.weather = weather;
+        data.isLocked = apiData.wave.locked;
+        data.leavingAt = apiData.wave.leavingAt;
+        data.announcement = apiData.announcement.announcement;
+        data.timer = apiData.timerDuration;
 
-    const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
-    const menuScroll = $(".dropdown-menu").scrollTop();
-    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
-    document.getElementById("content").innerHTML = html;
-    if(menuOpen) {
-        $('.dropdown-toggle').dropdown("toggle");
-        $(".dropdown-menu").scrollTop(menuScroll);
-    };
+        const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
+        const menuScroll = $(".dropdown-menu").scrollTop();
+        const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
+        document.getElementById("content").innerHTML = html;
+        if(menuOpen) {
+            $('.dropdown-toggle').dropdown("toggle");
+            $(".dropdown-menu").scrollTop(menuScroll);
+        };
 
-    announcementAlert(data.announcement);
-    updateWeather();
-    updatePins();
+        announcementAlert(data.announcement);
+        updateWeather();
+        updatePins();
+    } catch(e) {
+        setIndicatorStatus("offline");
+    }
 }
 
 
