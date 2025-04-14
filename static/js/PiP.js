@@ -33,6 +33,7 @@ ctx.font = `bold ${fontSize}px Roboto`;
 
 
 var PiPinterval = false;
+var angle = 0;
 function startPopout() {
     if(!("mediaSession" in navigator && 
         document.pictureInPictureEnabled && 
@@ -44,7 +45,14 @@ function startPopout() {
         const bus = buses.filter(e => +e.number === pins[activePin])[0];
         ctx.clearRect(0, 0, canWidth, canHeight);
     
-        ctx.fillStyle = "#2e294e";
+        //ctx.fillStyle = "#2e294e";
+        angle += 0.1;
+        var x = canWidth / 2;
+        var y = canHeight / 2;
+        var length = Math.max(canWidth, canHeight);
+        var grad1 = ctx.createLinearGradient(x, y, x + Math.cos(angle) * length, y + Math.sin(angle) * length);
+        grad1.addColorStop(0, "#2e294e"); grad1.addColorStop(0.75, "skyblue");
+        ctx.fillStyle = grad1;
         ctx.fillRect(0, 0, canWidth, canHeight);
     
         ctx.beginPath();
