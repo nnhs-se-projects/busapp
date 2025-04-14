@@ -29,8 +29,6 @@ vid.srcObject = can.captureStream(10);
 
 var fontSize = 60;
 var gap = 20;
-ctx.font = `bold ${fontSize}px Roboto`;
-
 
 var PiPinterval = false;
 var angle = 0;
@@ -43,9 +41,9 @@ function startPopout() {
     }
     if(!PiPinterval) PiPinterval = window.setInterval(() => {
         const bus = buses.filter(e => +e.number === pins[activePin])[0];
+        ctx.font = `bold ${fontSize}px Roboto`;
         ctx.clearRect(0, 0, canWidth, canHeight);
-    
-        //ctx.fillStyle = "#2e294e";
+
         angle += 0.1;
         var x = canWidth / 2;
         var y = canHeight / 2;
@@ -54,6 +52,14 @@ function startPopout() {
         grad1.addColorStop(0, "#2e294e"); grad1.addColorStop(0.75, "skyblue");
         ctx.fillStyle = grad1;
         ctx.fillRect(0, 0, canWidth, canHeight);
+
+        if(bus === undefined) {
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.font = `bold ${canWidth / 8}px Roboto`;
+            ctx.fillText("Pin a bus first!", canWidth/2, canHeight / 2 + (canWidth / 32));
+            return;
+        }
     
         ctx.beginPath();
         ctx.fillStyle = "#f46036"
