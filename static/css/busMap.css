@@ -2,6 +2,10 @@ body {
     background-color: #363434;
 }
 
+div {
+    margin-bottom: 15px;
+}
+
 .buttons {
     display: flex;
     background-color: #2E294E;
@@ -11,11 +15,38 @@ body {
     border-bottom-color: #F46036;
 }
 
-#table, tr, td, th {
-    border-collapse: collapse;
+table, tr, td, th {
+    /* border-collapse: collapse; */
     font-family: Verdana, sans-serif;
     padding: 15px;
     text-align: center;
+}
+
+tr, td {
+    border-radius: 15px;
+    background-color: #f7b90c;
+    width: 50px;
+}
+
+/* 
+td:hover {
+    border-width: 2px;
+    border-style: solid;
+    border-color: azure;
+    background-color: #f7b90c;
+    color: azure;
+    cursor: pointer;
+} */
+
+th {
+    border-radius: 15px;
+    color: black;
+    background-color: aliceblue;
+    margin: 50px;
+}
+
+table {
+    border-spacing: 10px;
 }
 
 button, a {
@@ -45,30 +76,6 @@ input {
     font-size: 15px;
     border: transparent;
     width: 50px;
-}
-
-tr, td {
-    border-radius: 15px;
-    background-color: #f7b90c;
-    width: 50px;
-}
-
-td:hover {
-    border-width: 2px; /* Makes the border more visible on hover */
-    border-style: solid; /* Ensures the border is solid on hover */
-    border-color: azure; /* Color of the border on hover */
-    background-color: #f7b90c; /* #32a89e; #facb48;*/
-    color: azure;
-    cursor: pointer;
-}
-
-th {
-    border-radius: 15px;
-    color: black;
-    background-color: aliceblue;
-}
-
-input {
     border: transparent;
     background-color: transparent;
 }

@@ -11,7 +11,7 @@
         <th colspan="100%">Next Wave
             <tr style="height: 100px">
                 <% for (let i = 0; i < data.nextWave.length; i++) { %>
-                    <td class="next"><%= data.nextWave[i].busNumber %></td>
+                    <td class="next-wave"><%= data.nextWave[i].busNumber %></td>
                 <% } %>
             </tr>
         </th>
@@ -24,8 +24,12 @@
     <table style="width:100%" id="current-wave">
         <th colspan="100%">Current Wave
             <tr style="height: 100px">
-                <% for (let i = 0; i < data.currentWave.length; i++) { %>
-                    <td class="current"><%= data.currentWave[i].busNumber %></td>
+                <% for (let i = 0; i < data.currentWave.length; i++) { let bus = data.currentWave[i] %>
+                    <% if (bus.busNumber === 129) { %>
+                        <td style="background-color: #ff3a3a;"><%= bus.busNumber %></td>
+                    <% } else { %>
+                        <td><%= bus.busNumber %></td>
+                    <% } %>
                 <% } %>
             </tr>
         </th>
@@ -37,14 +41,14 @@
 
     <table style="width:100%" id="bus-lots">
         <th colspan="100%">Bus Lots
-            <tr style="height: 100px">
+            <tr style="height: 100px" class="rowA">
                 <% for (let i = 0; i < 14; i++) { %>
-                    <td class="rowA"><input placeholder="enter"></td>
+                    <td><input placeholder="enter"></td>
                 <% } %>
             </tr>
-            <tr style="height: 100px">
+            <tr style="height: 100px" class="rowB">
                 <% for (let i = 0; i < 14; i++) { %>
-                    <td class="rowB"><input placeholder="enter"></td>
+                    <td><input placeholder="enter"></td>
                 <% } %>
             </tr>
         </th>

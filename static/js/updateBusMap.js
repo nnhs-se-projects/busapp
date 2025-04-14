@@ -6,6 +6,8 @@ const nextContent = document.getElementById("next-wave").innerHTML;
 const currentContent = document.getElementById("current-wave").innerHTML;
 const lotsContent = document.getElementById("bus-lots").innerHTML;
 
+const pins = localStorage.getItem("pins");
+
 document.getElementById("bus-lots").innerHTML = "";
 
 function changeMap() {
@@ -21,6 +23,14 @@ function changeMap() {
         document.getElementById("current-wave").innerHTML = currentContent;
 
         document.getElementById("bus-lots").innerHTML = "";
+    }
+}
+
+function pinColor() {
+    const current = document.getElementsByClassName("current");
+    
+    for (let i = 0; i < current.length; i++) {
+        current[i].style.backgroundColor = "var(--color-current)";
     }
 }
 
