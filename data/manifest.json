@@ -4,7 +4,6 @@
     "description": "App for displaying bus information",
     "start_url": "/",
     "scope": "/",
-    "orientation": "portrait",
     "categories": ["utilities", "travel", "navigation"],
     "icons": [
       {
@@ -87,25 +86,19 @@
       },
       {
         "src": "/img/busapp-optimisedsvg.svg",
-        "sizes": "any",
         "type": "image/svg",
         "purpose": "any"
       }
     ],
 
-    "theme_color": "#2e294e",
-    "background_color": "#2e294e",
+    "theme_color": "#a1b5be",
+    "background_color": "#a1b5be",
     "display_override": ["standalone", "fullscreen", "minimal-ui"],
     "display": "standalone",
     "shortcuts": [
       {
         "name": "Open admin page",
-        "url": "/admin",
-        "icons": [{
-          "src": "/img/Icon-New-96-any.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }]
+        "url": "/admin"
       }
     ],
 

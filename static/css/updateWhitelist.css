@@ -103,10 +103,6 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-input {
-    height: auto !important;
-}
-
 .new-table-button {
     text-align: center;
 }

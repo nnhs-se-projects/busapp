@@ -1,143 +1,192 @@
 * {
     padding: 0;
     margin: 0;
-    box-sizing: border-box;
-    font-family: roboto;
 }
 
-:root {
-    --crimson: #d7263d;
-    --giants-orange: #f46036;
-    --space-cadet: #2e294e;
-    --lighter-blue: hsl(250, 31%, 40%);
-    --night: #141415;
-    --gray: #ebebeb;
-    --gap: 20px;
-    --corner-rad: 10px;
-    /* --bs-navbar-brand-color: var(--dark-cyan) !important; */
+body {
+    background-color: #a1b5be;
 }
 
-.section {
-    border-radius: var(--corner-rad);
-    background-color: var(--space-cadet);
-    background-color: color-mix(in srgb, var(--space-cadet), transparent 10%);
-    box-shadow: 0px 0px 10px 1px var(--space-cadet);
-    color: white;
-    overflow: hidden;
+/* Login Button */
+.header {
+    display: grid;
+    grid-template-columns: 9fr 16fr 4fr;
+    grid-template-rows: 1fr 1fr;
+    padding: 3% 3.2%;
+    height: 5.5%;
 }
 
-h2 {
-    background-color: var(--giants-orange);
-    font-size: min(4vw, 4vh);
-    line-height: 2em;
-    padding-left: 1ch;
+.weather-container {
+    grid-column: 1/2;
+    grid-row: 1/3;
+
+    background-color: rgb(208, 207, 188);
+    border: rgb(208, 207, 188);;
+    border-radius: 10px;
+    
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 2fr 1fr;
+    font-family: 'Montserrat', sans-serif;
+    height: 10vh;
 }
 
-#content {
-    background-size: cover;
-    background-position: center;
+.weather-container * {
+    margin: 0;
+}
+
+.weather-temperature {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    text-align: center;
+    font-size: 2.4vh;
+}
+
+.weather-temperature > * {
+    padding: 5% 0 0;
+}
+
+.weather-status {
+    grid-column: 1/2;
+    grid-row: 2/3;  
+    padding: 0 0 3%;  
+    text-align: center;
+    font-size: 1.5vh;
+}
+
+.weather-status > * {
+    padding: 0 0 5%;
+}
+
+.weather-img {
+    text-align: center;
+    grid-column: 2/3;
+    grid-row: 1/3;
+}
+
+.weather-img > * {
+    height: 100%;
+}
+
+.image-container {
+    grid-row: 1/3;
+    grid-column: 3/4;
+}
+
+#qr-image {
+    width: 42%;
+    float: right;
+}
+
+.tvGridContainer {
+    margin-top: 10%;
     width: 100%;
+    display: grid;
+    grid-template-columns: 0.05fr 1fr 0 1fr 0 1fr 0.05fr;
+}
+
+.row1-8 {
+    grid-column: 2/3;
+}
+
+.row9-16 {
+    grid-column: 4/5;
+}
+
+.row17-24 {
+    grid-column: 6/7;
+}
+
+
+
+/* Table */
+.bus-table {
+    margin: 0 auto 3%;
+    width: 90%;
     height: 100%;
-    position: fixed;
+    border-collapse: collapse;
+    font-size: 1.5vw;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.container {
-    backdrop-filter: blur(3px);
-    border: var(--gap) solid transparent;
-    height: 100%;
-}
-.container, .top {
-    display: flex;
-    flex-direction: column;
-    row-gap: var(--gap);
+.bus-table thead tr {
+    background-color: #327fa8;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;;
 }
 
-.top > div {
-    display: flex;
-    flex-direction: row;
-    column-gap: var(--gap);
+.bus-table tbody tr {
+    border-bottom: 2px solid #dddddd;
 }
 
+.bus-table tbody tr:nth-of-type(even) {
+    background-color: #e7e6e6;
+}
+.bus-table tbody tr:nth-of-type(odd) {
+    background-color: #ffffff;
+}
+
+.bus-table tbody tr:last-of-type {
+    border-bottom: 4px solid #327fa8;
+}
+
+.bus-table th {
+    padding: 0.6% 2%;
+}
+.bus-table td {
+    padding: 0.6% 2%;
+}
+
+.num-col {
+    width: 42%;
+    font-size: 2.4vw;
+}
+
+.heading th {
+    font-size: 1.3vw;
+}
+
+.status-col {
+    width: 32%;
+}
+
+.time-col {
+    width: 24%;
+}
 .announcement {
-    font-size: min(2.5vw, 2.25vh);
-    flex-grow: 1;
-} .announcement > div {
-    padding: var(--gap);
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none;
+    font-size: 1.7vw;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color:#003749;
 }
 
-.timer {
-    --height: 30px;
-    background-size: 210%;
-    background-color: green;
-    transition: background-position 1s linear;
-    height: var(--height);
-    display: grid; align-items: center; justify-content: center;
-    font-size: calc(var(--height) * 0.75);
-    line-height: 1em;
-    color: black;
+.announcement-table {
+    margin: 0 auto 3%;
+    margin-left: 6.5%;
+    width: 101%;
+    border-collapse: collapse;
+    font-size: 0.8vw;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.bottom {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 2.2fr 1fr;
-    grid-column-gap: var(--gap);    
+.announcement-table thead tr {
+    background-color: #327fa8;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
 }
 
-.busNumber {
-    font-size: 120%;
-    font-weight: 900;
+.announcement-table tbody tr {
+    border-bottom: 2px solid #dddddd;
+    height: 5vh;
 }
 
-.busNumber.loading {
-    animation: flash 0.5s infinite step-start alternate;
-    color: #ff8080;
-} @keyframes flash { 0% {} 50% { color: var(--giants-orange); } 100% {} }
-
-.busContainer {
-    padding: var(--gap);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap);
-}
-.busContainer > p {
-    background-color: var(--lighter-blue);
-    padding: 5px;
-    padding-inline: 15px;
-    font-size: min(2.5vw, 3.8vh);
-    border-radius: var(--corner-rad);
-    box-shadow: 0px 0px 5px 5px var(--lighter-blue);
-    flex-grow: 1;
-}
-
-.weather {
-    padding: var(--gap);
-    min-width: 18ch;
-    max-height: 27.5vh;
-    max-width: 27.5vh;
-    flex-shrink: 1;
-    display: grid;
-    align-items: center;
-}
-
-.weather > .temp {
-    font-size: 6.5ch;
-}
-
-@keyframes shake {
-    0% { transform: translateX(-2.5px); background-color: #ff3030 }
-    10% { transform: translateX(2.5px); background-color: red;}
-    20% { transform: translateX(-2.5px); background-color: red }
-    30% { transform: translateX(2.5px); background-color: red;}
-    40% { transform: translateX(-2.5px); background-color: red }
-    50% { transform: translateX(2.5px); background-color: red;}
-    60% { transform: translateX(-2.5px); background-color: #ff3030 }
-    70% { transform: translateX(2.5px); background-color: #ff3030;}
-    80% { transform: translateX(-2.5px); background-color: #ff3030 }
-    90% { transform: translateX(2.5px); background-color: #ff3030;}
-    100% { transform: translateX(-2.5px); background-color: #ff3030 }
-}
-.shake {
-    background-image: none !important;
-    animation: shake 0.5s linear infinite;
+#announcement-table tbody tr {
+    background-color: #ffffff;
 }

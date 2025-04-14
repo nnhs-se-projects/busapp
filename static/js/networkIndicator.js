@@ -1,8 +1,7 @@
-"use strict";
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
-async function setIndicatorStatus(stat) {
+function setIndicatorStatus(stat) {
     const indicator = document.getElementById("networkIndicator");
     const blocker = document.getElementById("networkBlocker");
     const content = document.getElementById("content");
@@ -20,7 +19,7 @@ async function setIndicatorStatus(stat) {
         blocker?.classList.add("shown");
     }
     if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
-        await forceUpdatePage();
+        window.location.reload();
     }
     lastStatus = stat;
 }
@@ -33,7 +32,7 @@ async function checkNetworkConnectivity() {
         const response = await fetch("/getConnectivity", {cache: "no-store"});
         ping = performance.now() - ping;
         if(response.ok) {
-            if(ping < 500) { return "connected"; }
+            if(ping < 450) { return "connected"; }
             return "slow";
         }
     } catch(e) {
@@ -48,20 +47,14 @@ async function checkAndChange() {
     if(stat === "offline") {
         // double check before blocking stuff
         await new Promise(resolve => setTimeout(resolve, 3000));
-        if(stat === await checkNetworkConnectivity()) { await setIndicatorStatus(stat); }
+        if(stat === await checkNetworkConnectivity()) { setIndicatorStatus(stat); }
     } else {
-        await setIndicatorStatus(stat);
+        setIndicatorStatus(stat);
     }
-}
-
-async function checkAndChangeRecursive() {
-    await checkAndChange();
-    setTimeout(checkAndChangeRecursive, 5000);
 }
 
 // run checkAndChange whenever the network status changes and periodically in case the other events dont fire
 window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
-checkAndChangeRecursive();
-//setInterval(checkAndChange, 10000); // check connection every 10 seconds
-
+checkAndChange();
+setInterval(checkAndChange, 10000); // check connection every 10 seconds

@@ -1,10 +1,11 @@
 "use strict";
 
 const express = require("express");
-const {router, getTimer} = require("./server/router.js");
+const router = require("./server/router.js");
 const path = require("path");
 const {createServer} = require("http");
 const {Server} = require("socket.io");
+const {readData} = require("./server/jsonHandler.js");
 const startWeather = require("./server/weatherController.js");
 const session = require("express-session");
 const dotenv = require("dotenv");
@@ -13,7 +14,6 @@ const Bus = require("./server/model/bus.js");
 const Wave = require("./server/model/wave.js");
 const Weather = require("./server/model/weather.js");
 const Announcement = require("./server/model/announcement.js");
-const { getBuses } = require("./server/DBHandler.js");
 
 const app = express();
 const httpServer = createServer(app);
@@ -23,6 +23,13 @@ dotenv.config({ path: ".env" });
 connectDB();
 
 const PORT = process.env.PORT || 5182;
+/*
+type BusCommand = {
+    type: string
+    data: BusData
+}
+*/
+// let buses: BusData[];
 
 //root socket
 io.of("/").on("connection", (socket) => {
@@ -36,27 +43,25 @@ io.of("/").on("connection", (socket) => {
 io.of("/admin").on("connection", async (socket) => {
     socket.on("updateMain", async (command) => {
 
-        const wave = await Wave.findOne({});
 
         let data ={
-            allBuses: await getBuses(),
-            nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
-            loading: await Bus.find({status: "Loading"}).sort("order"),
-            isLocked: wave.locked, 
-            leavingAt: wave.leavingAt,
+            allBuses: (await readData()).buses,
+            nextWave: await Bus.find({status: "Next Wave"}),
+            loading: await Bus.find({status: "Loading"}),
+            isLocked: false, 
+            leavingAt: new Date(),
         };
+        data.isLocked = (await Wave.findOne({})).locked;
+        data.leavingAt = (await Wave.findOne({})).leavingAt;
         
         // console.log("updateMain called")
-        const announce = (await Announcement.findOne({}));
 
         let indexData = {
-            buses: data.allBuses,
-            isLocked: wave.locked,
-            leavingAt: wave.leavingAt,
+            buses: (await readData()).buses,
+            isLocked: data.isLocked,
+            leavingAt: data.leavingAt,
             weather: await Weather.findOne({}),
-            announcement: announce.announcement,
-            tvAnnouncement: announce.tvAnnouncement,
-            timer: getTimer()
+            announcement: (await Announcement.findOne({})).announcement
         }
         
         io.of("/admin").emit("update", data);
@@ -107,8 +112,12 @@ async function resetBusChanges() {
         busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
     }
 
-    await Bus.updateMany({}, { $set: { status: "", order: 0, busChange: 0 } }); 
-    await Wave.updateMany({}, { $set: { locked: false } })
+    let buses = await Bus.find({});
+    buses.forEach((bus) => { // for each bus in the database
+        bus.busChange = 0; // reset the bus change
+        bus.status = "normal"; // reset the bus status
+        bus.save(); // save the bus
+    });
 
     console.log("reset bus changes: " + new Date().toLocaleString());
 }

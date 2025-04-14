@@ -1,3 +1,5 @@
+
+
 body {
     background-color: #a1b5be;
 }
@@ -46,10 +48,6 @@ body {
 * {
     padding: 0;
     margin: 0;
-}
-
-select { 
-    cursor: pointer;
 }
 
 .weather-container {
@@ -171,7 +169,6 @@ select {
 .button-text {
     color: #225875;
     text-decoration: underline;
-    cursor: pointer;
 }
 
 .remove-col {
@@ -225,25 +222,6 @@ select {
 #networkBlocker:is(.shown){
     height: 100% !important;
     transition: height 0.5s;
-}
-
-.swapButton {
-    padding: 0 !important; 
-    font-size: 1.75em; 
-    transform: translateY(-50%)
-}
-.swapButton > i {
-    cursor: pointer;
-    padding-left: 1em;
-    padding-right: 1em;
-}
-
-@keyframes horizontal-shaking {
-    0% { transform: translateX(0) }
-    25% { transform: translateX(5px) }
-    50% { transform: translateX(-5px) }
-    75% { transform: translateX(5px) }
-    100% { transform: translateX(0) }
 }
 
 @media (orientation: portrait) {

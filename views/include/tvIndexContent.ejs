@@ -1,41 +1,95 @@
-<div class="container">
-    <div class="top">
-        <div>
-            <div class="weather section"><div class="temp"><%= data.weather.temperature %>&deg;F</div><div class="stat"><%= data.weather.status %></div></div>
-            <div class="announcement section"><h2>Announcement</h2><div><%= data.tvAnnouncement %></div></div>
+<!-- This is the indexContent for the TV page-->
+
+<div class="header">
+    <div class="weather-container">    
+        <div class="weather-temperature">
+            <p><%= data.weather.temperature %>°F</p>
         </div>
-        <% if(data.isLocked) { %> <div class="timer section"> Loading... </div> <% } %>
+        <div class="weather-status">
+            <p><%= data.weather.status %> </p>
+        </div>
+        <div class="weather-img">
+            <img src=<%= data.weather.icon %>>
+        </div>
+            <!-- <p>Feels like: <%= data.weather.feelsLike %>°F</p> -->
     </div>
-    <div class="bottom">
-        <div class="section">
-            <h2>Loading<%= data.isLocked ? " - Wave Locked" : ""%></h2>
-            <div class="busContainer">
-                <% // filter the buses for loading and dort by estimated width of element
-                var tmp = data.buses.filter(e => e.status === "Loading").sort((a, b) => 
-                    (String(a.number) + String(a.change ? " Changed To " + a.change : "")).length 
-                    - (String(b.number) + String(b.change ? " Changed To " + b.change : "")).length
-                ); 
-                // sort-of pair each short element with a long element from the end, its a lil weird but it works
-                var loading = [];
-                for(var i = 0; i < tmp.length; i+=2) {
-                    loading[i] = tmp[i];
-                } for(var i = 1; i < tmp.length; i+=2) {
-                    loading[i] = tmp[tmp.length - i - (tmp.length % 2)];
-                }
-                for(const bus of loading) { %>
-                    <p>Bus <b><span class="busNumber loading"><%= bus.number %></span><% if(bus.change) { %> Changed To <span style="color: #ff8080" class="busNumber"><%= bus.change %></span><% } %></b> at <%= bus.order !== 0 && bus.order !== loading.length-1 ? "spot " : "" %><%= bus.order === 0 ? "front (1)" : bus.order === loading.length-1 ? `back (${bus.order+1})` : bus.order + 1 %></p>
-                <% }
-                if(tmp.length === 0) { %> <h3>No buses currently loading.</h3> <% } %>
-            </div>
-        </div>
-        <div class="section">
-            <h2>Next Wave</h2>
-            <div class="busContainer">
-                <% var next = data.buses.filter(e => e.status === "Next Wave").sort((a, b) => ((String(a.number) + String(a.change ? " Changed To " + a.change : "")).length - (String(b.number) + String(b.change ? " Changed To " + b.change : "")).length)); for(const bus of next) { %>
-                    <p>Bus <b><span class="busNumber"><%= bus.number %></span><% if(bus.change) { %> Changed To <span class="busNumber"><%= bus.change %><% } %></span></b></p>
-                <% } 
-                if(next.length === 0) { %> <h3>No buses in next wave.</h3> <% } %>
-            </div>
-        </div>
-    </div> 
+    <div class="image-container">
+        <img src="/img/busappqrcode.png" id="qr-image">
+    </div>
+    <% if(announcement != "") { %>
+        <table class="announcement-table" id="announcement-table">
+            <thead>
+                <tr>
+                    <th style="background-color: #838BC2; font-size: 310%; padding-top: 2px; padding-bottom: 2px; padding-left: 10px;"><i class="fa-solid fa-bullhorn fa-fw"></i> Announcement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <td class="announcement"><%= announcement %></td>
+            </tbody>
+        </table>
+    <% } %>
 </div>
+<!-- TV STUFF START-->
+<div class="tvGridContainer">
+    <div class="row1-8">
+        <table class="bus-table">
+            <thead>
+                <tr class="heading">
+                    <th class="num-col">Bus # &rarr; Change</th>
+                    <th class="status-col">Status</th>
+                    <th class="time-col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for(let i = 0; i < Math.floor(data.buses.length / 3); i++) { %> 
+                <tr>
+                    <td class="num-col"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %><% } %></td>
+                    <td class="status-col"><%= data.buses[i].status %></td>
+                    <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>                
+                </tr>
+            <% } %> 
+            </tbody>
+        </table>
+    </div>
+    <div class="row9-16">
+        <table class="bus-table">
+            <thead>
+                <tr class="heading">
+                    <th class="num-col">Bus # &rarr; Change</th>
+                    <th class="status-col">Status</th>
+                    <th class="time-col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for(let i = Math.floor(data.buses.length / 3); i < Math.floor(2 * data.buses.length / 3); i++) { %> 
+                <tr>
+                    <td class="num-col"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %><% } %></td>
+                    <td class="status-col"><%= data.buses[i].status %></td>
+                    <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>                
+                </tr>
+            <% } %> 
+            </tbody>
+        </table>
+    </div>
+    <div class="row17-24">
+        <table class="bus-table">
+            <thead>
+                <tr class="heading">
+                    <th class="num-col">Bus # &rarr; Change</th>
+                    <th class="status-col">Status</th>
+                    <th class="time-col">Time</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% for(let i = Math.floor(2 * data.buses.length / 3); i < data.buses.length; i++) { %> 
+                <tr>
+                    <td class="num-col"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %><% } %></td>
+                    <td class="status-col"><%= data.buses[i].status %></td>
+                    <td class="time-col"><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>        
+                </tr>
+            <% } %> 
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- TV STUFF END -->

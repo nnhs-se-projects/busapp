@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <title>Bus App</title>
@@ -24,7 +23,7 @@
                 </tr>                
             </thead>
             <tr class="add-row">
-                <td class="email-col"><input type="text" id="addInput" placeholder="Enter Email"></td>
+                <td class="email-col"><input type="text" id="gleepGlorp" placeholder="Enter Email"></td>
                 <td class="add-cell change-col"><i class="fa-solid fa-plus add-button table-button" onclick="addAdmin_admins(this)"></i></td>
             </tr>
             <% for(i = 0; i < whitelist.admins.length; i++) { %>
@@ -36,6 +35,6 @@
         </table>
         <script src="js/ejs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script id="adminList" admins="<%=JSON.stringify(whitelist.admins)%>" src="js/updateWhitelist.js"></script>
+        <script src="js/updateWhitelist.js"></script>
     </body>
 </html>

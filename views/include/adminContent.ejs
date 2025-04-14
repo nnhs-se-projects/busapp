@@ -35,27 +35,23 @@
         <tr>
             <th>Bus Number</th>
             <th>Bus Change</th>
-            <th>Position</th>
+            <th>Time</th>
             <th>Status</th>
         </tr>
     </thead>
-    <tbody id="currentWaveTBody">
-        <% for(let i = 0; i < data.loading.length; i++) { %>
-            <% if(i === 0) { %> <tr><td style="font-size: .5em; padding-block: 0">front</td><td></td><td></td><td></td></tr> <% } %>
-            <tr>
-                <td><input class="tableInput numberInput" type="number" value=<%= data.loading[i].busNumber %> readonly></td>
-                <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.loading[i].busChange ? data.loading[i].busChange : "" %> ></td>
-                <% if(!data.isLocked) { if(i > 0) { %> <td class="swapButton"><i class="fa-solid fa-arrows-up-down" onclick="updateOrder(this)"></i></td> <% } else { %> <td class="swapButton"></td> <% } } else { %><td><%= i + 1 %></td><% } %>
-                <td>
-                    <% if(!data.isLocked) { %>
-                        <p onclick="removeFromWave(this, true)" class="button-text">Remove</p>
-                    <% } else { %>
-                        <p>Locked</p>
-                    <% } %>
-                </td>
-            </tr>
-            <% if(i === data.loading.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>
-    <% } %>
+    <tbody id="tbody">
+        <% for(let i = 0; i < data.allBuses.length; i++) { %>
+            <% if (data.allBuses[i].status === 'Loading') { %>
+                <tr>
+                    <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
+                    <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
+                    <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value= "<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
+                    <td>
+                        <p onclick="removeFromWave(this)" class="button-text">Remove</p>
+                    </td>
+                </tr>
+            <% } %>
+        <% } %>
     </tbody>
 </table>
 <table id="bus-table" class="bus-table">
@@ -71,18 +67,18 @@
             <th>Status</th>
         </tr>
     </thead>
-    <tbody id="nextWaveTBody">
-        <% for(let i = 0; i < data.nextWave.length; i++) { %> 
-            <% if(i === 0) { %> <tr><td style="font-size: .5em; padding-block: 0">front</td><td></td><td></td><td></td></tr> <% } %>
-            <tr>
-                <td><input class="tableInput numberInput" type="number" value=<%= data.nextWave[i].busNumber %> readonly></td>
-                <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.nextWave[i].busChange ? data.nextWave[i].busChange : "" %> ></td>
-                <td><input class="tableInput timeInput" type="text" value="<%= data.nextWave[i].time ? (new Date(data.nextWave[i].time)).toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" readonly></td>
-                <td>
-                    <p onclick="removeFromWave(this)" class="button-text">Remove</p>
-                </td>
-            </tr>
-            <% if(i === data.nextWave.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>
+    <tbody id="tbody">
+        <% for(let i = 0; i < data.allBuses.length; i++) { %>
+            <% if (data.allBuses[i].status === 'Next Wave') { %>
+                <tr>
+                    <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
+                    <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
+                    <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
+                    <td>
+                        <p onclick="removeFromWave(this)" class="button-text">Remove</p>
+                    </td>
+                </tr>
+            <% } %>
         <% } %>
     </tbody>
 </table>
@@ -101,7 +97,7 @@
                 <td><input class="tableInput numberInput" type="number" value=<%= data.allBuses[i].number %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.allBuses[i].change %> ></td>
                 
-                <td><input class="tableInput timeInput" type="text" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" readonly></td>
+                <td><input class="tableInput timeInput" type="text" oninput="startTimeout(this)" value="<%= data.allBuses[i].time ? data.allBuses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true }) : "" %>" ></td>
 
                 <td>
                     <% if (data.allBuses[i].status === 'Loading') { %>
