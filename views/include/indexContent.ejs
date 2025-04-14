@@ -1,48 +1,23 @@
-<nav class="navbar">
-  <div class="container-fluid">
-    <div class="navbar-text">NNHS Bus App</div>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link button text-center" aria-current="page" href="/admin">Admin</a>
-        </li>
-        <li class="nav-item text-center">
-          <a class="nav-link button" href="/help">Help</a>
-        </li>
-      </ul>
-    </div>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  </div>
-</nav>  
-
-<div class="d-flex justify-content-center w-100 mt-1">
-  <div class="row announcement-nav bus-nav mt-2 text-center align-items-center justify-content-center">
+<div class="announcement-div d-flex justify-content-center container-fluid mt-1">
+  <div class="ribbon" id="announcementRibbon">New!</div>
+  <div class="row text-center align-items-center justify-content-center" style="width: 100%">
       <!-- <i class="fa-solid fa-bullhorn"></i> -->
-      <h3>Announcements:</h3>
-      <hr>
+      <h2 class="section-header">Announcement</h2>
+      <!-- <hr> -->
       <p id="announcement-text"><%= data.announcement %></p>
   </div>
 </div>
 
-<div class="content-container nav-item container-fluid text-center mt-1">
+<div class="content-container nav-item container-fluid text-center mt-1 has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
   <div class="row justify-content-center dropdown-center">
-    <button class="dropdown-toggle" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" data-bs-auto-close="outside" aria-expanded="false">
+    <h2 class="section-header">Pinned Buses</h2>
+    <button class="dropdown-toggle has-tooltip" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" aria-expanded="false" style="color: white" tooltip-text="Pin a bus to get started!">
     <i class="fa-solid fa-thumbtack"></i> 
     </button>
     <ul class="dropdown-menu">
       <% for(let i = 0; i < data.buses.length; i++) { %> 
           <li class = "bus-row p-1 text-center">
-              <button class="pin-button" onclick="pinBus(this)"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
+              <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
           </li>
       <% } %> 
     </ul>
@@ -50,134 +25,35 @@
   <div class="row justify-content-center">
     <table class="pinned-bus-table text-center">
       <thead>
-          <th>Bus #</th>
-          <th>Status</th>
+          <th style="width: 5ch">Bus #</th>
+          <th style="width: 9ch">Time</th>
+          <th>Status @Position</th>
       <tbody>
       </tbody>
     </table>
   </div>
 </div>
 
-
-<!-- <div id = "panel-header" class = "panel-header" onclick = "togglePanelExpanded()">
-    <h1 id = "pBusBanner">Pinned Bus: </h1>
-</div>
-<div id = "panel" class = "panel">
-        <table id = "top-bus-table" class = "">
-            <tbody id = "top-bus-table-body">
-                <% for(let i = 0; i < data.buses.length; i++) { %> 
-                    <tr class = "bus-row">
-                        <td class="num-col" colspan="1"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></td>
-                        <td class="status-col" colspan="5"><%= data.buses[i].status ? data.buses[i].status : "Not Here" %><%= data.buses[i].time ? data.buses[i].time.toLocaleTimeString([], { timeZone: 'America/Chicago',  hour: '2-digit', minute: '2-digit', hour12: true }) : "" %></td>
-                        <td class="pin-col" onclick="pinBus(this)">Pin</td>
-                    </tr>
-                <% } %> 
-            </tbody>
-        </table>
-</div>    -->
-
-<div class="buttons-container">
-  <div id="notif-container">
-    <a
-      id="notif-button"
-      onclick="enablePushNotifications('<%= data.vapidPublicKey %>')"
-      >Enable Notifications</a
-    >
+<div class="content-container nav-item container-fluid text-center mt-1">
+  <div class="row justify-content-center dropdown-center">
+  <h2 class="section-header">Now Loading<span id="timer"></span></h2>
+  <% const loading = data.buses.filter(e => e.status === "Loading").sort((a, b) => +a.order - +b.order); 
+  if(loading.length === 0) { %> 
+    <span style="padding-bottom: 15px">No buses currently loading.</span>
+  <% } else { %>
+    <table class="pinned-bus-table text-center">
+      <thead>
+          <th style="width: 5ch">Bus #</th>
+          <th style="width: 9ch">Time</th>
+          <th>Status @Position</th>
+      <tbody>
+        <% for(const bus of loading) {%>
+          <tr>
+            <td class="num-col"><%= bus.number %><% if(bus.change) { %>&rarr;<%= bus.change %><% } %></td> <td class="time-col"></td> <td data-bus-number="<%= bus.number %>" class="status-col<%- data.isLocked ? " loading" : "" %>" style="filter: grayscale(0.75); background-color: green;"><%= bus.status %> @<%= bus.order + 1 %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } %>
   </div>
 </div>
-
-<!-- Main Content /\/\/\ ----------------------------------------------->
-
-<input type="checkbox" id="credits-dropdown" />
-<label class="credits-dropdown-label" for="credits-dropdown"
-  >Show Credits</label
->
-<div class="credits-dropdown">
-  <p
-    style="
-      color: #006678;
-      font-size: 100%;
-      text-align: center;
-      padding: 5px 15px 5px 15px;
-      border-top: 3px solid;
-    "
-  >
-    Credits: Pierre Hanlet, JD Piar, Varun Vaid, Maaz Zubair, Sayee Anand, Wyatt
-    Barnes, Kurt Lovisa, Nolan Yee, Devam Das, Ronith Manikonda, Everett
-    Dombrowski, Rohan Rao, Lucas van Laerhoven, Aidan Malana, Muhammad Yulbarsov
-  </p>
-</div>
-
-<div id="IOSnotifpopup">
-  <div>
-    <i
-      class="fa-regular fa-circle-xmark"
-      onclick="document.getElementById('IOSnotifpopup').style.display='none'"
-      style="position: absolute; right: 10px; top: 10px; cursor: pointer"
-    ></i>
-    <h2>It appears you may be using IOS</h2>
-    <p>
-      IOS needs you to add the busapp to the homescreen before enabling
-      notifications. If you have already added the Bus App to your homescreen
-      previously, remove it and re-add it. Once you have added the Bus App to
-      your home screen, press the "Enable Notifications" button from within the
-      app.
-    </p>
-    <video
-      autoplay
-      muted
-      loop
-      style="max-width: 100%; max-height: 100vh; width: 100%"
-    >
-      <source src="img/ios-instructions.mp4" type="video/mp4" />
-    </video>
-  </div>
-</div>
-
-<!-- Update the value of <% version = 2 %> in this comment when updating the what's new popup to make it appear again on launch -->
-<input type="hidden" id="whatsNewVersion" value="<%=version%>"/>
-<div id="whatsNewPopup"><div> <i class="fa-regular fa-circle-xmark" onclick="hideWhatsNew(<%=version%>)" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
-    <h2>What's New</h2>
-    <ul>
-        <li><p>New Designs! 🖌️</p>
-            <ul>
-                <li>The Bus App has a new icon and logo 🎨</li>
-                <li>Improved 404 page 🩹</li>
-                <li>Whats next: total user interface redesign 📐</li>
-            </ul>
-        </li>
-        <li><p>Performance Improvements And Better Reliability 🕒</p>
-            <ul>
-                <li>Notifications should now send faster and more efficiently 🔔</li>
-                <li>Pinning a bus with notifications enabled now shows a loading indicator 📌</li>
-                <li>Network indicator on bottom left is 🟢 for fast network, 🟡 for slow network, and 🔴 for offline</li>
-                <li>Multiple security issues were identified and fixed 🔒</li>
-            </ul>
-        </li>
-        <li><p>Backend Improvements 🧑‍🔧</p>
-            <ul>
-                <li>New backend code ensures fewer conflicts when new changes are added 🦾</li>
-                <li>Bug fixes in admin page make it faster and easier for staff to get you to your bus ⏱️</li>
-            </ul>
-        </li>
-        <li><p>More responsive announcements 🗣️</p>
-            <ul>
-                <li>The announcement now updates without reloading the page 📡</li>
-                <li>Fixed bug where announcement disappeared randomly 🫥</li>
-            </ul>
-        </li>
-        <li>Have feedback or ideas? Send us an email at <a href="mailto:busappdevs@proton.me">busappdevs@proton.me</a></li>
-    </ul>
-    <br />
-    <p>- 🚍 The Bus App Team</p>
-    <br /><a class="generic-button" onclick="hideWhatsNew(<%=version%>)"
-      >Got It!</a
-    >
-  </div>
-</div>
-
-<div id="networkBlocker">
-    <i class="fa-solid fa-globe" style="font-size: min(30vw, 40vh); clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 100% 0, 80% 0, 0 100%);"></i>
-    <h3 style="font-size: min(5vw, 10vh); font-family: sans-serif; margin-top: 20px;">No Network</h3>
-</div>
-<div id="networkIndicator"></div>

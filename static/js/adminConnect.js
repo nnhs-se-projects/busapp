@@ -1,7 +1,8 @@
-let adminSocket = window.io("/admin");
-let countDownDate = new Date();
+"use strict";
+var adminSocket = window.io("/admin");
+var countDownDate = new Date();
+var updatingCount = 0;
 
-let updatingCount = 0;
 
 let TIMER = (document.getElementById("timerDurationSelector")).value;
 
@@ -17,6 +18,7 @@ adminSocket.on("update", (data) => {
     document.getElementById("getRender").getAttribute("render"),
     { data: data }
   );
+  
   document.getElementById("content").innerHTML = html;
 
   // update the timer input to match the actual value
@@ -55,7 +57,7 @@ async function updateTimer() {
     { minutes: timerValue.value }
   );
   if (!res.ok) {
-    console.log(`Response status: ${res.status}`);
+    alert(`Response status: ${res.status}`);
   }
 
   TIMER = timerValue.value;
@@ -69,8 +71,9 @@ async function updateStatus(button, status) {
   let data = {
     number: number,
     time: time,
-    status: status,
+    status: status
   };
+
 
   await fetchWithAlert(
     "/updateBusStatus",
@@ -93,7 +96,7 @@ async function addToWave(button) {
   await updateStatus(button, "Loading");
 }
 
-async function removeFromWave(button) {
+async function removeFromWave(button, current) {
   await updateStatus(button, "");
 }
 
@@ -102,11 +105,20 @@ async function addToNextWave(button) {
 }
 
 async function reset(button) {
+  if(!confirm("Are you sure you want to reset this bus?")) return;
   await updateStatus(button, "");
 }
 
 async function resetAllBusses(button) {
   await fetchWithAlert("/resetAllBusses", "POST", {}, {});
+  update();
+}
+
+async function updateOrder(elem) {
+  var busOne = elem.parentElement.parentElement?.children[0].children[0].value;
+  var busTwo = elem.parentElement.parentElement.previousElementSibling?.children[0].children[0].value;
+
+  await fetchWithAlert("/updateOrder", "POST", {"Content-Type": "application/json"}, {busOne: busOne, busTwo: busTwo});
   update();
 }
 
@@ -142,7 +154,6 @@ fetch("/leavingAt")
     const leavingAt = new Date(data);
 
     countDownDate = leavingAt; // Assign the value to countDownDate
-    console.log(leavingAt);
   })
   .catch((error) => {
     console.error("Error:", error);

@@ -1,0 +1,39 @@
+<nav class="navbar navbar-div justify-content-center container-fluid mt-1">
+    <div class="container-fluid">
+        <div id="weather" class="navbar-text"><%= data.weather.temperature %>&deg;F <%= data.weather.status %></div>
+        <div>
+            <button type="button" class="navbar-toggler" style="aspect-ratio: 1/1;" onclick="enablePushNotifications('<%= data.vapidPublicKey %>')">
+                <a id="notif-button"><i class="fa-solid fa-bell-slash fa-beat-fade"></i></a>
+            </button>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+                <li class="nav-item text-center">
+                    <a class="nav-link button" href="/busmap">Bus Map</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link button text-center" aria-current="page" href="/admin">Admin</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link button" target="_blank" href="https://forms.gle/ffekcnoKTtAUMBic6">Feedback</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link button" href="/help">Help</a>
+                </li>
+                <li class="nav-item text-center">
+                    <a class="nav-link button" style="cursor:pointer;" onclick="toggleCredits()">Credits</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>  

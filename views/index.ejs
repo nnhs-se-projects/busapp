@@ -1,26 +1,75 @@
+<!DOCTYPE html>
+<!-- 
+ Hey you! Yeah, you! If you're thinking of building something around the Bus App, like a Discord bot
+ and want to parse this HTML, thats probably not gonna be so much fun. We at the bus app envisioned this
+ and built an API you can access to get bus data here: https://busapp.nnhsse.org/api 
+ 
+ Read the docs here: https://github.com/nnhs-se-projects/busapp/wiki/06.-API 
+ -->
+ 
 <html data-bs-theme="dark">
     <head>
         <title>Bus App</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
         <link rel="manifest" href="/manifest.json">
+        <meta name = “theme-color” content = “#2e294e”>
         <link rel="icon" type="image/x-icon" href="/img/busapp-favicon.png">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <link rel="stylesheet" href="/css/index.css">
     </head>
-    <body>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <div id="content">
-            <%- include('include/indexContent'); %>
+    <body style="background-image: url('<%= data.weather.icon %>')">
+        <div class="pageContainer">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+            <div style="height: 0.25rem"></div>
+
+            <%- include('include/navBar'); %>
+            <div id="content">
+                <%- include('include/indexContent'); %>
+            </div>
+            <%- include('include/devTools'); %>
         </div>
+
+        <!-- Keep position: fixed elements out of pageContainer, something with backdrop-filter: blur() breaks positioning for some reason...-->
+        <%- include('include/whatsNew'); %>
+        <%- include('include/credits'); %>
+        
+        <div id="IOSnotifpopup">
+            <div>
+                <i class="fa-regular fa-circle-xmark" onclick="document.getElementById('IOSnotifpopup').style.display='none'" style="position: absolute; right: 10px; top: 10px; cursor: pointer"></i>
+                <h2>It appears you may be using IOS</h2>
+                <p> IOS needs you to add the busapp to the homescreen before enabling
+                notifications. If you have already added the Bus App to your homescreen
+                previously, remove it and re-add it. Once you have added the Bus App to
+                your home screen, press the "Enable Notifications" button from within the
+                app.</p>
+                <video autoplay muted loop style="max-width: 100%; max-height: 100vh; width: 100%">
+                    <source src="img/ios-instructions.mp4" type="video/mp4" />
+                </video>
+            </div>
+        </div>
+
+        <div id="networkBlocker">
+            <i class="fa-solid fa-globe" style="font-size: min(30vw, 40vh); clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 100% 0, 80% 0, 0 100%);"></i>
+            <h3 style="font-size: min(5vw, 10vh); font-family: sans-serif; margin-top: 20px;">No Network</h3>
+        </div>
+        <div id="networkIndicator"></div>
+
+        <a id="popoutToggler" style="cursor:pointer; position: fixed; right: 0px; bottom: 0px; padding: 15px; line-height: 1em; font-size: 120%;" onclick="startPopout()"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <div class="hidden">
+            <canvas width="640" height="260" id="pipCanvas"></canvas>
+        </div>
+        
         <script src="js/pushNotifs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <!--script src='js/indexConnect.js'></script-->
         <script src="js/ejs.js"></script>
         <script src="js/networkIndicator.js"></script>
-        <script id="getRender" render="<%= render %>" buses="<%= JSON.stringify(data.buses) %>" src='js/indexConnect.js'></script>
+        <script id="getRender" render="<%= render %>" data="<%= JSON.stringify(data) %>" src='js/indexConnect.js'></script>
+        <script src="js/PiP.js"></script>
     </body>
 </html>
