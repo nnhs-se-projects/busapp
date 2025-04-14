@@ -64,4 +64,3 @@ window.addEventListener('online', () => checkAndChange());
 window.addEventListener('offline', () => checkAndChange());
 checkAndChangeRecursive();
 //setInterval(checkAndChange, 10000); // check connection every 10 seconds
-

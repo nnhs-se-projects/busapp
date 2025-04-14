@@ -3,8 +3,7 @@ var adminSocket = window.io("/admin");
 var countDownDate = new Date();
 var updatingCount = 0;
 
-
-let TIMER = (document.getElementById("timerDurationSelector")).value;
+var TIMER = (document.getElementById("timerDurationSelector")).value;
 
 adminSocket.on("update", (data) => {
   // convert from time strings to dates to allow conversion to local time
@@ -22,7 +21,7 @@ adminSocket.on("update", (data) => {
   document.getElementById("content").innerHTML = html;
 
   // update the timer input to match the actual value
-  let timerValue = document.getElementById("timerDurationSelector");
+  var timerValue = document.getElementById("timerDurationSelector");
   if (timerValue !== null) {
     timerValue.value = TIMER;
   }
@@ -42,7 +41,7 @@ async function lockWave() {
 }
 
 async function updateTimer() {
-  let timerValue = document.getElementById("timerDurationSelector");
+  var timerValue = document.getElementById("timerDurationSelector");
 
   if (timerValue === null) {
     timerValue = { value: 1 };
@@ -160,19 +159,19 @@ fetch("/leavingAt")
   });
 
 // Update the count down every 1 second
-let x = setInterval(async function () {
+var x = setInterval(async function () {
   // Get today's date and time
-  let now = new Date().getTime();
+  var now = new Date().getTime();
 
   // Find the distance between now and the count down date
-  let distance = countDownDate.getTime() - now;
+  var distance = countDownDate.getTime() - now;
   // console.log("distance: " + distance);
 
   // Time calculations for days, hours, minutes and seconds
-  let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   // Output the result in an element with id="demo"
   document.querySelectorAll("[id=timer]").forEach((element) => {
@@ -189,7 +188,7 @@ let x = setInterval(async function () {
 }, 1000);
 
 
-// requires global letiable updatingcount
+// requires global variable updatingcount
 // functions like the fetch command, but shows the loading alert message to show if the app is actually working on it
 async function fetchWithAlert(
   endpoint,
@@ -199,7 +198,7 @@ async function fetchWithAlert(
 ) {
   updatingCount++;
   setLoadingState(true);
-  let response;
+  var response;
   try {
     response = await fetch(endpoint, {
       method: method,
@@ -226,7 +225,7 @@ async function fetchWithAlert(
 
 // sets the loading state for the "Loading" popup
 async function setLoadingState(option) {
-  let div = document.getElementsByClassName("popup")[0];
+  var div = document.getElementsByClassName("popup")[0];
   if (div) {
     if (option) {
       div.style.animationName = "slide";
