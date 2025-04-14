@@ -56,7 +56,7 @@ async function checkAndChange() {
 
 async function checkAndChangeRecursive() {
     await checkAndChange();
-    setTimeout(checkAndChangeRecursive, 5000);
+    setTimeout(checkAndChangeRecursive, lastStatus === "offline" ? 1000 : 5000);
 }
 
 // run checkAndChange whenever the network status changes and periodically in case the other events dont fire

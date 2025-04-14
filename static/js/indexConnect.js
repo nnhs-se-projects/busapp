@@ -331,7 +331,7 @@ const checkWeather = setInterval(async function() {
 async function forceUpdatePage() {
     console.log("Force update called!");
 
-    const apiData = await (await fetch("/api", {cache: "no-store"})).json()
+    const apiData = await (await fetch(`/api?key=${initialData.apiKey}`, {cache: "no-store"})).json()
 
     // convert from time strings to dates to allow conversion to local time
     apiData.buses.forEach((bus) => {
