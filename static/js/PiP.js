@@ -1,6 +1,6 @@
 const can = document.getElementById("pipCanvas");
 const canWidth = +can.getAttribute("width");
-const canHeight = +can.getAttribute("width");
+const canHeight = +can.getAttribute("height");
 
 
 const vid = document.createElement("video");
@@ -29,17 +29,37 @@ vid.srcObject = can.captureStream(10);
 
 var fontSize = 60;
 var gap = 20;
-ctx.font = `bold ${fontSize}px Roboto`;
-
 
 var PiPinterval = false;
+var angle = 0;
 function startPopout() {
+    if(!("mediaSession" in navigator && 
+        document.pictureInPictureEnabled && 
+        !!document.createElement("canvas").getContext)) {
+        console.log("Browser not supported (Hey iPhone users, get a phone that doesn't suck)");
+        return;
+    }
     if(!PiPinterval) PiPinterval = window.setInterval(() => {
         const bus = buses.filter(e => +e.number === pins[activePin])[0];
+        ctx.font = `bold ${fontSize}px Roboto`;
         ctx.clearRect(0, 0, canWidth, canHeight);
-    
-        ctx.fillStyle = "#2e294e";
+
+        angle += 0.1;
+        var x = canWidth / 2;
+        var y = canHeight / 2;
+        var length = Math.max(canWidth, canHeight);
+        var grad1 = ctx.createLinearGradient(x, y, x + Math.cos(angle) * length, y + Math.sin(angle) * length);
+        grad1.addColorStop(0, "#2e294e"); grad1.addColorStop(0.75, "skyblue");
+        ctx.fillStyle = grad1;
         ctx.fillRect(0, 0, canWidth, canHeight);
+
+        if(bus === undefined) {
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.font = `bold ${canWidth / 8}px Roboto`;
+            ctx.fillText("Pin a bus first!", canWidth/2, canHeight / 2 + (canWidth / 32));
+            return;
+        }
     
         ctx.beginPath();
         ctx.fillStyle = "#f46036"
@@ -60,7 +80,7 @@ function startPopout() {
     
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
-        ctx.fillText(`Bus ${pins[activePin]}${bus.status === "Loading" ? ` @ Spot ${bus.order+1}` : ""}`, canWidth/2, fontSize + (gap*1.5));
+        ctx.fillText(`Bus ${pins[activePin]}${bus.change ? "➡" + bus.change : ""}${bus.status === "Loading" ? `@Spot ${bus.order+1}` : ""}`, canWidth/2, fontSize + (gap*1.5));
         ctx.fillText(`${bus.status === "Loading" && isLocked ? `${minutes > 0 || seconds > 0 ? `Loading: ${minutes}:${String(seconds).padStart(2, "0")}` : "About to Leave!"}` : bus.status ? bus.status : "Not Here Yet"}`, canWidth/2, (2*fontSize) + (gap*4.5));
     }, 100);
 
