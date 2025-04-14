@@ -66,7 +66,7 @@ function startPopout() {
     
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
-        ctx.fillText(`Bus ${pins[activePin]}${bus.status === "Loading" ? ` @ Spot ${bus.order+1}` : ""}`, canWidth/2, fontSize + (gap*1.5));
+        ctx.fillText(`Bus ${pins[activePin]}${bus.change ? "➡" + bus.change : ""}${bus.status === "Loading" ? `@Spot ${bus.order+1}` : ""}`, canWidth/2, fontSize + (gap*1.5));
         ctx.fillText(`${bus.status === "Loading" && isLocked ? `${minutes > 0 || seconds > 0 ? `Loading: ${minutes}:${String(seconds).padStart(2, "0")}` : "About to Leave!"}` : bus.status ? bus.status : "Not Here Yet"}`, canWidth/2, (2*fontSize) + (gap*4.5));
     }, 100);
 
