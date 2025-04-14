@@ -1,6 +1,6 @@
 const can = document.getElementById("pipCanvas");
 const canWidth = +can.getAttribute("width");
-const canHeight = +can.getAttribute("width");
+const canHeight = +can.getAttribute("height");
 
 
 const vid = document.createElement("video");
@@ -34,6 +34,12 @@ ctx.font = `bold ${fontSize}px Roboto`;
 
 var PiPinterval = false;
 function startPopout() {
+    if(!(mediaSession in navigator && 
+        document.pictureInPictureEnabled && 
+        !!document.createElement("canvas").getContext)) {
+        console.log("Browser not supported (Hey iPhone users, get a phone that doesn't suck)");
+        return;
+    }
     if(!PiPinterval) PiPinterval = window.setInterval(() => {
         const bus = buses.filter(e => +e.number === pins[activePin])[0];
         ctx.clearRect(0, 0, canWidth, canHeight);
