@@ -261,6 +261,7 @@ async function pinBus(button) { // pins the bus when the user clicks the button
     }
 
     updatePins();
+
 }
 
 // Set the date we're counting down to

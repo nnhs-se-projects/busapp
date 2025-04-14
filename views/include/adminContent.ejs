@@ -5,6 +5,7 @@
         <button class="button" onclick="addAdmin()">Add New Admin</button> <!--new button to redirect to whitelist page-->
         <a class="button" href="/">Back to homepage</a>
         <a class="button" href="/makeAnnouncement">Make Announcement</a>
+        <a class="button" href="/busMap">Bus Map</a>
     </div>
     <script>
         function addAdmin() {
@@ -22,7 +23,7 @@
 <table id="bus-table" class="bus-table">
     <thead>
         <tr colspan="5" style="background-color: #05a1f5; font-size: 160%;">
-            <th colspan="2"><i class="fa fa-star fa-fw"></i> Current Wave</th>
+            <th colspan="2"><i class="fa fa-star fa-fw"></i>Current Wave</th>
             <% if (data.isLocked === true) { %>
                 <th><button class="table-button" onclick="lockWave()">Unlock Wave</button></th>
             <% } %>
