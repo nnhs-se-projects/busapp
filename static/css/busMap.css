@@ -28,6 +28,14 @@ tr, td {
     width: 50px;
 }
 
+.numbering td {
+    background-color: transparent;
+    color: azure;
+    border: transparent;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 /* 
 td:hover {
     border-width: 2px;
@@ -76,6 +84,5 @@ input {
     font-size: 15px;
     border: transparent;
     width: 50px;
-    border: transparent;
     background-color: transparent;
 }

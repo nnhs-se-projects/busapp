@@ -6,8 +6,17 @@ const nextContent = document.getElementById("next-wave").innerHTML;
 const currentContent = document.getElementById("current-wave").innerHTML;
 const lotsContent = document.getElementById("bus-lots").innerHTML;
 
+/*
+These are to get the actual list of buses in each wave
+*/
+const nextWave = document.getElementsByClassName("next-wave");
+const currentWave = document.getElementsByClassName("current-wave");
+
 const pins = localStorage.getItem("pins");
 
+/*
+This immediately clears the bus lots when the page loads (I know this is scuffed but it works for now)
+*/
 document.getElementById("bus-lots").innerHTML = "";
 
 function changeMap() {
@@ -26,18 +35,15 @@ function changeMap() {
     }
 }
 
-function pinColor() {
-    const current = document.getElementsByClassName("current");
-    
-    for (let i = 0; i < current.length; i++) {
-        current[i].style.backgroundColor = "var(--color-current)";
+function containsPins() {
+    for (let i = 0; i < nextWave.length; i++) {
+        if (pins.includes(nextWave[i].value)) {
+            nextWave[i].value = "pinned";
+        }
     }
 }
 
-function getStuff() {
-    const current = document.getElementsByClassName("current");
-    
-}
+containsPins();
 
 async function saveMap() {
     await fetch("/updateBusMap", {

@@ -437,15 +437,5 @@ router.get("/busMap", async (req, res) => {
     });
 });
 
-router.post("/updateBusMap", async (req, res) => {
-    if (!req.session.userEmail) {
-        res.redirect("/login");
-        return;
-    }
-
-    await Wave.findOneAndUpdate({}, { locked: locked }, { upsert: true });
-    res.redirect("/admin");
-});
-
 
 module.exports = router;
