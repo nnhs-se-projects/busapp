@@ -144,7 +144,7 @@ function updatePins() { // guess what
                 if(isLocked) {
                     cell.classList.add("loading");
                     if(firstUpdateHappened && !alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate) {
-                        if(navigator.vibrate(3000)) {
+                        if(navigator.vibrate(1000)) {
                             alreadyVibrated.push(busInfo.number);
                         }
                     }
