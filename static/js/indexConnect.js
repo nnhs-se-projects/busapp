@@ -155,7 +155,7 @@ function updatePins() { // guess what
                 cell.innerHTML += " @" + (busInfo.order+1);
 
                 const container = cell.parentElement.parentElement;
-                if(container === document.querySelector(".pinned-bus-table")) container.prepend(cell.parentElement);
+                if(container === document.querySelector(".pinned-bus-table > tbody") && busInfo.status === "Loading") container.prepend(cell.parentElement);
             } else if(busInfo.status === "Gone") {
                 cell.parentElement.style.filter = "brightness(0.75) grayscale(0.75) ";
                 cell.parentElement.parentElement.append(cell.parentElement);
