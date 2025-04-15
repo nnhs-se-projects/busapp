@@ -17,7 +17,7 @@
     <ul class="dropdown-menu">
       <% for(let i = 0; i < data.buses.length; i++) { %> 
           <li class = "bus-row p-1 text-center">
-              <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> &rarr; <%= data.buses[i].change %></span><% } %></button>
+              <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> ➔ <%= data.buses[i].change %></span><% } %></button>
           </li>
       <% } %> 
     </ul>

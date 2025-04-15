@@ -176,7 +176,7 @@ function updatePins() { // guess what
                 timeCol.style.setProperty("--text-shadow-color", "#69696969");
             }
             if(busInfo.change) {
-                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "&rarr;" + busInfo.change;
+                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "➔" + busInfo.change;
             }
         }
     });
