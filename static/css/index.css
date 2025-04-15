@@ -24,7 +24,7 @@ body {
 
 .pageContainer {
     backdrop-filter: blur(4px);
-    min-height: 100vh;
+    height: 100vh;
     height: 100dvh;
     overflow-x: hidden; /* ribbon on the announcement causes horizontal overflow, prevent that */
 }
