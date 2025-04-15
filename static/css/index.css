@@ -19,7 +19,6 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover; 
-    font-family: Roboto;
 }
 
 .pageContainer {
@@ -434,13 +433,6 @@ a {
     } to {
         transform: translateY(-100%);
     }
-}
-
-.hidden {
-    background-color: red;
-    position: fixed;
-    top: 0;
-    transform: translateY(-200%);
 }
 
 @media (orientation: landscape) {

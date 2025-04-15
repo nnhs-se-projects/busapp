@@ -121,7 +121,6 @@ router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 // also reduces load on the server as we dont have to render the EJS for automated requests.
 var limiter = {};
 router.get("/api", async (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
     const now = Date.now();
 
     // go over every ip and remove everything from more than 500ms ago
