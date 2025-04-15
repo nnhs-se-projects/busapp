@@ -6,7 +6,13 @@ const canHeight = +can.getAttribute("height");
 const vid = document.createElement("video");
 vid.setAttribute("width", canWidth);
 vid.setAttribute("height", canHeight);
-vid.addEventListener("pause", () => {});
+vid.addEventListener("pause", () => { 
+    vid.play();
+    // SOME operating systems (ahem, IOS), dont show the right mediaSession controls... add a fallback to cycle through pins with the pause/stop button
+    activePin++;
+    if(activePin >= pins.length) { activePin = 0 }
+});
+
 var activePin = 0;
 if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', () => { 
@@ -32,6 +38,7 @@ var gap = 20;
 
 var PiPinterval = false;
 var angle = 0;
+
 function startPopout() {
     if(!("mediaSession" in navigator && 
         document.pictureInPictureEnabled && 
@@ -40,6 +47,7 @@ function startPopout() {
         return;
     }
     if(!PiPinterval) PiPinterval = window.setInterval(() => {
+        if(activePin >= pins.length && pins.length > 0) {activePin--}
         const bus = buses.filter(e => +e.number === pins[activePin])[0];
         ctx.font = `bold ${fontSize}px Roboto`;
         ctx.clearRect(0, 0, canWidth, canHeight);
@@ -67,7 +75,7 @@ function startPopout() {
         ctx.fill();
         ctx.beginPath();
         if(bus.status === "Loading") {
-            const dist = isLocked ? canWidth * (Math.max(distance, 0)/timerDuration/1000) : canWidth;
+            const dist = isLocked ? canWidth * (Math.max(countDownDate.getTime() - (new Date()).getTime(), 0)/timerDuration/1000) : canWidth;
             const grad=ctx.createLinearGradient(dist,0,dist+10,0);
             grad.addColorStop(0, "green");
             grad.addColorStop(1, "red");
@@ -84,16 +92,14 @@ function startPopout() {
         ctx.fillText(`${bus.status === "Loading" && isLocked ? `${minutes > 0 || seconds > 0 ? `Loading: ${minutes}:${String(seconds).padStart(2, "0")}` : "About to Leave!"}` : bus.status ? bus.status : "Not Here Yet"}`, canWidth/2, (2*fontSize) + (gap*4.5));
     }, 100);
 
-    if('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: 'Bus App',
-            artist: 'Bus Status PiP window',
-            album: 'Bus App',
-            artwork: [
-                { src: '/img/Icon-New-512.png', sizes: '512x512', type: 'image/jpeg' }
-            ]
-        });
-    }
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: 'Bus App',
+        artist: 'Bus Status PiP window',
+        album: 'Bus App',
+        artwork: [
+            { src: '/img/Icon-New-512.png', sizes: '512x512', type: 'image/jpeg' }
+        ]
+    });
       
     vid.play();
     vid.requestPictureInPicture();

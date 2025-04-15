@@ -438,10 +438,16 @@ a {
 }
 
 .hidden {
-    background-color: red;
     position: fixed;
-    top: 0;
-    transform: translateY(-200%);
+    bottom: 0;
+    right: 0;
+    /* The reason we cannot just display: none is because then safari doesnt like to think the video can actually exist
+    believe it or not, all other browsers have fixed this kind of bug, since early versions of Internet Explorer!
+    But Apple will be Apple, and refuse to adhere to standards just to be difficult */
+    filter: opacity(0.01%);
+    transform: scale(0.1);
+    transform-origin: bottom right;
+    pointer-events: none;
 }
 
 @media (orientation: landscape) {

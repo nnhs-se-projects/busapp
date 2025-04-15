@@ -85,11 +85,12 @@ function announcementAlert(announcement) {
 }
 
 var tooltips = {};
+var idCounter = 0;
 function addToolTip(elem, text) {
     const tooltip = document.createElement("div");
     tooltip.innerHTML = text;
     tooltip.classList.add("tool-tip")
-    const uuid = crypto.randomUUID();
+    const uuid = ++idCounter;
     tooltips[uuid] = elem;
     tooltip.setAttribute("elem", uuid);
     elem.appendChild(tooltip);
@@ -284,14 +285,13 @@ fetch('/leavingAt')
 
 var minutes = 0;
 var seconds = 0;
-var distance = 0;
 // Update the count down every second
 var x = setInterval(async function() {
     // Get today's date and time
     var now = new Date().getTime();
 
     // Find the distance between now and the count down date
-    distance = countDownDate.getTime() - now;
+    var distance = countDownDate.getTime() - now;
     // console.log("distance: " + distance);
 
     // Time calculations for days, hours, minutes and seconds
@@ -382,7 +382,7 @@ async function forceUpdatePage() {
 
 updatePins();
 updateNotifButton();
-navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
+navigator.serviceWorker?.register('/serviceWorker.js', { scope: '/' });
 
 if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
     document.getElementById('whatsNewPopup').style.display='block';

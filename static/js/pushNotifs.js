@@ -71,7 +71,7 @@ async function enablePushNotifications(publicKey) {
 // checks if notifications are working via a couple of methods and if they are, removes the notification button
 function updateNotifButton() {
     // check if the serviceworker is present and functional/"active"
-    var areServiceWorkersWorking = navigator.serviceWorker.getRegistrations().then(e => {
+    var areServiceWorkersWorking = navigator.serviceWorker?.getRegistrations().then(e => {
         if(e.length !== 0) {
             e.forEach( i => {
                 if(!i.active) {
@@ -85,7 +85,7 @@ function updateNotifButton() {
         return true;
     });
 
-    areServiceWorkersWorking.then(condition => {
+    areServiceWorkersWorking?.then(condition => {
         const button = document.getElementById("notif-button");
         if (Notification.permission === "granted" && condition) {
             button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
