@@ -368,6 +368,8 @@ async function forceUpdatePage() {
         updatePins();
     } catch(e) {
         setIndicatorStatus("offline");
+        // server may have restarted, get the new API key
+        window.location.reload();
     }
 }
 
