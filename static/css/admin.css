@@ -1,5 +1,13 @@
+:root {
+    --crimson: #d7263dff;
+    --giants-orange: #f46036ff;
+    --space-cadet: #2e294eea;
+    --lighter-blue: hsl(250, 31%, 40%);
+    --night: #141415ff;
+    --gray: #ebebeb
+}
+
 body {
-    background-color: #a1b5be;
 }
 
 .header {
@@ -22,7 +30,8 @@ body {
     text-decoration: none;
     font-size: 3vw;
     border-width: 0;
-    background-color: #327fa8;
+    background-color: var(--giants-orange);
+    border-bottom: solid var(--crimson);
     color: #ffffff;
     padding: 3%;
     text-align: center;
@@ -35,7 +44,8 @@ body {
     text-decoration: none;
     font-size: 1.7vw;
     border-width: 0;
-    background-color: #327fa8;
+    background-color: var(--giants-orange);
+    border-bottom: solid var(--crimson);
     color: #ffffff;
     padding: 3%;
     text-align: center;
@@ -131,7 +141,7 @@ select {
 }
 
 .bus-table thead tr {
-    background-color: #327fa8;
+    background-color: var(--lighter-blue);
     color: #ffffff;
     text-align: left;
     font-weight: bold;;
@@ -155,7 +165,7 @@ select {
 }
 
 .bus-table tbody tr:last-of-type {
-    border-bottom: 4px solid #327fa8;
+    border-bottom: 4px solid var(--lighter-blue);
 }
 
 .bus-table tbody tr:hover {

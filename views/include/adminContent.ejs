@@ -21,7 +21,7 @@
 
 <table id="bus-table" class="bus-table">
     <thead>
-        <tr colspan="5" style="background-color: #05a1f5; font-size: 160%;">
+        <tr colspan="5">
             <th colspan="2"><i class="fa fa-star fa-fw"></i> Current Wave</th>
             <% if (data.isLocked === true) { %>
                 <th><button class="table-button" onclick="lockWave()">Unlock Wave</button></th>
@@ -40,7 +40,7 @@
     </thead>
     <tbody id="currentWaveTBody">
         <% for(let i = 0; i < data.loading.length; i++) { %>
-            <% if(i === 0) { %> <tr><td style="font-size: .5em; padding-block: 0">front</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === 0) { %> <tr><td>front</td><td></td><td></td><td></td></tr> <% } %>
             <tr>
                 <td><input class="tableInput numberInput" type="number" value=<%= data.loading[i].busNumber %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.loading[i].busChange ? data.loading[i].busChange : "" %> ></td>
@@ -53,14 +53,14 @@
                     <% } %>
                 </td>
             </tr>
-            <% if(i === data.loading.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === data.loading.length - 1) { %> <tr><td>back</td><td></td><td></td><td></td></tr> <% } %>
     <% } %>
     </tbody>
 </table>
 <table id="bus-table" class="bus-table">
     <thead>
         <tr>
-            <th colspan="5" style="background-color: #05a1f5; font-size: 160%;"><i class="fa-solid fa-forward"></i> Next Wave
+            <th colspan="5"><i class="fa-solid fa-forward"></i> Next Wave
             </th>
         </tr>
         <tr>
@@ -72,7 +72,7 @@
     </thead>
     <tbody id="nextWaveTBody">
         <% for(let i = 0; i < data.nextWave.length; i++) { %> 
-            <% if(i === 0) { %> <tr><td style="font-size: .5em; padding-block: 0">front</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === 0) { %> <tr><td>front</td><td></td><td></td><td></td></tr> <% } %>
             <tr>
                 <td><input class="tableInput numberInput" type="number" value=<%= data.nextWave[i].busNumber %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.nextWave[i].busChange ? data.nextWave[i].busChange : "" %> ></td>
@@ -81,7 +81,7 @@
                     <p onclick="removeFromWave(this)" class="button-text">Remove</p>
                 </td>
             </tr>
-            <% if(i === data.nextWave.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === data.nextWave.length - 1) { %> <tr><td>back</td><td></td><td></td><td></td></tr> <% } %>
         <% } %>
     </tbody>
 </table>
@@ -123,7 +123,7 @@
 
 <div style="align-items: center; display: flex; justify-content: center;">
     <button class="button" onclick="resetAllBusses()">Reset All Buses</button>
-    <select name="minutes" id="timerDurationSelector" onchange="updateTimer()" style="margin-left: 10px;">
+    <select name="minutes" id="timerDurationSelector" onchange="updateTimer()">
         <% var options = []; %>
         <% for(var i = 0.5; i <= 3; i+=0.5) { %>
             <option <% if(data.timer/60 === i) { %> selected <% } %> value='<%= i %>'><%= i %></option>
