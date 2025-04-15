@@ -102,7 +102,12 @@ function startPopout() {
     });
       
     vid.play();
-    vid.requestPictureInPicture();
+    if(vid.webkitSupportsPresentationMode && typeof vid.webkitSetPresentationMode === "function") {
+        // I hate Safari
+        vid.webkitSetPresentationMode("picture-in-picture");
+    } else {
+        vid.requestPictureInPicture();
+    }
 }
 
 vid.addEventListener("leavepictureinpicture", () => {
