@@ -97,7 +97,7 @@ function updatePins() { // guess what
             }
 
             if(busInfo.change) {
-                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "&rarr;" + busInfo.change;
+                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "➔" + busInfo.change;
             }
         }
     });
