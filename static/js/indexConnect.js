@@ -98,9 +98,14 @@ function addToolTip(elem, text) {
     return tooltip;
 }
 
+var positions = {};
+
 function setToolTipPosition(tooltip) {
+    tooltip.style.transform = `translateY(0px)`;
     const boundingBox = tooltips[tooltip.getAttribute("elem")].getBoundingClientRect();
-    tooltip.style.top = boundingBox.bottom + window.scrollY + 5 + "px";
+    const otherBound = tooltip.getBoundingClientRect();
+    const offset = boundingBox.bottom - otherBound.top;
+    tooltip.style.transform = `translateY(${offset + 6}px)`;
     tooltip.style.left = Math.max(0, boundingBox.left + window.scrollX - ((tooltip.getBoundingClientRect().width - boundingBox.width) / 2)) + "px";
     tooltip.style.right = 0;
 }
@@ -183,7 +188,7 @@ function updatePins() { // guess what
 
     for(const i of document.querySelector(".dropdown-menu").children) {
         // if there is a bus change we need to strip that extra stuff
-        if(pins.includes(+i.querySelector("button").innerHTML.replace(/→(.*)/, ""))) {
+        if(pins.includes(+i.querySelector("button").innerHTML.replace(/➔(.*)/, ""))) {
             i.style.filter = "grayscale(0.5)";
             // button.textContent += " - Pinned";
         } else {
@@ -388,7 +393,7 @@ if(!localStorage.getItem("firstLoad")) {
 
     window.setInterval((e) => {
         document.querySelectorAll(".tool-tip").forEach(tooltip => setToolTipPosition(tooltip));
-    }, 100);    
+    }, 500);    
 }
 
 announcementAlert(initialData.announcement);
