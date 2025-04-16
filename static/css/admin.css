@@ -8,6 +8,7 @@
 }
 
 body {
+    background-color: white;
 }
 
 .header {
@@ -38,6 +39,10 @@ body {
     border-radius: 10px;
     cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
 } 
+
+table {
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
+}
 
 .table-button {
     font-family: 'Montserrat', sans-serif;

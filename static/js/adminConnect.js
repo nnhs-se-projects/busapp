@@ -12,12 +12,12 @@ adminSocket.on("update", (data) => {
   });
 
   countDownDate = new Date(data.leavingAt);
+  weather = data.weather;
   // rerender the page
   const html = ejs.render(
     document.getElementById("getRender").getAttribute("render"),
     { data: data }
   );
-  
   document.getElementById("content").innerHTML = html;
 
   // update the timer input to match the actual value

@@ -221,7 +221,8 @@ router.get("/admin", async (req, res) => {
         loading: await Bus.find({status: "Loading"}).sort("order"),
         isLocked: false, 
         leavingAt: new Date(),
-        timer: timer
+        timer: timer,
+        weather: await Weather.findOne({}),
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;
