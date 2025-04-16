@@ -402,3 +402,5 @@ if("mediaSession" in navigator &&
     !!document.createElement("canvas").getContext) {
     document.getElementById("popoutToggler").style.display = "block";
 }
+
+if(window.chrome) document.getElementById("extensionButton").style.display = "block";
