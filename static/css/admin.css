@@ -8,7 +8,6 @@
 }
 
 body {
-    background-color: white;
 }
 
 .header {
@@ -36,7 +35,7 @@ body {
     color: #ffffff;
     padding: 3%;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
 } 
 
@@ -54,7 +53,7 @@ table {
     color: #ffffff;
     padding: 3%;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
 }
 
@@ -73,7 +72,7 @@ select {
 
     background-color: rgb(208, 207, 188);
     border: rgb(208, 207, 188);;
-    border-radius: 10px;
+    border-radius: 5px;
     
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -146,7 +145,7 @@ select {
 }
 
 .bus-table thead tr {
-    background-color: var(--lighter-blue);
+    background-color: var(--space-cadet);
     color: #ffffff;
     text-align: left;
     font-weight: bold;;
@@ -170,7 +169,7 @@ select {
 }
 
 .bus-table tbody tr:last-of-type {
-    border-bottom: 4px solid var(--lighter-blue);
+    border-bottom: 4px solid var(--space-cadet);
 }
 
 .bus-table tbody tr:hover {
@@ -301,7 +300,7 @@ select {
     color: #ffffff;
     padding: 1%;
     text-align: center;
-    border-radius: 10px;
+    border-radius: 5px;
     margin: 0 auto;
     width: 40%;
     margin-bottom: 2%;
@@ -339,9 +338,9 @@ select {
 select[name="minutes"] {
     padding: 12px; /* Increase padding */
     font-size: 16px; /* Increase font size */
-    border: 1px solid #266080;
-    border-radius: 4px;
-    background-color: #327fa8;
+    border-bottom: solid var(--crimson);
+    border-radius: 5px;
+    background-color: var(--giants-orange );
     color: #ffffff;
     width: 200px; /* Increase width */
   }
