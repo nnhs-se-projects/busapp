@@ -9,15 +9,15 @@ async function setIndicatorStatus(stat) {
     if(stat === "connected") {
         indicator.style.backgroundColor = "green";
         indicator.innerHTML = '<i class="fa-solid fa-check"></i>';
-        blocker?.classList.remove("shown");
+        blocker.classList.remove("shown");
     } else if(stat === "slow") {
         indicator.style.backgroundColor = "yellow";
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        blocker?.classList.remove("shown");
+        blocker.classList.remove("shown");
     } else if(stat === "offline") {
         indicator.style.backgroundColor = "red";
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
-        blocker?.classList.add("shown");
+        blocker.classList.add("shown");
     }
     if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
         await forceUpdatePage();
@@ -56,7 +56,7 @@ async function checkAndChange() {
 
 async function checkAndChangeRecursive() {
     await checkAndChange();
-    setTimeout(checkAndChangeRecursive, 5000);
+    setTimeout(checkAndChangeRecursive, lastStatus === "offline" ? 1000 : 5000);
 }
 
 // run checkAndChange whenever the network status changes and periodically in case the other events dont fire

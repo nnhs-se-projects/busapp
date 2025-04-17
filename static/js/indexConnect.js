@@ -109,11 +109,12 @@ function announcementAlert(announcement) {
 }
 
 var tooltips = {};
+var idCounter = 0;
 function addToolTip(elem, text) {
     const tooltip = document.createElement("div");
     tooltip.innerHTML = text;
     tooltip.classList.add("tool-tip")
-    const uuid = crypto.randomUUID();
+    const uuid = ++idCounter;
     tooltips[uuid] = elem;
     tooltip.setAttribute("elem", uuid);
     elem.appendChild(tooltip);
@@ -122,9 +123,14 @@ function addToolTip(elem, text) {
     return tooltip;
 }
 
+var positions = {};
+
 function setToolTipPosition(tooltip) {
+    tooltip.style.transform = `translateY(0px)`;
     const boundingBox = tooltips[tooltip.getAttribute("elem")].getBoundingClientRect();
-    tooltip.style.top = boundingBox.bottom + window.scrollY + 5 + "px";
+    const otherBound = tooltip.getBoundingClientRect();
+    const offset = boundingBox.bottom - otherBound.top;
+    tooltip.style.transform = `translateY(${offset + 6}px)`;
     tooltip.style.left = Math.max(0, boundingBox.left + window.scrollX - ((tooltip.getBoundingClientRect().width - boundingBox.width) / 2)) + "px";
     tooltip.style.right = 0;
 }
@@ -168,7 +174,7 @@ function updatePins() { // guess what
                 if(isLocked) {
                     cell.classList.add("loading");
                     if(firstUpdateHappened && !alreadyVibrated.includes(busInfo.number) && pins.includes(busInfo.number) && window.navigator.vibrate) {
-                        if(navigator.vibrate(3000)) {
+                        if(navigator.vibrate(1000)) {
                             alreadyVibrated.push(busInfo.number);
                         }
                     }
@@ -179,7 +185,7 @@ function updatePins() { // guess what
                 cell.innerHTML += " @" + (busInfo.order+1);
 
                 const container = cell.parentElement.parentElement;
-                if(container === document.querySelector(".pinned-bus-table")) container.prepend(cell.parentElement);
+                if(container === document.querySelector(".pinned-bus-table > tbody") && busInfo.status === "Loading") container.prepend(cell.parentElement);
             } else if(busInfo.status === "Gone") {
                 cell.parentElement.style.filter = "brightness(0.75) grayscale(0.75) ";
                 cell.parentElement.parentElement.append(cell.parentElement);
@@ -200,14 +206,14 @@ function updatePins() { // guess what
                 timeCol.style.setProperty("--text-shadow-color", "#69696969");
             }
             if(busInfo.change) {
-                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "&rarr;" + busInfo.change;
+                cell.parentElement.querySelector(".num-col").innerHTML = busInfo.number + "➔" + busInfo.change;
             }
         }
     });
 
     for(const i of document.querySelector(".dropdown-menu").children) {
         // if there is a bus change we need to strip that extra stuff
-        if(pins.includes(+i.querySelector("button").innerHTML.replace(/→(.*)/, ""))) {
+        if(pins.includes(+i.querySelector("button").innerHTML.replace(/➔(.*)/, ""))) {
             i.style.filter = "grayscale(0.5)";
             // button.textContent += " - Pinned";
         } else {
@@ -301,6 +307,8 @@ fetch('/leavingAt')
         console.error('Error:', error);
     });
 
+var minutes = 0;
+var seconds = 0;
 // Update the count down every second
 var x = setInterval(async function() {
     // Get today's date and time
@@ -352,38 +360,71 @@ const checkWeather = setInterval(async function() {
 async function forceUpdatePage() {
     console.log("Force update called!");
 
-    const apiData = await (await fetch("/api", {cache: "no-store"})).json()
+    try {
+        const apiData = await (await fetch(`/api?key=${initialData.apiKey}`, {cache: "no-store"})).json()
 
-    // convert from time strings to dates to allow conversion to local time
-    apiData.buses.forEach((bus) => {
-        if (bus.time != "")
-            bus.time = new Date(bus.time);
-    });
+        // convert from time strings to dates to allow conversion to local time
+        apiData.buses.forEach((bus) => {
+            if (bus.time != "")
+                bus.time = new Date(bus.time);
+        });
 
-    countDownDate = new Date(apiData.wave.leavingAt);
-    timerDuration = apiData.timerDuration;
-    buses = apiData.buses;
-    isLocked = apiData.wave.locked;
-    weather = await (await fetch("/getWeather")).json();
+        countDownDate = new Date(apiData.wave.leavingAt);
+        timerDuration = apiData.timerDuration;
+        buses = apiData.buses;
+        isLocked = apiData.wave.locked;
+        weather = await (await fetch("/getWeather")).json();
 
-    const data = {};
-    data.buses = apiData.buses;
-    data.weather = weather;
-    data.isLocked = apiData.wave.locked;
-    data.leavingAt = apiData.wave.leavingAt;
-    data.announcement = apiData.announcement.announcement;
-    data.timer = apiData.timerDuration;
+        const data = {};
+        data.buses = apiData.buses;
+        data.weather = weather;
+        data.isLocked = apiData.wave.locked;
+        data.leavingAt = apiData.wave.leavingAt;
+        data.announcement = apiData.announcement.announcement;
+        data.timer = apiData.timerDuration;
 
-    const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
-    const menuScroll = $(".dropdown-menu").scrollTop();
-    const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
-    document.getElementById("content").innerHTML = html;
-    if(menuOpen) {
-        $('.dropdown-toggle').dropdown("toggle");
-        $(".dropdown-menu").scrollTop(menuScroll);
-    };
+        const menuOpen = document.querySelector(".dropdown-toggle").classList.contains("show");
+        const menuScroll = $(".dropdown-menu").scrollTop();
+        const html = ejs.render(document.getElementById("getRender").getAttribute("render"), {data: data});
+        document.getElementById("content").innerHTML = html;
+        if(menuOpen) {
+            $('.dropdown-toggle').dropdown("toggle");
+            $(".dropdown-menu").scrollTop(menuScroll);
+        };
 
-    announcementAlert(data.announcement);
-    updateWeather();
-    updatePins();
+        announcementAlert(data.announcement);
+        updateWeather();
+        updatePins();
+    } catch(e) {
+        setIndicatorStatus("offline");
+        // server may have restarted, get the new API key
+        window.location.reload();
+    }
 }
+
+
+
+updatePins();
+updateNotifButton();
+navigator.serviceWorker?.register('/serviceWorker.js', { scope: '/' });
+
+if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
+    document.getElementById('whatsNewPopup').style.display='block';
+}
+if(!localStorage.getItem("firstLoad")) {
+    document.querySelectorAll(".has-tooltip")
+        .forEach(e => addToolTip(e, e.getAttribute("tooltip-text")));
+
+    window.setInterval((e) => {
+        document.querySelectorAll(".tool-tip").forEach(tooltip => setToolTipPosition(tooltip));
+    }, 500);    
+}
+
+announcementAlert(initialData.announcement);
+if("mediaSession" in navigator && 
+    document.pictureInPictureEnabled && 
+    !!document.createElement("canvas").getContext) {
+    document.getElementById("popoutToggler").style.display = "block";
+}
+
+if(window.chrome) document.getElementById("extensionButton").style.display = "block";

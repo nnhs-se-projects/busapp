@@ -48,7 +48,8 @@ router.get("/", async (req, res) => {
         vapidPublicKey,
         announcement: (await Announcement.findOne({})).announcement,
         isDev: process.env.DEV === "true", 
-        timer: timer
+        timer: timer,
+        apiKey: officialKey
     };
 
     res.render("index", {
@@ -120,6 +121,7 @@ router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 // this is for other students making discord bots or other integrations with apps to make it easier.
 // also reduces load on the server as we dont have to render the EJS for automated requests.
 var limiter = {};
+const officialKey = Math.random().toString(36).substring(2, 15);
 router.get("/api", async (req, res) => {
     const now = Date.now();
 
@@ -130,7 +132,7 @@ router.get("/api", async (req, res) => {
 
     // check if it has been < 500 ms since last request from this IP
     // by seeing if the IP is still in the map
-    if(req.ip in limiter) {
+    if(req.ip in limiter && req.query.key !== officialKey) {
         // 429 = too many requests
         res.sendStatus(429);
     } else {

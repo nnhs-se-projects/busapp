@@ -23,8 +23,8 @@ body {
 
 .pageContainer {
     backdrop-filter: blur(4px);
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
     overflow-x: hidden; /* ribbon on the announcement causes horizontal overflow, prevent that */
 }
 
@@ -180,6 +180,7 @@ td, .busContainer > p {
     text-align: center;
     text-wrap: initial;
     box-shadow: 1px 1px 3px 1.5px rgba(0,0,0,0.75);
+    margin-top: 10px;
 }
 
 .tool-tip > i { pointer-events: auto; }
@@ -433,6 +434,19 @@ a {
     } to {
         transform: translateY(-100%);
     }
+}
+
+.hidden {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    /* The reason we cannot just display: none is because then safari doesnt like to think the video can actually exist
+    believe it or not, all other browsers have fixed this kind of bug, since early versions of Internet Explorer!
+    But Apple will be Apple, and refuse to adhere to standards just to be difficult */
+    filter: opacity(0.01%);
+    transform: scale(0.1);
+    transform-origin: bottom right;
+    pointer-events: none;
 }
 
 @media (orientation: landscape) {
