@@ -21,7 +21,7 @@
 
 <table id="bus-table" class="bus-table">
     <thead>
-        <tr colspan="5" style="background-color: #05a1f5; font-size: 160%;">
+        <tr colspan="5">
             <th colspan="2"><i class="fa fa-star fa-fw"></i> Current Wave</th>
             <% if (data.isLocked === true) { %>
                 <th><button class="table-button" onclick="lockWave()">Unlock Wave</button></th>
@@ -60,7 +60,7 @@
 <table id="bus-table" class="bus-table">
     <thead>
         <tr>
-            <th colspan="5" style="background-color: #05a1f5; font-size: 160%;"><i class="fa-solid fa-forward"></i> Next Wave
+            <th colspan="5"><i class="fa-solid fa-forward"></i> Next Wave
             </th>
         </tr>
         <tr>
@@ -121,9 +121,9 @@
     </tbody>
 </table>
 
-<div style="align-items: center; display: flex; justify-content: center;">
+<div style="align-items: center; display: flex; justify-content: center; column-gap: 5px; margin-bottom: 25px;">
     <button class="button" onclick="resetAllBusses()">Reset All Buses</button>
-    <select name="minutes" id="timerDurationSelector" onchange="updateTimer()" style="margin-left: 10px;">
+    <select name="minutes" id="timerDurationSelector" onchange="updateTimer()">
         <% var options = []; %>
         <% for(var i = 0.5; i <= 3; i+=0.5) { %>
             <option <% if(data.timer/60 === i) { %> selected <% } %> value='<%= i %>'><%= i %></option>
