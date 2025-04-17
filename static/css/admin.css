@@ -1,13 +1,5 @@
-:root {
-    --crimson: #d7263dff;
-    --giants-orange: #f46036ff;
-    --space-cadet: #2e294eea;
-    --lighter-blue: hsl(250, 31%, 40%);
-    --night: #141415ff;
-    --gray: #ebebeb
-}
-
 body {
+    background-color: #a1b5be;
 }
 
 .header {
@@ -30,30 +22,24 @@ body {
     text-decoration: none;
     font-size: 3vw;
     border-width: 0;
-    background-color: var(--giants-orange);
-    border-bottom: solid var(--crimson);
+    background-color: #327fa8;
     color: #ffffff;
     padding: 3%;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
 } 
-
-table {
-    box-shadow: 0px 1px 10px 0px var(--space-cadet);
-}
 
 .table-button {
     font-family: 'Montserrat', sans-serif;
     text-decoration: none;
     font-size: 1.7vw;
     border-width: 0;
-    background-color: var(--giants-orange);
-    border-bottom: solid var(--crimson);
+    background-color: #327fa8;
     color: #ffffff;
     padding: 3%;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
 }
 
@@ -72,7 +58,7 @@ select {
 
     background-color: rgb(208, 207, 188);
     border: rgb(208, 207, 188);;
-    border-radius: 5px;
+    border-radius: 10px;
     
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -145,7 +131,7 @@ select {
 }
 
 .bus-table thead tr {
-    background-color: var(--space-cadet);
+    background-color: #327fa8;
     color: #ffffff;
     text-align: left;
     font-weight: bold;;
@@ -169,7 +155,7 @@ select {
 }
 
 .bus-table tbody tr:last-of-type {
-    border-bottom: 4px solid var(--space-cadet);
+    border-bottom: 4px solid #327fa8;
 }
 
 .bus-table tbody tr:hover {
@@ -300,7 +286,7 @@ select {
     color: #ffffff;
     padding: 1%;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 10px;
     margin: 0 auto;
     width: 40%;
     margin-bottom: 2%;
@@ -338,9 +324,9 @@ select {
 select[name="minutes"] {
     padding: 12px; /* Increase padding */
     font-size: 16px; /* Increase font size */
-    border-bottom: solid var(--crimson);
-    border-radius: 5px;
-    background-color: var(--giants-orange );
+    border: 1px solid #266080;
+    border-radius: 4px;
+    background-color: #327fa8;
     color: #ffffff;
     width: 200px; /* Increase width */
   }
