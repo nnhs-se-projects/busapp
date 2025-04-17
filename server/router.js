@@ -123,7 +123,6 @@ router.get("/getConnectivity", (req, res) => { res.sendStatus(200); });
 var limiter = {};
 const officialKey = Math.random().toString(36).substring(2, 15);
 router.get("/api", async (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
     const now = Date.now();
 
     // go over every ip and remove everything from more than 500ms ago
@@ -224,7 +223,8 @@ router.get("/admin", async (req, res) => {
         loading: await Bus.find({status: "Loading"}).sort("order"),
         isLocked: false, 
         leavingAt: new Date(),
-        timer: timer
+        timer: timer,
+        weather: await Weather.findOne({}),
     };
     data.isLocked = (await Wave.findOne({})).locked;
     data.leavingAt = (await Wave.findOne({})).leavingAt;

@@ -17,7 +17,6 @@ adminSocket.on("update", (data) => {
     document.getElementById("getRender").getAttribute("render"),
     { data: data }
   );
-  
   document.getElementById("content").innerHTML = html;
 
   // update the timer input to match the actual value
