@@ -4,14 +4,17 @@ var indexSocket = window.io('/'); // This line and the line above is how you get
 // !!! do NOT import/export anything or ejs will get angry
 
 var countDownDate = new Date();
-var timerDuration = 0;
-var isLocked = false;
 var weather;
 var firstUpdateHappened = false;
 
 var pins = [];
 var notifStatus = {};
-var buses;
+var version = +(document.getElementById("whatsNewVersion")).value;
+
+var initialData = JSON.parse(document.getElementById("getRender").getAttribute("data"));
+var buses = initialData.buses;
+var isLocked = initialData.isLocked;
+var timerDuration = initialData.timer;
 
 const oldAnnouncement = localStorage.getItem("lastAnnouncement");
 
@@ -65,33 +68,6 @@ function toggleCredits() {
         elem.style.animationPlayState = "paused";
     }
 }
-
-window.onload = async () => {
-    var version = +(document.getElementById("whatsNewVersion")).value;
-
-    var initialData = JSON.parse(document.getElementById("getRender").getAttribute("data"));
-    buses = initialData.buses;
-    isLocked = initialData.isLocked;
-    timerDuration = initialData.timer;
-
-    updatePins();
-    updateNotifButton();
-    navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
-
-    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
-        document.getElementById('whatsNewPopup').style.display='block';
-    }
-    if(!localStorage.getItem("firstLoad")) {
-        document.querySelectorAll(".has-tooltip")
-            .forEach(e => addToolTip(e, e.getAttribute("tooltip-text")));
-
-        window.setInterval((e) => {
-            document.querySelectorAll(".tool-tip").forEach(tooltip => setToolTipPosition(tooltip));
-        }, 100);    
-    }
-
-    announcementAlert(initialData.announcement);
-};
 
 var lastUpdateAnnouncement;
 function announcementAlert(announcement) {
@@ -321,8 +297,8 @@ var x = setInterval(async function() {
     // Time calculations for days, hours, minutes and seconds
     //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     //var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
     document.querySelectorAll(".loading").forEach((element) => {
