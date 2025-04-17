@@ -12,7 +12,6 @@ adminSocket.on("update", (data) => {
   });
 
   countDownDate = new Date(data.leavingAt);
-  weather = data.weather;
   // rerender the page
   const html = ejs.render(
     document.getElementById("getRender").getAttribute("render"),
