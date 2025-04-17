@@ -7,7 +7,7 @@
 }
 :root {
     --crimson: #d7263dff;
-    --giants-orange: #f46036ff;
+    --giants-orange: rgb(231, 105, 70);
     --space-cadet: #2e294eea;
     --lighter-blue: hsl(250, 31%, 40%);
     --night: #141415ff;
