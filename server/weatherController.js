@@ -1,37 +1,35 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.startWeather = void 0;
-const jsonHandler_1 = require("./jsonHandler");
-const node_fetch_1 = __importDefault(require("node-fetch"));
+const fetch = require ("node-fetch");
+const Weather = require("./model/weather.js");
+
+async function writeWeather(weather) {
+    const doc = await Weather.findOneAndUpdate({}, {
+        status: weather.properties.periods[0].shortForecast,
+        icon: weather.properties.periods[0].icon.replace(/,.*$/, "").replace("?size=small", "") + "?size=500",
+        temperature: weather.properties.periods[0].temperature,
+        // feelsLike: weather.periods[0].temperature,
+    }, {upsert: true, returnDocument: "after"});
+
+}
+
 // Code to update weather automcatically every 5 minutes
-function getWeather(io) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const res = yield (0, node_fetch_1.default)("http://api.weatherapi.com/v1/current.json?"
-                + new URLSearchParams([["key", "8afcf03c285047a1b6e201401222202"], ["q", "60563"]]));
-            yield (0, jsonHandler_1.writeWeather)(yield res.json());
-            io.of("/admin").emit("updateWeather", (yield (0, jsonHandler_1.readData)()).weather);
-        }
-        catch (error) {
-            console.log('failed to fetch data from weatherapi.com', error);
-        }
-    });
+async function getWeather(io) {
+    try {
+        // If for some reason Naperville North's coordinates change a significant amount, becoming 
+        // Aurora North, or god forbid, we merge with Naperville Central after the apocalypse, 
+        // and Naperville Central/North then moves to another city, you might need to change the gridpoint. 
+        // Currently we are getting this url from https://api.weather.gov/points/41.7835,-88.1573
+        const res = await fetch("https://api.weather.gov/gridpoints/LOT/58,68/forecast/hourly");
+        await writeWeather(await res.json());
+        io.of("/admin").emit("updateWeather", await Weather.findOne({}));
+    } catch (error) {
+        console.log('failed to fetch data from weather.gov', error);
+    }
+
+
 }
-function startWeather(io) {
+
+module.exports = function startWeather(io) {
     getWeather(io);
-    setInterval(() => { getWeather(io); }, 300000);
+    setInterval(() => { getWeather(io) }, 300000);
 }
-exports.startWeather = startWeather;
-//# sourceMappingURL=weatherController.js.map

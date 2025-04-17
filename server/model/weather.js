@@ -14,11 +14,6 @@ const schema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    feelsLike: {
-        type: Number,
-        required: true,
-    }
 });
 const Weather = mongoose.model("Weather", schema);
 module.exports = Weather;
-//# sourceMappingURL=weather.js.map
