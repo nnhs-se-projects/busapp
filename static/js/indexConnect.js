@@ -305,7 +305,7 @@ var x = setInterval(async function() {
         element.style.backgroundImage = `linear-gradient(90deg, green 49% , red 51%)`;
         element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
         if (distance < 0) { 
-            element.innerHTML = element.innerHTML.replace("Loading", "About to leave!"); // keeps position (About to leave! @1,2,3...)
+            element.innerHTML = element.innerHTML.replace("Loading", "About to leave"); // keeps position (About to leave! @1,2,3...)
         }
         if(pins.includes(+element.getAttribute("data-bus-number"))) {
             element.style.filter = "";
