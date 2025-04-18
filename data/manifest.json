@@ -111,28 +111,28 @@
 
     "screenshots": [
       {
-        "src": "/img/screenshotHome-1.png",
+        "src": "/img/ScreenshotHome-1.png",
         "form_factor": "narrow",
         "sizes": "978x2100",
         "type": "image/png",
         "label": "Home screen on mobile"
       },
       {
-        "src": "/img/screenshotHome-2.png",
+        "src": "/img/ScreenshotHome-2.png",
         "form_factor": "narrow",
         "sizes": "978x2100",
         "type": "image/png",
         "label": "Home screen on mobile"
       },
       {
-        "src": "/img/screenshotHome-3.png",
+        "src": "/img/ScreenshotHome-3.png",
         "form_factor": "narrow",
         "sizes": "978x2100",
         "type": "image/png",
         "label": "Home screen on mobile"
       },
       {
-        "src": "/img/screenshotDesktop.png",
+        "src": "/img/ScreenshotDesktop.png",
         "form_factor": "wide",
         "sizes": "2360x1640",
         "type": "image/png",
