@@ -284,12 +284,8 @@ select {
         font-size: 1.5vw;
     }
 
-    .bus-table select {
+    .bus-table select, .bus-table input, .table-button {
         font-size: 1.5vw
-    }
-
-    .bus-table input {
-        font-size: 1.5vw;
     }
 }
 
