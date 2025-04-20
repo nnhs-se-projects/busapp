@@ -41,7 +41,7 @@ body {
 }
 
 .status-col {
-    transition: background-position 1s linear;
+    transition: background-position 0.5s linear;
     background-size: 210%;
 }
 
@@ -69,7 +69,7 @@ body {
 }
 
 .navbar-text {
-    max-width: calc(88vw - 120px); 
+    max-width: calc(100% - 120px); 
     display: inline-block; 
     text-overflow: ellipsis; 
     overflow: hidden; 

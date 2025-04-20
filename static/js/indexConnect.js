@@ -197,6 +197,7 @@ function updatePins() { // guess what
             // button.textContent = button.textContent.split(" ")[0];
         }
     }
+    updateTimers()
 }
 
 function updateWeather() {
@@ -286,7 +287,7 @@ fetch('/leavingAt')
 var minutes = 0;
 var seconds = 0;
 // Update the count down every second
-var x = setInterval(async function() {
+async function updateTimers() {
     // Get today's date and time
     var now = new Date().getTime();
 
@@ -315,7 +316,8 @@ var x = setInterval(async function() {
     });
 
     if(isLocked)document.getElementById("timer").innerHTML = minutes + seconds > 0 ? ` - ${minutes}:${String(seconds).padStart(2, "0")}` : "";
-}, 500);
+}
+var x = setInterval(updateTimers, 500);
 
 
 // When the app gets put into the background, the browser pauses execution of the code.
