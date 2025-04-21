@@ -341,6 +341,7 @@ thead > tr:first-child {
 select[name="minutes"] {
     padding: 12px; /* Increase padding */
     font-size: 16px; /* Increase font size */
+    border: none;
     border-bottom: solid var(--crimson);
     border-radius: 5px;
     background-color: var(--giants-orange );
