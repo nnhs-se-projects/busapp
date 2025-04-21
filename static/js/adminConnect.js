@@ -87,6 +87,9 @@ async function updateStatus(button, status) {
 }
 
 async function sendWave() {
+  if (!confirm("Are you sure you want to send a wave?")) {
+    return;
+  }
   await fetchWithAlert("/sendWave", "POST", {}, {});
   update();
 }
