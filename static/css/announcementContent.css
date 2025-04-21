@@ -162,8 +162,8 @@ body {
 }
 
 .button {
-    font-size: 1.8vw;
-    padding: 2%;
+    font-size: 20px;
+    margin: auto;
 }
 
 .bus-table th,
@@ -195,12 +195,18 @@ body {
 {
     border: none;
     width: 75%;
-    height: 50%;
-    font-size: 6vw;
+    font-size: 30px;
     font-family: 'Montserrat', sans-serif;
     display: block;
     margin-left: 12.5%;
     word-wrap: break-word;
+    height: auto;
+}
+
+textarea {
+    resize: none;
+    overflow: hidden;
+    min-height: 50px;
 }
 
 @media (orientation: portrait) {
@@ -208,13 +214,6 @@ body {
         height: 10%;
         gap: 5%;
         flex-direction: column;
-    }
-
-    .button {
-        font-size: 8vw;
-        padding: 2%;
-        border-radius: 3.5vw;
-        text-overflow: break-word;
     }
 
     .label {

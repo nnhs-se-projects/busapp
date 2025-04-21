@@ -39,7 +39,8 @@ html, body {
     padding: 10px;
     text-align: center;
     border-radius: 5px;
-    cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
+    cursor: pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
+    align-content: center;
 } 
 
 table {
