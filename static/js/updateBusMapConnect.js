@@ -1,4 +1,4 @@
-var busMapSocket = window.io('/admin');
+var busMapSocket = window.io('/busMap');
 
 
 busMapSocket.on("update", (data) => {

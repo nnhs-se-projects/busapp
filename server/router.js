@@ -487,7 +487,16 @@ router.post("/clearAnnouncement", async (req, res) => {
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
-
+router.get("/busMap", async (req, res) => {
+    let data = {
+        currentWave: await Bus.find({status: "Loading"}),
+        nextWave: await Bus.find({status: "Next Wave"}),
+    }
+    res.render("busMap", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
+    });
+});
 
 // this is stupid but in order to get the actual timer to server.js and not just the initial value we need this
 function getTimer() { return timer; }
