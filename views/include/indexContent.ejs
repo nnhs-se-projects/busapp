@@ -1,13 +1,14 @@
-<div class="announcement-div d-flex justify-content-center container-fluid mt-1">
-  <div class="ribbon" id="announcementRibbon">New!</div>
-  <div class="row text-center align-items-center justify-content-center" style="width: 100%">
-      <!-- <i class="fa-solid fa-bullhorn"></i> -->
-      <h2 class="section-header">Announcement</h2>
-      <!-- <hr> -->
-      <p id="announcement-text"><%= data.announcement %></p>
+<% if(data.announcement) { %>
+  <div class="announcement-div d-flex justify-content-center container-fluid mt-1">
+    <div class="ribbon" id="announcementRibbon">New!</div>
+    <div class="row text-center align-items-center justify-content-center" style="width: 100%">
+        <!-- <i class="fa-solid fa-bullhorn"></i> -->
+        <h2 class="section-header">Announcement</h2>
+        <!-- <hr> -->
+        <p id="announcement-text"><%= data.announcement %></p>
+    </div>
   </div>
-</div>
-
+<% } %>
 <div class="content-container nav-item container-fluid text-center mt-1 has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
   <div class="row justify-content-center dropdown-center">
     <h2 class="section-header">Pinned Buses</h2>
