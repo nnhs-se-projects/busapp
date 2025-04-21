@@ -1,6 +1,10 @@
 const rowA = document.getElementById("rowA").value;
 const rowB = document.getElementById("rowB").value;
 
+const test = [1,2,3,4,5,6,7,8,9];
+
+
+
 async function saveMap() {
     await fetch("/updateBusMap", {
         method: 'POST',

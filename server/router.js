@@ -514,7 +514,13 @@ router.get("/busMapAdmin", async (req, res) => {
 
     await Lot.findOneAndUpdate({}, {rowA: req.body.rowA, rowB: req.body.rowB}, {upsert: true});
 
+    let data = {
+        rowA: ["you", "suck"],
+        rowB: ["blah", "blah"],
+    }
+
     res.render("busMapAdmin", {
+        data: data,
         render: fs.readFileSync(path.resolve(__dirname, "../views/busMapAdmin.ejs")),
     });
 });

@@ -10,14 +10,14 @@
 
 <table style="width:100%" id="bus-lots">
     <th colspan="100%">Bus Lots
-        <tr style="height: 100px" class="rowA">
-            <% for (let i = 0; i < 14; i++) { %>
-                <td><input type="number"></td>
+        <tr style="height: 100px" id="rowA">
+            <% for (let i = 0; i < data.rowA.length; i++) { %>
+                <td><input><%=data.rowA[i]%></td>
             <% } %>
         </tr>
-        <tr style="height: 100px" class="rowB">
-            <% for (let i = 0; i < 14; i++) { %>
-                <td><input type="number"></td>
+        <tr style="height: 100px" id="rowB">
+            <% for (let i = 0; i < data.rowB.length; i++) { %>
+                <td><input><%=data.rowB[i]%></td>
             <% } %>
         </tr>
         <tr style="height: 100px; background-color: transparent" class="numbering">
