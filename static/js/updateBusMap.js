@@ -65,7 +65,7 @@ async function saveMap() {
        },
        body:
        JSON.stringify({
-           currentWave: currentWave
+           lots, lots
        })
    });
 

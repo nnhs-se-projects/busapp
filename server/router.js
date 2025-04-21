@@ -14,6 +14,7 @@ const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
 const Admin = require("./model/admin");
+const Lot = require("./model/lot");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -31,6 +32,7 @@ webpush.setVapidDetails(
 );
 
 const bodyParser = require('body-parser');
+const { log } = require("console");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
@@ -488,13 +490,31 @@ router.post("/clearAnnouncement", async (req, res) => {
 });
 
 router.get("/busMap", async (req, res) => {
+    let currentWave = await Bus.find({status: "Loading"});
+    let nextWave = await Bus.find({status: "Next Wave"});
+
+    // sort the current wave by order
+    currentWave = currentWave.sort((a, b) => b.order - a.order);
+    nextWave = nextWave.sort((a, b) => a.order - b.order);
+    
     let data = {
-        currentWave: await Bus.find({status: "Loading"}),
-        nextWave: await Bus.find({status: "Next Wave"}),
-    }
+        currentWave: currentWave,
+        nextWave: nextWave,
+    };
+
     res.render("busMap", {
         data: data,
         render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
+    });
+});
+
+router.get("/busMapAdmin", async (req, res) => {
+    if(!(await checkLogin(req, res))) { return; }
+
+    await Lot.findOneAndUpdate({}, {rowA: req.body.rowA, rowB: req.body.rowB}, {upsert: true});
+
+    res.render("busMapAdmin", {
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMapAdmin.ejs")),
     });
 });
 
