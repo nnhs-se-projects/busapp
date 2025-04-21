@@ -90,6 +90,16 @@ function startPopout() {
         ctx.textAlign = "center";
         ctx.fillText(`Bus ${pins[activePin]}${bus.change ? "➡" + bus.change : ""}${bus.status === "Loading" ? `@Spot ${bus.order+1}` : ""}`, canWidth/2, fontSize + (gap*1.5));
         ctx.fillText(`${bus.status === "Loading" && isLocked ? `${minutes > 0 || seconds > 0 ? `Loading: ${minutes}:${String(seconds).padStart(2, "0")}` : "About to Leave!"}` : bus.status ? bus.status : "Not Here Yet"}`, canWidth/2, (2*fontSize) + (gap*4.5));
+
+        if(lastStatus === "offline") {
+            ctx.fillStyle = "rgba(0,0,0,0.8)";
+            ctx.fillRect(0, 0, canWidth, canHeight);
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.font = `bold ${canWidth / 6}px Roboto`;
+            ctx.fillText("No Network", canWidth/2, canHeight / 2 + (canWidth / 18));
+            return;
+        }
     }, 100);
 
     navigator.mediaSession.metadata = new MediaMetadata({

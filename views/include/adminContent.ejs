@@ -2,7 +2,7 @@
     
     <div class="buttons">
         <a class="button" href="/updateBusList">Update Bus List</a>
-        <button class="button" onclick="addAdmin()">Add New Admin</button> <!--new button to redirect to whitelist page-->
+        <button class="button" onclick="addAdmin()">Edit Admins</button> <!--new button to redirect to whitelist page-->
         <a class="button" href="/">Back to homepage</a>
         <a class="button" href="/makeAnnouncement">Make Announcement</a>
         <a class="button" href="/busMapAdmin">Bus Map</a>
@@ -41,7 +41,7 @@
     </thead>
     <tbody id="currentWaveTBody">
         <% for(let i = 0; i < data.loading.length; i++) { %>
-            <% if(i === 0) { %> <tr><td>front</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === 0) { %> <tr><td style="font-size: .5em; padding-block: 0">front</td><td></td><td></td><td></td></tr> <% } %>
             <tr>
                 <td><input class="tableInput numberInput" type="number" value=<%= data.loading[i].busNumber %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.loading[i].busChange ? data.loading[i].busChange : "" %> ></td>
@@ -54,7 +54,7 @@
                     <% } %>
                 </td>
             </tr>
-            <% if(i === data.loading.length - 1) { %> <tr><td>back</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === data.loading.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>
     <% } %>
     </tbody>
 </table>
@@ -73,7 +73,7 @@
     </thead>
     <tbody id="nextWaveTBody">
         <% for(let i = 0; i < data.nextWave.length; i++) { %> 
-            <% if(i === 0) { %> <tr><td>front</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === 0) { %> <tr><td style="font-size: .5em; padding-block: 0">front</td><td></td><td></td><td></td></tr> <% } %>
             <tr>
                 <td><input class="tableInput numberInput" type="number" value=<%= data.nextWave[i].busNumber %> readonly></td>
                 <td><input class="tableInput changeInput" type="number" onfocusout="updateBusChange(this)" value=<%= data.nextWave[i].busChange ? data.nextWave[i].busChange : "" %> ></td>
@@ -82,7 +82,7 @@
                     <p onclick="removeFromWave(this)" class="button-text">Remove</p>
                 </td>
             </tr>
-            <% if(i === data.nextWave.length - 1) { %> <tr><td>back</td><td></td><td></td><td></td></tr> <% } %>
+            <% if(i === data.nextWave.length - 1) { %> <tr><td style="font-size: .5em; padding-block: 0">back</td><td></td><td></td><td></td></tr> <% } %>
         <% } %>
     </tbody>
 </table>

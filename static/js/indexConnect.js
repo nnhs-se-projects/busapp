@@ -4,14 +4,17 @@ var indexSocket = window.io('/'); // This line and the line above is how you get
 // !!! do NOT import/export anything or ejs will get angry
 
 var countDownDate = new Date();
-var timerDuration = 0;
-var isLocked = false;
 var weather;
 var firstUpdateHappened = false;
 
 var pins = [];
 var notifStatus = {};
-var buses;
+var version = +(document.getElementById("whatsNewVersion")).value;
+
+var initialData = JSON.parse(document.getElementById("getRender").getAttribute("data"));
+var buses = initialData.buses;
+var isLocked = initialData.isLocked;
+var timerDuration = initialData.timer;
 
 const oldAnnouncement = localStorage.getItem("lastAnnouncement");
 
@@ -65,33 +68,6 @@ function toggleCredits() {
         elem.style.animationPlayState = "paused";
     }
 }
-
-window.onload = async () => {
-    var version = +(document.getElementById("whatsNewVersion")).value;
-
-    var initialData = JSON.parse(document.getElementById("getRender").getAttribute("data"));
-    buses = initialData.buses;
-    isLocked = initialData.isLocked;
-    timerDuration = initialData.timer;
-
-    updatePins();
-    updateNotifButton();
-    navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' });
-
-    if(!localStorage.getItem("whatsNewVersion") || +localStorage.getItem("whatsNewVersion") < version) {
-        document.getElementById('whatsNewPopup').style.display='block';
-    }
-    if(!localStorage.getItem("firstLoad")) {
-        document.querySelectorAll(".has-tooltip")
-            .forEach(e => addToolTip(e, e.getAttribute("tooltip-text")));
-
-        window.setInterval((e) => {
-            document.querySelectorAll(".tool-tip").forEach(tooltip => setToolTipPosition(tooltip));
-        }, 100);    
-    }
-
-    announcementAlert(initialData.announcement);
-};
 
 var lastUpdateAnnouncement;
 function announcementAlert(announcement) {
@@ -221,6 +197,7 @@ function updatePins() { // guess what
             // button.textContent = button.textContent.split(" ")[0];
         }
     }
+    updateTimers()
 }
 
 function updateWeather() {
@@ -310,7 +287,7 @@ fetch('/leavingAt')
 var minutes = 0;
 var seconds = 0;
 // Update the count down every second
-var x = setInterval(async function() {
+async function updateTimers() {
     // Get today's date and time
     var now = new Date().getTime();
 
@@ -321,15 +298,15 @@ var x = setInterval(async function() {
     // Time calculations for days, hours, minutes and seconds
     //var days = Math.floor(distance / (1000 * 60 * 60 * 24));
     //var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
     // Output the result in an element with id="demo"
     document.querySelectorAll(".loading").forEach((element) => {
         element.style.backgroundImage = `linear-gradient(90deg, green 49% , red 51%)`;
         element.style.backgroundPosition = `${Math.max(Math.min(-distance / 10 / timerDuration + 100, 100), 0)}% 0%`;
         if (distance < 0) { 
-            element.innerHTML = element.innerHTML.replace("Loading", "About to leave!"); // keeps position (About to leave! @1,2,3...)
+            element.innerHTML = element.innerHTML.replace("Loading", "About to leave"); // keeps position (About to leave! @1,2,3...)
         }
         if(pins.includes(+element.getAttribute("data-bus-number"))) {
             element.style.filter = "";
@@ -339,7 +316,8 @@ var x = setInterval(async function() {
     });
 
     if(isLocked)document.getElementById("timer").innerHTML = minutes + seconds > 0 ? ` - ${minutes}:${String(seconds).padStart(2, "0")}` : "";
-}, 500);
+}
+var x = setInterval(updateTimers, 500);
 
 
 // When the app gets put into the background, the browser pauses execution of the code.

@@ -7,15 +7,18 @@
     --gray: #ebebeb
 }
 
-body {
+html, body {
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow: auto;
 }
 
 .header {
     grid-template-columns: 7fr 5fr 6fr;
     grid-template-rows: 1fr 1fr;
-    padding: 3% 5%;
+    padding: 10px;
+    margin-bottom: 10px;
     height: 7%;
-    margin-bottom: 20px;
 }
 
 .buttons {
@@ -28,12 +31,12 @@ body {
 .button {
     font-family: 'Montserrat', sans-serif;
     text-decoration: none;
-    font-size: 3vw;
+    font-size: max(3vw, 12px);
     border-width: 0;
     background-color: var(--giants-orange);
     border-bottom: solid var(--crimson);
     color: #ffffff;
-    padding: 3%;
+    padding: 10px;
     text-align: center;
     border-radius: 5px;
     cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
@@ -45,8 +48,9 @@ table {
 
 .table-button {
     font-family: 'Montserrat', sans-serif;
+    text-wrap: nowrap;
+    font-size: 3vw;
     text-decoration: none;
-    font-size: 1.7vw;
     border-width: 0;
     background-color: var(--giants-orange);
     border-bottom: solid var(--crimson);
@@ -157,8 +161,7 @@ select {
 
 .grayed-out{
     background-color: #ffffff;
-    opacity: 0.3;
-    filter: alpha(opacity = 3);
+    filter: opacity(80%) brightness(60%) contrast(30%);
 }
 
 .bus-table tbody tr:nth-of-type(even) {
@@ -281,12 +284,8 @@ select {
         font-size: 1.5vw;
     }
 
-    .bus-table select {
+    .bus-table select, .bus-table input, .table-button {
         font-size: 1.5vw
-    }
-
-    .bus-table input {
-        font-size: 1.5vw;
     }
 }
 
@@ -294,7 +293,7 @@ select {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.5vw;
+    font-size: min(3vw, 15px);
     font-family: 'Montserrat', sans-serif;
     background-color: #31538d;
     color: #ffffff;
@@ -302,9 +301,13 @@ select {
     text-align: center;
     border-radius: 5px;
     margin: 0 auto;
-    width: 40%;
+    width: 75%;
     margin-bottom: 2%;
 
+}
+
+thead > tr:first-child {
+    background-color: var(--lighter-blue);
 }
 
 .popup {
