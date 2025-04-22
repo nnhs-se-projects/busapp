@@ -514,9 +514,12 @@ router.get("/busMapAdmin", async (req, res) => {
 
     await Lot.findOneAndUpdate({}, {rowA: req.body.rowA, rowB: req.body.rowB}, {upsert: true});
 
+    const rowA = await Lot.findOne({}).rowA;
+    const rowB = await Lot.findOne({}).rowB;
+
     let data = {
-        rowA: ["you", "suck"],
-        rowB: ["blah", "blah"],
+        rowA: rowA,
+        rowB: rowB,
     }
 
     res.render("busMapAdmin", {

@@ -11,11 +11,13 @@ const lotsContent = document.getElementById("bus-lots").innerHTML;
 /*
 These are to get the actual list of buses in each wave
 */
-const nextWave = document.getElementsByClassName("next-wave");
-const currentWave = document.getElementsByClassName("current-wave");
+const nextWave = Array.from(document.getElementById("next-wave").rows).map(row => Array.from(row.cells).map(cell => cell.innerText));
+const currentWave = document.getElementById("current-wave");
 
 
 const pins = localStorage.getItem("pins");
+
+const button = document.getElementById("button map-change");
 
 
 /*
@@ -33,6 +35,9 @@ function changeMap() {
 
 
        document.getElementById("bus-lots").innerHTML = lotsContent;
+
+       button.innerText = "Waves";
+       
    }
    else {
        document.getElementById("next-wave").innerHTML = nextContent;
@@ -40,12 +45,15 @@ function changeMap() {
 
 
        document.getElementById("bus-lots").innerHTML = "";
+
+
+       button.innerText = "Lots";
    }
 }
 
 
 function containsPins() {
-   for (let i = 0; i < nextWave.length; i++) {
+   for (let i = 0; i < currentWave.length; i++) {
        if (pins.includes(nextWave[i].value)) {
            nextWave[i].value = "pinned";
        }
