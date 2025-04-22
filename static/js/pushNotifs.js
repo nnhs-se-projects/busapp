@@ -91,7 +91,7 @@ function updateNotifButton() {
             button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
             button.parentElement.onclick = "";
             button.parentElement.style.cursor = "not-allowed";
-        } else {
+        } else if(Notification.permission !== "denied") {
             const tooltip = addToolTip(button.parentElement, "Enable Notifications");
             setToolTipPosition(tooltip);
             window.setInterval((e) => {
