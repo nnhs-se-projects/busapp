@@ -59,10 +59,11 @@ async function enablePushNotifications(publicKey) {
                 // update the status of the button
                 updateNotifButton()
         } else {
-            alert("You denied notification permission, this will result in push notifications not working");
+            alert("You denied notification permission, this will result in push notifications not working. Please go into settings and allow notifications for the Bus App.");
         }
     } else if('serviceWorker' in navigator) { // If the browser supports service workers but not notifications, I'm like 60% sure it'll be safari on IOS
         document.getElementById('IOSnotifpopup').style.display='block';
+        document.getElementById("iosNotifVideo").play();
     } else {
         alert("Your browser is not supported :(");
     }
