@@ -409,7 +409,9 @@ if("mediaSession" in navigator &&
 
 if(window.chrome) document.getElementById("extensionButton").style.display = "block";
 
-if(localStorage.getItem("lastPermission") !== Notification.permission) {
-    if(Notification.permission === "granted") enablePushNotifications(initialData.vapidPublicKey)
+if ('Notification' in window) {
+    if(localStorage.getItem("lastPermission") !== Notification.permission) {
+        if(Notification.permission === "granted") enablePushNotifications(initialData.vapidPublicKey)
+    }
+    localStorage.setItem("lastPermission", Notification.permission);
 }
-localStorage.setItem("lastPermission", Notification.permission);
