@@ -319,8 +319,8 @@ thead > tr:first-child {
     padding: 10px;
     border-radius: 5px;
     color: white;
-    background-color: #327fa8;
-    border: 5px solid #05a1f5;
+    background-color: var(--space-cadet);
+    box-shadow: 0px 1px 10px 0px var(--lighter-blue);
     top: 0;
     transform: translateY(-100%);
     animation: 0.3s ease-in 0s normal forwards;
