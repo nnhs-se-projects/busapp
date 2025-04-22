@@ -22,7 +22,8 @@ const urlBase64ToUint8Array = (base64String) => {
 // Takes in the VAPID public key as an argument. This can be set in .env and is passed to the function from the ejs file
 async function enablePushNotifications(publicKey) {
     if ('Notification' in window && 'serviceWorker' in navigator) {
-        let permission = await Notification.requestPermission();
+        await Notification.requestPermission();
+        let permission = Notification.permission;
         if(permission === "granted") {
                 // wait until it's ready before continuing
                 var registration = await navigator.serviceWorker.ready;
