@@ -54,22 +54,28 @@ function changeMap() {
 }
 
 
-const pinnedBusHighlight = () => { 
-    for (let i = 0; i < currentWave.length; i++) {
-        const bus = currentWave[i].textContent.trim();
+const pinnedBusHighlight = () => {
+    let nextHighlight = [];
 
-        if (pins.includes(parseInt(bus))) {
-            currentWave[i].style.backgroundColor = "#e43939";
-        }
-    }
     for (let i = 0; i < nextWave.length; i++) {
         const bus = nextWave[i].textContent.trim();
 
         if (pins.includes(parseInt(bus))) {
             nextWave[i].style.backgroundColor = "#e43939";
+            nextHighlight.push(i);
         }
     }
- };
+
+    for (let i = currentWave.length - 1; i >= 0; i--) {
+        const bus = currentWave[i].textContent.trim();
+
+        if (pins.includes(parseInt(bus))) {
+            currentWave[i].style.backgroundColor = "#e43939";
+        } if (nextHighlight.includes(i)) {
+            currentWave[i].style.backgroundColor = "#1cbfff";
+        }
+    }
+};
 
 
 async function saveMap() {
