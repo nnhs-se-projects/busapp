@@ -148,6 +148,8 @@ var x = setInterval(async function() {
             timer.innerHTML = "Wave is about to leave!";
         } else if(isLocked) {
             timer.innerHTML = `${minutes ? `${minutes} Minute${ minutes > 1 ? "s" : "" }` : ""} ${seconds && minutes ? `and ${seconds} Seconds` : `${seconds} Seconds`} Left In Wave`;
+        } else {
+            timer.innerHTML = "Wave is not locked.";
         }
     }
 }, 1000);
