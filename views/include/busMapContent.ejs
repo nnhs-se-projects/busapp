@@ -1,6 +1,7 @@
 <div class="buttons">
     <a id="button back-button" onclick="saveMap()" href="/">Back to Homepage</a>
     <button id="button map-change" onclick="changeMap()">Lots</button>
+    <button id="button" onclick="pinnedBusHighlight()">HIGHLITOI</button>
 </div>
 
 
@@ -27,12 +28,8 @@
 <table style="width:100%" id="current-wave">
     <th colspan="100%">Current Wave
         <tr style="height: 100px">
-            <% for (let i = 0; i < data.currentWave.length; i++) { let bus = data.currentWave[i] %>
-                <% if (bus.busNumber === 129) { %>
-                    <td style="background-color: #ff3a3a;"><%= bus.busNumber %></td>
-                <% } else { %>
-                    <td><%= bus.busNumber %></td>
-                <% } %>
+            <% for (let i = 0; i < data.currentWave.length; i++) { %>
+                <td class="current-wave"><%= data.currentWave[i].busNumber %></td>
             <% } %>
         </tr>
     </th>

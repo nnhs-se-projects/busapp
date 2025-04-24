@@ -501,6 +501,8 @@ router.get("/busMap", async (req, res) => {
     let data = {
         currentWave: currentWave,
         nextWave: nextWave,
+        rowA: await Lot.findOne({}).rowA,
+        rowB: await Lot.findOne({}).rowB,
     };
 
     res.render("busMap", {
@@ -514,12 +516,9 @@ router.get("/busMapAdmin", async (req, res) => {
 
     await Lot.findOneAndUpdate({}, {rowA: req.body.rowA, rowB: req.body.rowB}, {upsert: true});
 
-    const rowA = await Lot.findOne({}).rowA;
-    const rowB = await Lot.findOne({}).rowB;
-
     let data = {
-        rowA: rowA,
-        rowB: rowB,
+        rowA: await Lot.findOne({}).rowA,
+        rowB: await Lot.findOne({}).rowB,
     }
 
     res.render("busMapAdmin", {

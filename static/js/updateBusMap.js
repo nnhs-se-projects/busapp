@@ -7,9 +7,24 @@ const nextContent = document.getElementById("next-wave").innerHTML;
 const currentContent = document.getElementById("current-wave").innerHTML;
 const lotsContent = document.getElementById("bus-lots").innerHTML;
 
-const pins = localStorage.getItem("pins");
-
+// This is the button that will change the layout of the map from the waves to the bus lots
 const button = document.getElementById("button map-change");
+
+// These are the table rows of the respective waves
+const currentWave = document.getElementsByClassName("current-wave");
+const nextWave = document.getElementsByClassName("next-wave");
+
+const pinString = localStorage.getItem("pins");
+
+let pins = [];
+if (pinString != null) {
+    let pinArrayString = pinString.split(", ");
+    
+    for (let i = 0; i < pinArrayString.length; i++) {
+        let n = parseInt(pinArrayString[i]);
+        pins.push(n);
+    }
+}
 
 
 /*
@@ -39,7 +54,22 @@ function changeMap() {
 }
 
 
-const getPins = () => { return pins };
+const pinnedBusHighlight = () => { 
+    for (let i = 0; i < currentWave.length; i++) {
+        const bus = currentWave[i].textContent.trim();
+
+        if (pins.includes(parseInt(bus))) {
+            currentWave[i].style.backgroundColor = "#e43939";
+        }
+    }
+    for (let i = 0; i < nextWave.length; i++) {
+        const bus = nextWave[i].textContent.trim();
+
+        if (pins.includes(parseInt(bus))) {
+            nextWave[i].style.backgroundColor = "#e43939";
+        }
+    }
+ };
 
 
 async function saveMap() {
