@@ -72,7 +72,9 @@ const pinnedBusHighlight = () => {
         if (pins.includes(parseInt(bus))) {
             currentWave[i].style.backgroundColor = "#e43939";
         } if (nextHighlight.includes(i)) {
-            currentWave[i].style.backgroundColor = "#1cbfff";
+            currentWave[i].style.borderWidth = "5px";
+            currentWave[i].style.borderStyle = "solid";
+            currentWave[i].style.borderColor = "#1cbfff";
         }
     }
 };

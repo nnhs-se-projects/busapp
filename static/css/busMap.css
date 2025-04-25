@@ -1,10 +1,12 @@
 body {
    background-color: #363434;
+   margin: 0;
 }
  
  
 div {
    margin-bottom: 15px;
+   rotate: 90deg;
 }
  
  
@@ -62,6 +64,7 @@ th {
  
 table {
    border-spacing: 10px;
+   
 }
  
  
