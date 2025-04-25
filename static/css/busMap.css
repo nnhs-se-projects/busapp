@@ -1,12 +1,14 @@
 body {
    background-color: #363434;
    margin: 0;
+   /* rotate: 90deg;
+   transform: translate(0%, -100%);
+   transform-origin: 0 0; */
 }
  
  
 div {
    margin-bottom: 15px;
-   rotate: 90deg;
 }
  
  
@@ -25,6 +27,7 @@ table, tr, td, th {
    font-family: Verdana, sans-serif;
    padding: 15px;
    text-align: center;
+   font-size: 20px;
 }
  
  
@@ -37,7 +40,6 @@ tr, td {
 tr.numbering td {
    background-color: transparent;
    color: azure;
-   font-size: 20px;
    font-weight: bold;
    border: transparent;
 }
@@ -99,4 +101,12 @@ input {
    width: 50px;
    background-color: transparent;
 }
- 
+
+@keyframes glowNext {
+   0% { box-shadow: 0 0 5px #1cbfff, 0 0 15px #1cbfff, 0 0 25px #1cbfff; }
+   100% { box-shadow: none; }
+}
+@keyframes glowCurrent {
+   0% { box-shadow: 0 0 5px #e43939, 0 0 15px #e43939, 0 0 25px #e43939; }
+   100% { box-shadow: none; }
+}

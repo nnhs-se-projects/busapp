@@ -62,6 +62,8 @@ const pinnedBusHighlight = () => {
 
         if (pins.includes(parseInt(bus))) {
             nextWave[i].style.backgroundColor = "#e43939";
+            nextWave[i].style.animation = "glowCurrent 1s ease-in-out infinite alternate";
+
             nextHighlight.push(i);
         }
     }
@@ -71,10 +73,12 @@ const pinnedBusHighlight = () => {
 
         if (pins.includes(parseInt(bus))) {
             currentWave[i].style.backgroundColor = "#e43939";
+            currentWave[i].style.animation = "glowCurrent 1s ease-in-out infinite alternate";
         } if (nextHighlight.includes(i)) {
             currentWave[i].style.borderWidth = "5px";
             currentWave[i].style.borderStyle = "solid";
             currentWave[i].style.borderColor = "#1cbfff";
+            currentWave[i].style.animation = "glowNext 1s ease-in-out infinite alternate";
         }
     }
 };
