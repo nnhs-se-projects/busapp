@@ -43,7 +43,7 @@ function startPopout() {
     if(!("mediaSession" in navigator && 
         document.pictureInPictureEnabled && 
         !!document.createElement("canvas").getContext)) {
-        console.log("Browser not supported (Hey iPhone users, get a phone that doesn't suck)");
+        console.log("Browser not supported");
         return;
     }
     if(!PiPinterval) PiPinterval = window.setInterval(() => {
