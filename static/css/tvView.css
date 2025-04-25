@@ -59,14 +59,14 @@ h2 {
 }
 
 .announcement {
-    font-size: min(2.5vw, 2.25vh);
+    font-size: min(3.25vw, 3vh);
     flex-grow: 1;
 } .announcement > div {
     padding: var(--gap);
 }
 
 .timer {
-    --height: 30px;
+    --height: 6vh;
     background-size: 210%;
     background-color: green;
     transition: background-position 1s linear;
@@ -118,6 +118,7 @@ h2 {
     flex-shrink: 1;
     display: grid;
     align-items: center;
+    font-size: 110%;
 }
 
 .weather > .temp {
