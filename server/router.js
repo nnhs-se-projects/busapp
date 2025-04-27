@@ -511,6 +511,19 @@ router.get("/busMap", async (req, res) => {
     });
 });
 
+router.get("/busMapLots", async (req, res) => {
+
+    let data = {
+        rowA: await Lot.findOne({}).rowA,
+        rowB: await Lot.findOne({}).rowB,
+    }
+
+    res.render("busMapLots", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMapLots.ejs")),
+    });
+});
+
 router.get("/busMapAdmin", async (req, res) => {
     if(!(await checkLogin(req, res))) { return; }
 

@@ -1,6 +1,6 @@
 <div class="buttons">
     <a id="button back-button" onclick="saveMap()" href="/">Back to Homepage</a>
-    <button id="button map-change" onclick="changeMap()">Lots</button>
+    <a id="button back-button" onclick="saveMap()" href="/busMapLots">Lots</a>
     <button id="button highlight" onclick="pinnedBusHighlight()">Highlight</button>
 </div>
 
@@ -30,32 +30,6 @@
         <tr style="height: 100px">
             <% for (let i = 0; i < data.currentWave.length; i++) { %>
                 <td class="current-wave"><%= data.currentWave[i].busNumber %></td>
-            <% } %>
-        </tr>
-    </th>
-</table>
-   
-</div>
-
-
-<div>
-
-
-<table style="width:100%" id="bus-lots">
-    <th colspan="100%">Bus Lots
-        <tr style="height: 100px" class="rowA">
-            <% for (let i = 0; i < 14; i++) { %>
-                <td></td>
-            <% } %>
-        </tr>
-        <tr style="height: 100px" class="rowB">
-            <% for (let i = 0; i < 14; i++) { %>
-                <td></td>
-            <% } %>
-        </tr>
-        <tr style="height: 100px; background-color: transparent" class="numbering">
-            <% for (let i = 1; i < 15; i++) { %>
-                <td> <%=i%> </td>
             <% } %>
         </tr>
     </th>

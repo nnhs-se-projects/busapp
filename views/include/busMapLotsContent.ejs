@@ -1,0 +1,29 @@
+<div class="buttons">
+    <a id="button back-button" onclick="saveMap()" href="/">Back to Homepage</a>
+    <a id="button back-button" onclick="saveMap()" href="/busMap">Waves</a>
+    <button id="button highlight" onclick="pinnedBusHighlight()">Highlight</button>
+</div>
+
+<div>
+
+    <table style="width:100%" id="bus-lots">
+        <th colspan="100%">Bus Lots
+            <tr style="height: 100px" id="rowA">
+                <% for (let i = 0; i < 14; i++) { %>
+                    <td></td>
+                <% } %>
+            </tr>
+            <tr style="height: 100px" id="rowB">
+                <% for (let i = 0; i < 14; i++) { %>
+                    <td></td>
+                <% } %>
+            </tr>
+            <tr style="height: 100px; background-color: transparent" class="numbering">
+                <% for (let i = 1; i < 15; i++) { %>
+                    <td> <%=i%> </td>
+                <% } %>
+            </tr>
+        </th>
+    </table>
+       
+</div>
