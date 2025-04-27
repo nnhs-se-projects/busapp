@@ -1,12 +1,11 @@
-
-// This is the button that will change the layout of the map from the waves to the bus lots
-const button = document.getElementById("button map-change");
+"use strict";
+window.onload = () => { pinnedBusHighlight(); }
 
 // These are the table rows of the respective waves
 const currentWave = document.getElementsByClassName("current-wave");
 const nextWave = document.getElementsByClassName("next-wave");
-const rowA = document.getElementById("rowA");
-const rowB = document.getElementById("rowB");
+const rowA = document.getElementsByClassName("rowA");
+const rowB = document.getElementsByClassName("rowB");
 
 const pinString = localStorage.getItem("pins");
 
@@ -18,10 +17,6 @@ if (pinString != null) {
         let n = parseInt(pinArrayString[i]);
         pins.push(n);
     }
-}
-
-function changeMap() {
-   
 }
 
 
@@ -50,6 +45,23 @@ function pinnedBusHighlight() {
             currentWave[i].style.borderStyle = "solid";
             currentWave[i].style.borderColor = "#1cbfff";
             currentWave[i].style.animation = "glowNext 1s ease-in-out infinite alternate";
+        }
+    }
+
+    for (let i = 0; i < rowA.length; i++) {
+        const bus = rowA[i].textContent.trim();
+
+        if (pins.includes(parseInt(bus))) {
+            rowA[i].style.backgroundColor = "#e43939";
+            rowA[i].style.animation = "glowCurrent 1s ease-in-out infinite alternate";
+        }
+    }
+    for (let i = 0; i < rowB.length; i++) {
+        const bus = rowB[i].textContent.trim();
+
+        if (pins.includes(parseInt(bus))) {
+            rowB[i].style.backgroundColor = "#e43939";
+            rowB[i].style.animation = "glowCurrent 1s ease-in-out infinite alternate";
         }
     }
 };

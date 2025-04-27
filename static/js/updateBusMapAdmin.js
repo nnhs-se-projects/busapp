@@ -1,9 +1,19 @@
-const rowA = document.getElementById("rowA").value;
-const rowB = document.getElementById("rowB").value;
+"use strict";
+
+
+const rowA = document.getElementsByClassName("rowA");
+const rowB = document.getElementsByClassName("rowB");
 
 const test = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
 
-
+function updateLots() {
+    for (let i = 0; i < rowA.length; i++) {
+        rowA[i].textContent = test[i];
+    }
+    for (let i = 0; i < rowB.length; i++) {
+        rowB[i].textContent = test[i + 14];
+    }
+}
 
 async function saveMap() {
     await fetch("/updateBusMap", {
