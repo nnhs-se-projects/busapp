@@ -1,5 +1,5 @@
 "use strict";
-
+window.onload = () => { updateLots(); }
 
 const rowA = document.getElementsByClassName("rowA");
 const rowB = document.getElementsByClassName("rowB");

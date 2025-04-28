@@ -34,13 +34,13 @@ function pinnedBusHighlight() {
         }
     }
 
-    for (let i = currentWave.length - 1; i >= 0; i--) {
+    for (let i = 0; i < currentWave.length; i++) {
         const bus = currentWave[i].textContent.trim();
 
         if (pins.includes(parseInt(bus))) {
             currentWave[i].style.backgroundColor = "#e43939";
             currentWave[i].style.animation = "glowCurrent 1s ease-in-out infinite alternate";
-        } if (nextHighlight.includes(i)) {
+        } if (nextHighlight.includes(currentWave.length - i - 1)) {
             currentWave[i].style.borderWidth = "5px";
             currentWave[i].style.borderStyle = "solid";
             currentWave[i].style.borderColor = "#1cbfff";
