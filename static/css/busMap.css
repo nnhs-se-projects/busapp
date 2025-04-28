@@ -37,7 +37,7 @@ tr, td {
    width: 50px;
 }
 
-tr.numbering td {
+.numbering {
    background-color: transparent;
    color: azure;
    font-weight: bold;
@@ -96,10 +96,20 @@ a:hover, button:hover {
 input {
    text-align: center;
    font-family: Verdana, sans-serif;
-   font-size: 15px;
+   font-size: 20px;
    border: transparent;
-   width: 50px;
+   width: 100%;
    background-color: transparent;
+}
+
+input.submitA, input.submitB {
+   font-size: 15px;
+   background-color: #50c878;
+   color: azure;
+   border-radius: 5px;
+   padding: 10px;
+   margin: 5px;
+   cursor: pointer;
 }
 
 @keyframes glowNext {
