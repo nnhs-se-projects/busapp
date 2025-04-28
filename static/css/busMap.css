@@ -1,9 +1,7 @@
 body {
    background-color: #363434;
    margin: 0;
-   /* rotate: 90deg;
-   transform: translate(0%, -100%);
-   transform-origin: 0 0; */
+   font-family: Verdana, sans-serif;
 }
  
  
@@ -23,7 +21,6 @@ div {
  
  
 table, tr, td, th {
-   /* border-collapse: collapse; */
    font-family: Verdana, sans-serif;
    padding: 15px;
    text-align: center;
@@ -43,17 +40,6 @@ tr, td {
    font-weight: bold;
    border: transparent;
 }
- 
- 
-/*
-td:hover { 
-   border-width: 2px;
-   border-style: solid;
-   border-color: azure;
-   background-color: #f7b90c;
-   color: azure;
-   cursor: pointer;
-} */
  
  
 th {
@@ -81,7 +67,6 @@ button, a {
    border-color: transparent;
    background-color: #F46036;
    color:aliceblue;
-   width: 200px;
    font-family: Verdana, sans-serif;
    font-size: 20px;
    cursor: pointer;
@@ -90,6 +75,10 @@ button, a {
  
 a:hover, button:hover {
    border-color: azure;
+}
+
+a.popup {
+   background-color: transparent;
 }
  
  
@@ -102,21 +91,46 @@ input {
    background-color: transparent;
 }
 
-input.submitA, input.submitB {
+input.rowA, input.rowB {
    font-size: 15px;
-   background-color: #50c878;
-   color: azure;
+   color: black;
    border-radius: 5px;
-   padding: 10px;
-   margin: 5px;
-   cursor: pointer;
+   width: 100%;
+   padding: 5px;
+}
+
+.popup {
+   display: none;
+   position: fixed;
+   top: 0; left: 0;
+   width: 100%; height: 100%;
+   background: rgba(0, 0, 0, 0.5);
+   justify-content: center;
+   align-items: flex-start;
+}
+
+.popup-content {
+   color: azure;
+   background: #2E294E;
+   border-width: 2px;
+   border-style: solid;
+   border-color: #F46036;
+   padding: 20px;
+   margin: 50px auto;
+   width: 300px;
+   border-radius: 5px;
+   text-align: center;
+}
+
+.popup:target {
+   display: flex;
 }
 
 @keyframes glowNext {
-   0% { box-shadow: 0 0 5px #1cbfff, 0 0 15px #1cbfff, 0 0 25px #1cbfff; }
+   0% { box-shadow: 0 0 5px #1cbfff, 0 0 15px #1cbfff, 0 0 25px #1cbfff, 0 0 35px #1cbfff, 0 0 45px #1cbfff; }
    100% { box-shadow: none; }
 }
 @keyframes glowCurrent {
-   0% { box-shadow: 0 0 5px #e43939, 0 0 15px #e43939, 0 0 25px #e43939; }
+   0% { box-shadow: 0 0 5px #e43939, 0 0 15px #e43939, 0 0 25px #e43939, 0 0 35px #e43939, 0 0 45px #e43939; }
    100% { box-shadow: none; }
 }

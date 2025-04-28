@@ -72,6 +72,11 @@ function updateBusLots() {
     }
 }
 
+function popper() {
+    const popper = document.getElementById("popper");
+    popper.classList.toggle("fadeIn");
+}
+
 
 async function saveMap() {
    await fetch("/updateBusMap", {

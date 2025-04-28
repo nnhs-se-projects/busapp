@@ -1,6 +1,14 @@
 <div class="buttons">
     <a id="button back-button" onclick="saveMap()" href="/">Back to Homepage</a>
     <a id="button back-button" onclick="saveMap()" href="/busMapLots">Lots</a>
+    <a href="#popup">info</a>
+    <div class="popup" id="popup">info
+        <div class="popup-content"><a href="#" id="popup">&#10005;</a><br><br>
+            The <span style="color: #e43939">RED</span> 
+            cells are buses that you have pinned. The <span style="color: #1cbfff">BLUE BORDER</span> 
+            cells are the projected positions of pinned buses in the next wave once the current wave leaves.
+        </div>
+    </div>
 </div>
 
 
@@ -8,9 +16,8 @@
 
 <div>
 
-
 <table style="width:100%" id="next-wave">
-    <th colspan="100%">Next Wave
+    <th colspan="100%">&#10229; Next Wave
         <tr style="height: 100px">
             <% for (let i = 0; i < data.nextWave.length; i++) { %>
                 <td class="next-wave"><%= data.nextWave[i].busNumber %></td>
@@ -25,7 +32,7 @@
 <div>
 
 <table style="width:100%" id="current-wave">
-    <th colspan="100%">Current Wave
+    <th colspan="100%">Current Wave &#10230;
         <tr style="height: 100px">
             <% for (let i = 0; i < data.currentWave.length; i++) { %>
                 <td class="current-wave"><%= data.currentWave[i].busNumber %></td>

@@ -1,10 +1,11 @@
 <div class="buttons">
-    <a id="button back-button" onclick="saveMap()" href="/admin">Save and Return</a>
+    <a id="button back-button" onclick="save()" href="/admin">Save and Return</a>
+    <button id="button back-button" onclick="save()">Save</button>
 </div>
     
 <body>
 
-    <form>
+<form>
 
 <div>
 
@@ -12,20 +13,12 @@
     <th colspan="100%">Bus Lots
         <tr style="height: 100px">
             <% for (let i = 0; i < 14; i++) { %>
-                <td>
-                    <input class="rowA" inputmode="numeric" placeholder="bus #">
-                    <!-- <input class="submitA" type="submit" value="Enter"> -->
-                </td>
-                <td onclick="saveMap(this)"></td>
+                <td><input class="rowA" type="number" inputmode="number" placeholder="bus #"></td>
             <% } %>
         </tr>
         <tr style="height: 100px">
-            <% for (let i = 0; i < 14; i++) { %>
-                <td>
-                    <input class="rowB" inputmode="numeric" placeholder="bus #">
-                    <!-- <input class="submitB" type="submit" value="Enter"> -->
-                </td>
-                <td onclick="saveMap(this)"></td>
+            <% for (let i = 14; i < 28; i++) { %>
+                <td><input class="rowB" type="number" inputmode="number" placeholder="bus #"></td>
             <% } %>
         </tr>
         <tr style="height: 100px; background-color: transparent">
