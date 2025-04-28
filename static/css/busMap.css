@@ -77,8 +77,10 @@ a:hover, button:hover {
    border-color: azure;
 }
 
-a.popup {
-   background-color: transparent;
+#info {
+   margin-left: auto;
+   border-radius: 45%;
+   font-size: 30px;
 }
  
  
