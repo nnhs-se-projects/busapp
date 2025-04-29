@@ -4,6 +4,7 @@
     "description": "App for displaying bus information",
     "start_url": "/",
     "scope": "/",
+    "orientation": "portrait",
     "categories": ["utilities", "travel", "navigation"],
     "icons": [
       {
@@ -86,34 +87,54 @@
       },
       {
         "src": "/img/busapp-optimisedsvg.svg",
+        "sizes": "any",
         "type": "image/svg",
         "purpose": "any"
       }
     ],
 
-    "theme_color": "#a1b5be",
-    "background_color": "#a1b5be",
+    "theme_color": "#2e294e",
+    "background_color": "#2e294e",
     "display_override": ["standalone", "fullscreen", "minimal-ui"],
     "display": "standalone",
     "shortcuts": [
       {
         "name": "Open admin page",
-        "url": "/admin"
+        "url": "/admin",
+        "icons": [{
+          "src": "/img/Icon-New-96-any.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }]
       }
     ],
 
     "screenshots": [
       {
-        "src": "/img/screenshotHome.png",
+        "src": "/img/ScreenshotHome-1.png",
         "form_factor": "narrow",
-        "sizes": "796x1289",
+        "sizes": "978x2100",
         "type": "image/png",
         "label": "Home screen on mobile"
       },
       {
-        "src": "/img/screenshotDesktop.png",
+        "src": "/img/ScreenshotHome-2.png",
+        "form_factor": "narrow",
+        "sizes": "978x2100",
+        "type": "image/png",
+        "label": "Home screen on mobile"
+      },
+      {
+        "src": "/img/ScreenshotHome-3.png",
+        "form_factor": "narrow",
+        "sizes": "978x2100",
+        "type": "image/png",
+        "label": "Home screen on mobile"
+      },
+      {
+        "src": "/img/ScreenshotDesktop.png",
         "form_factor": "wide",
-        "sizes": "1026x625",
+        "sizes": "2360x1640",
         "type": "image/png",
         "label": "Home screen on desktop"
       }

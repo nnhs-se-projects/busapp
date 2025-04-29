@@ -1,23 +1,226 @@
 * {
     padding: 0;
     margin: 0;
+    max-width: 100vw;
+    scrollbar-width: none;
+    overscroll-behavior: none;
+}
+:root {
+    --crimson: #d7263dff;
+    --giants-orange: #f46036ff;
+    --space-cadet: #2e294eea;
+    --lighter-blue: hsl(250, 31%, 40%);
+    --night: #141415ff;
+    --gray: #ebebeb
+    /* --bs-navbar-brand-color: var(--dark-cyan) !important; */
 }
 
 body {
-    background-color: #a1b5be;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; 
+    font-family: Roboto;
 }
 
-li {
-    margin-left: min(max(0.5em, 2vw), 2em);
+.pageContainer {
+    backdrop-filter: blur(4px);
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: hidden; /* ribbon on the announcement causes horizontal overflow, prevent that */
 }
 
-/* Weather/Notification/Login */
-.header {
-    display: grid;
-    grid-template-columns: 7fr 5fr 3fr 3fr;
-    grid-template-rows: 1fr 1fr;
-    padding: 3% 5%;
-    height: 7%;
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: max(80vh, 40vw);
+}
+
+.status-col {
+    transition: background-position 0.5s linear;
+    background-size: 210%;
+}
+
+.navbar-div {
+    width: calc(100% - 10px);
+    background-color: var(--space-cadet);
+    border-radius: 5px;
+    color: white;
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
+    margin-top: 0px !important;
+}
+
+.navbar-toggler, .nav-link {
+    box-shadow: inset 0px -3px 0px 0px var(--crimson);
+    line-height: 1.5em; 
+}
+
+.navbar-text, .navbar-toggler {
+    background-color: var(--giants-orange);
+    border-radius: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin: 5px;
+    color: white;
+}
+
+.navbar-text {
+    max-width: calc(100% - 120px); 
+    display: inline-block; 
+    text-overflow: ellipsis; 
+    overflow: hidden; 
+    white-space: nowrap;
+}
+
+#notif-button > i {
+    width: 1.5em;
+    line-height: 1.5em;
+    cursor: inherit;
+} #notif-button { cursor: inherit; }
+
+.navbar-brand:hover, .navbar-toggler:hover, .nav-link:hover {
+    transform: translateY(2px);
+    box-shadow: unset;
+}
+
+.navbar > .container-fluid {
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    padding-right: calc(var(--bs-gutter-x) * .5);
+}
+
+.nav-item a {
+    border-radius: 5px;
+    background-color: var(--giants-orange);
+    margin: 5px;
+}
+
+button:not(.navbar-toggler) {
+    border-radius: 5px;
+    background-color: var(--giants-orange);
+    border: none;
+    padding: 20px;
+    width: 80%;
+    border-bottom: solid var(--crimson); 
+}
+
+button:active{
+    transform: translateY(1px);
+}
+
+.dropdown-toggle {
+    max-width: 30%;
+    padding: 5px !important;
+    margin-bottom: 5px;
+}
+
+.dropdown-menu {
+    max-width: min(300px, 90%);
+    height: 50vh;
+    scrollbar-width: auto;
+    overflow: scroll;
+    background-color: var(--space-cadet);
+    border: solid 2px var(--giants-orange);
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.announcement-div {
+    width: calc(100% - 10px);
+    background-color: var(--space-cadet);
+    border-radius: 5px;
+    /* color: var(--dark-cyan); */
+    color: white;
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
+    line-height: 1.2em;
+}
+
+.content-container {
+    width: calc(100% - 10px);
+    background-color: var(--space-cadet);
+    /* color: var(--dark-cyan); */
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0px 1px 10px 0px var(--space-cadet);
+    /* padding: 5px;
+    padding-left: 5px; */
+    margin-bottom: 5px;
+}
+
+.pinned-bus-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 10px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+td, .busContainer > p {
+    border-radius: 5px;
+    /* border: solid var(--giants-orange); */
+    background-color: var(--lighter-blue);
+    padding: 5px;
+    box-shadow: 0px 0px 10px 0px var(--lighter-blue);
+    --text-shadow-color: #00000070;
+    text-shadow: 1px 1px 1px var(--text-shadow-color), -1px 1px 1px var(--text-shadow-color), 1px -1px 1px var(--text-shadow-color), -1px -1px 1px var(--text-shadow-color);
+}
+
+.tool-tip {
+    max-width: min(80vw, 300px);
+    background-color: var(--crimson);
+    z-index: 9;
+    position: fixed;
+    padding: 5px;
+    border-radius: 5px;
+    transition: top 0.1s linear, left 0.1s linear;
+    border: 2px solid var(--giants-orange);
+    pointer-events: none;
+    font-size: 16px;
+    text-align: center;
+    text-wrap: initial;
+    box-shadow: 1px 1px 3px 1.5px rgba(0,0,0,0.75);
+    margin-top: 10px;
+}
+
+.tool-tip > i { pointer-events: auto; }
+
+.tool-tip:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 7px solid transparent;
+	border-bottom-color: var(--crimson);
+	border-top: 0;
+	margin-left: -7px;
+	margin-top: -7px;
+}
+
+.section-header {
+    background-color: var(--giants-orange); 
+    width: 100%; 
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px;
+    padding: 0px;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+}
+
+.busContainer > p {
+    margin-left: calc(var(--bs-gutter-x) / 2);
+    margin-right: calc(var(--bs-gutter-x) / 2);
+}
+
+.busContainer {
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #IOSnotifpopup > div, #whatsNewPopup > div {
@@ -28,13 +231,14 @@ li {
     transform: translateX(-50%) translateY(-50%); 
     width: calc(100% - min(10%, 50px)); 
     max-height: calc(100% - min(10%, 50px));
-    background-color: lightgray;
-    border: 5px solid #327fa8;
+    background-color: var(--space-cadet);
+    border: 5px solid var(--giants-orange);
     border-radius: 10px;
     padding: 1em;
     overflow: auto;
 }
 #IOSnotifpopup, #whatsNewPopup {
+    z-index: 10;
     position: fixed;
     display: none;
     width: 100%;
@@ -47,89 +251,8 @@ li {
     font-size: calc(1vw + 1em);
 }
 
-.weather-container {
-    grid-column: 1/2;
-    grid-row: 1/3;
-
-    background-color: rgb(208, 207, 188);
-    border: rgb(208, 207, 188);;
-    border-radius: 10px;
-    
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 2fr 1fr;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.weather-container * {
-    margin: 0;
-}
-
-.weather-temperature {
-    grid-column: 1/2;
-    grid-row: 1/2;
-    text-align: center;
-    font-size: 2.4vh;
-}
-
-.weather-temperature > * {
-    padding: 13% 0 0;
-}
-
-.weather-status {
-    grid-column: 1/2;
-    grid-row: 2/3;    
-    text-align: center;
-    font-size: 1.5vh;
-}
-
-.weather-status > * {
-    padding: 0 0 5%;
-}
-
-.weather-img {
-    text-align: center;
-    grid-column: 2/3;
-    grid-row: 1/3;
-}
-
-.weather-img > * {
-    height: 100%;
-}
-
-.buttons-container {
-    grid-column: 3/4;
-    grid-row: 1/3;
-    align-items: right;
-    display: flex;
-    gap: 2%;
-}
-
-.buttons-container > * {
-    text-align: right;
-    height: 80%;
-}
-
-.help-button, #notif-button, #login-button, .generic-button {
-    border-radius: 10px;
-    font-family: 'Montserrat', sans-serif;
-    text-decoration: none;
-    font-size: 3.5vw;
-    background-color: #327fa8;
-    color: #ffffff;
-    padding: 5px;
-    text-wrap: nowrap;
-}
-
-.button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    transition-duration: 0.4s;
+a {
+    color: var(--giants-orange);
     cursor: pointer;
 }
 
@@ -141,7 +264,7 @@ li {
 .button2:hover {
     background-color: #003749;
     color: rgb(255, 255, 255);
-}
+} */
 
 .android-button {
     font-family: 'Montserrat', sans-serif;
@@ -161,119 +284,6 @@ li {
     padding: 2%;
 }
 
-/* Tables */
-.bus-table {
-    margin: 0 auto 3%;
-    width: 90%;
-    border-collapse: collapse;
-    font-size: 3.1vw;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.bus-table thead tr {
-    background-color: #327fa8;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-.bus-table tbody tr {
-    border-bottom: 2px solid #dddddd;
-    height: 5vh;
-}
-
-#all-bus-table tbody tr:nth-of-type(even) {
-    background-color: #e7e6e6;
-}
-
-#all-bus-table tbody tr:nth-of-type(odd) {
-    background-color: #ffffff;
-}
-
-#pin-bus-table tbody tr {
-    background-color: #ffffff;
-}
-
-.bus-table tbody tr:last-of-type {
-    border-bottom: 4px solid #327fa8;
-}
-
-.bus-table th,
-.bus-table td {
-    padding: 0.6% 2%;
-}
-
-.num-col {
-    width: 28%;
-}
-
-.num-col:not(th) {
-    font-size: 5vw;
-    padding: 0.6% 2% 0.6% 4%;
-}
-
-.status-col {
-    width: 21%;
-}
-
-.time-col {
-    width: 14%;
-}
-
-.pin-col {
-    text-align: center;
-    width: 22%;
-}
-
-.pin-button {
-    font-family: 'Montserrat', sans-serif;
-    width: 70%;
-    text-decoration: none;
-    font-size: 0.8em;
-    background-color: #327fa8;
-    color: #ffffff;
-    padding: 4%;
-    transition: 0.2s;
-}
-
-.announcement {
-    font-family: 'Montserrat', sans-serif;
-    text-decoration: none;
-    font-size: 3.1vw;
-    padding-left: 5px;
-    padding-right: 5px;
-    text-align: center;
-    color:#000000;
-}
-
-.announcement-table {
-    margin: 0 auto 3%;
-    width: 90%;
-    border-collapse: collapse;
-    font-size: 1.7vw;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.announcement-table thead th {
-    background-color: #838BC2; 
-    font-size: 310%; 
-    padding-top: 5px; 
-    padding-bottom: 5px; 
-    padding-left: 7px;
-    color: #ffffff;
-    text-align: left;
-    font-weight: bold;
-}
-
-.announcement-table tbody tr {
-    border-bottom: 2px solid #dddddd;
-    height: 5vh;
-}
-
-#announcement-table tbody tr {
-    background-color: #ffffff;
-}
-
 .timer-box {
     display: flex;
     justify-content: center;
@@ -290,39 +300,25 @@ li {
     margin-bottom: 3%;
 }
 
-
-.credits-dropdown {
-    font-family: 'Montserrat', sans-serif;
-    overflow: hidden;
-    position: absolute;
-    clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
-    transform: translateY(0);
-    max-height: 0px;
-    transition: clip-path 1s, transform 1s, max-height 1s;
-    background-color: lightgray;
-    z-index: 0;
-    width: 100%;
-}
-#credits-dropdown:checked ~ .credits-dropdown {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-    transform: translateY(-100%);
-    max-height: 9999999999999px;
-    transition: clip-path 1s, transform 1s;
-}
-#credits-dropdown {
-    display: none;
-}
-
-.credits-dropdown-label::before {
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
+.announcement-div {
     position: relative;
-    content: "\f062";
-    padding: 5px;
-    z-index: 1;
 }
-#credits-dropdown:checked ~ .credits-dropdown-label::before {
-    content: "\f063";
+.ribbon {
+    --f: .35em; /* control the folded part */
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    right: 0;
+    line-height: 1.75;
+    padding-inline: 1lh;
+    padding-bottom: var(--f);
+    border-image: conic-gradient(#0008 0 0) 51%/var(--f);
+    clip-path: polygon(
+      100% calc(100% - var(--f)),100% 100%,calc(100% - var(--f)) calc(100% - var(--f)),var(--f) calc(100% - var(--f)), 0 100%,0 calc(100% - var(--f)),999px calc(100% - var(--f) - 999px),calc(100% - 999px) calc(100% - var(--f) - 999px));
+    transform: translate(calc((1 - cos(45deg))*100%), -100%) rotate(45deg);
+    transform-origin: 0% 100%;
+    background-color: var(--crimson); /* the main color  */
 }
 
 #networkIndicator {
@@ -367,12 +363,100 @@ li {
     transition: height 0.5s;
 }
 
+#credits {
+    --angle: 12deg;
+    --gap: 20px;
+    border-radius: 15px;
+    display: none;
+    position: fixed;
+    width: calc(100% - calc(var(--gap) * 2));
+    height: calc(100% - calc(var(--gap) * 2));
+    left: var(--gap);
+    top: var(--gap);
+    background-color: black;
+    background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)), radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    z-index: 1;
+    perspective: 12vh;
+    overflow: hidden;
+    font-size: max(min(10vw, 10vh), 30px);
+    text-align: center;
+    color: yellow;
+    animation-play-state: paused;
+    font-family: sans-serif;
+    font-weight: 900;
+    outline: calc(var(--gap) + 15px) solid rgba(0, 0, 0, 0.8);
+}
+#credits > .spacer {
+    position: relative;
+    height: 100%;
+}
+#credits > .starWarsContainer {
+    transform: rotateX(var(--angle)) translateY(0%);
+    animation: forwards 40s 1 linear startwars, forwards 10s infinite linear starwars;
+    animation-delay: 2s, 32s;
+    animation-play-state: inherit;
+    transform-origin: top;
+    position: relative;
+}
+#credits > .starWarsContainer:before {
+    content: "CREDITS";
+    left: 50%;
+    translate: -50%;
+    display: block;
+    position: absolute;
+    animation: forwards 1.5s ease-in prologue;
+    animation-delay: 0.5s;
+    animation-play-state: inherit;
+    font-size: 200%;
+}
+#credits p {
+    padding-bottom: .75ch;
+    line-height: 1.6ch;
+}
+@keyframes starwars {
+    from {
+        transform: rotateX(var(--angle)) translateY(-80%);
+    } to {
+        transform: rotateX(var(--angle)) translateY(-100%);
+    }
+}
+@keyframes startwars {
+    from {
+        transform: rotateX(var(--angle)) translateY(0%);
+    }
+    to {
+        transform: rotateX(var(--angle)) translateY(-80%);
+    }
+}
+@keyframes prologue {
+    from {
+        transform: translateY(0%);
+    } to {
+        transform: translateY(-100%);
+    }
+}
+
+.hidden {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    /* The reason we cannot just display: none is because then safari doesnt like to think the video can actually exist
+    believe it or not, all other browsers have fixed this kind of bug, since early versions of Internet Explorer!
+    But Apple will be Apple, and refuse to adhere to standards just to be difficult */
+    filter: opacity(0.01%);
+    transform: scale(0.1);
+    transform-origin: bottom right;
+    pointer-events: none;
+}
+
 @media (orientation: landscape) {
     .header {
         grid-template-columns: 4fr 9fr 3fr;
     }
 
-    #login-button, #notif-button, .help-button {
+    #login-button, .help-button {
         font-size: 1.8vw;
     }
 
@@ -380,56 +464,15 @@ li {
         font-size: 2vw;
         padding: 1%;
     }
-    
-    .bus-table {
-        width: 70%;     
-        font-size: 1.5vw;
-    }
-
-    .weather-temperature > *{
-        padding: 5% 0 0;
-    }
-
-    .weather-status > *{
-        padding: 0 0 3%;
-    }
-
-    .bus-table th,
-    .bus-table td {
-        padding: 0.6% 1%;
-        width: 28%;
-    }
-
-    .num-col:not(th) {
-        font-size: 2vw;
-    }
 
     .pin-col {
         width: 5%;
-    }
-
-    .pin-button:hover {
-        cursor: pointer;
     }
 
     #notif-notice:hover {
         cursor: pointer;
     }
   
-    .announcement-table {
-        width: 70%;
-        font-size: 0.8vw;
-        background-color: #838BC2; 
-        padding-top: 5px; 
-        padding-bottom: 5px; 
-        padding-left: 10px;
-        color: #ffffff;
-        text-align: left;
-    }
-
-    .announcement {
-        font-size: 1.5vw;
-    }
     .timer-box{
         display: flex;
         justify-content: center;
@@ -448,3 +491,8 @@ li {
 
 }
 
+@media (display-mode: standalone) {
+    body {
+        user-select: none; 
+    }
+}

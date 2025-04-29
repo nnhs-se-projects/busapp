@@ -104,6 +104,10 @@ body {
     word-wrap: break-word;
 }
 
+input {
+    height: auto !important;
+}
+
 .new-bus-buttons {
     text-align: center;
 }

@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html style="background-image: url('<%= data.weather.icon %>'); background-repeat: no-repeat; background-size: cover; backdrop-filter: blur(3px);">
     <head>
         <title>Bus App</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,7 +18,7 @@
         <script src="js/ejs.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script id="getRender" render="<%= render %>" src='js/adminConnect.js'></script>
-        <script src="js/adminConnect.js"></script>
+        <!--script src="js/adminConnect.js"></script-->
         <script src="js/formVerification.js"></script>
         <script src="js/networkIndicator.js"></script>
     </body>

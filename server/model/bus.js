@@ -18,7 +18,14 @@ const schema = new mongoose.Schema({
         type: Date,
         required: false,
     },
+    order: {
+        type: Number,
+        required: false,
+    },
+    busTimes: {
+        type: [Date],
+        required: false,
+    },
 });
 const Bus = mongoose.model("Bus", schema);
 module.exports = Bus;
-//# sourceMappingURL=bus.js.map
