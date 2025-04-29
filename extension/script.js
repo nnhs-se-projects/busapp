@@ -10,6 +10,3 @@ eventer(messageEvent,function(e) {
 		document.getElementById('content').style.height = height+'px';
 	}
 } ,false);
-
-// fetching the api because that is the only endpoint without CORS
-fetch("https://busapp.nnhsse.org/api").catch(e => { console.log(e); document.getElementById('content').src = "https://busappdev.nnhsse.org/extension" })
