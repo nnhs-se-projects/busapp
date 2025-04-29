@@ -2,12 +2,12 @@ body {
    background-color: #363434;
    margin: 0;
    font-family: Verdana, sans-serif;
+   min-width: max-content;
 }
  
  
 div {
    margin-bottom: 15px;
-   min-width: max-content;
 }
  
  
@@ -32,7 +32,6 @@ table, tr, td, th {
 tr, td {
    border-radius: 15px;
    background-color: #f7b90c;
-   width: auto;
 }
 
 .numbering {
@@ -40,6 +39,8 @@ tr, td {
    color: azure;
    font-weight: bold;
    border: transparent;
+   padding: 0;
+   min-width: 100px;
 }
  
  
@@ -98,7 +99,7 @@ input.rowA, input.rowB {
    font-size: 15px;
    color: black;
    border-radius: 5px;
-   width: auto;
+   max-width: 100px;
    padding: 5px;
 }
 
