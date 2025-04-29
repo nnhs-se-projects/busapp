@@ -2,13 +2,12 @@ body {
    background-color: #363434;
    margin: 0;
    font-family: Verdana, sans-serif;
-   rotate: 90deg;
 }
  
  
 div {
    margin-bottom: 15px;
-   width: auto 100%;
+   min-width: max-content;
 }
  
  
