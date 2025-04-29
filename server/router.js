@@ -462,7 +462,7 @@ router.post("/submitAnnouncement", async (req, res) => {    //overwrites the ann
     if(!(await checkLogin(req, res))) { return; }
 
     // check if the announcement was actually changed
-    if((await Announcement.findOne({})).announcement !== req.body.announcement) {
+    if((await Announcement.findOne({})).announcement !== req.body.announcement && req.body.announcement !== "") {
         (await Subscription.find().distinct("subscription")).forEach((sub) => {
             webpush.sendNotification(JSON.parse(sub), JSON.stringify({
                 title: 'Announcement From Bus App',

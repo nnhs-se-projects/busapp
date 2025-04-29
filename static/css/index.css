@@ -112,7 +112,8 @@ button:active{
 }
 
 .dropdown-toggle {
-    max-width: 15em;
+    max-width: 30%;
+    padding: 5px !important;
     margin-bottom: 5px;
 }
 

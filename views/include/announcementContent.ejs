@@ -1,10 +1,10 @@
 <label class="label">Announcement</label>
-<textarea type="text" name="announcement" class="content"><%= currentAnnouncement%></textarea>
+<textarea oninput="auto_grow(this)" type="text" name="announcement" class="content"><%= currentAnnouncement%></textarea>
 <div class="buttons">
     <button class="button" onclick="clearAnnouncement()">Clear Current Announcement</button>
 </div>
 <text class="label">TV Announcement</label>
-<textarea type="text" name="tvAnnouncement" class="content"><%= currentTvAnnouncement%></textarea>
+<textarea oninput="auto_grow(this)" type="text" name="tvAnnouncement" class="content"><%= currentTvAnnouncement%></textarea>
 <div class="buttonsTv">
     <button class="button" onclick="clearTvAnnouncement()">Clear Current Announcement</button>
 </div>

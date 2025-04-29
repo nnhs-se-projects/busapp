@@ -22,7 +22,8 @@ const urlBase64ToUint8Array = (base64String) => {
 // Takes in the VAPID public key as an argument. This can be set in .env and is passed to the function from the ejs file
 async function enablePushNotifications(publicKey) {
     if ('Notification' in window && 'serviceWorker' in navigator) {
-        let permission = await Notification.requestPermission();
+        await Notification.requestPermission();
+        let permission = Notification.permission;
         if(permission === "granted") {
                 // wait until it's ready before continuing
                 var registration = await navigator.serviceWorker.ready;
@@ -59,10 +60,11 @@ async function enablePushNotifications(publicKey) {
                 // update the status of the button
                 updateNotifButton()
         } else {
-            alert("You denied notification permission, this will result in push notifications not working");
+            alert("You denied notification permission, this will result in push notifications not working. Please go into settings and allow notifications for the Bus App.");
         }
     } else if('serviceWorker' in navigator) { // If the browser supports service workers but not notifications, I'm like 60% sure it'll be safari on IOS
         document.getElementById('IOSnotifpopup').style.display='block';
+        document.getElementById("iosNotifVideo").play();
     } else {
         alert("Your browser is not supported :(");
     }
@@ -91,7 +93,7 @@ function updateNotifButton() {
             button.innerHTML = "<i class=\"fa-solid fa-bell\"></i>";
             button.parentElement.onclick = "";
             button.parentElement.style.cursor = "not-allowed";
-        } else {
+        } else if(Notification.permission !== "denied") {
             const tooltip = addToolTip(button.parentElement, "Enable Notifications");
             setToolTipPosition(tooltip);
             window.setInterval((e) => {

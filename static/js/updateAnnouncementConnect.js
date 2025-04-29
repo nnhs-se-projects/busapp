@@ -17,13 +17,13 @@ function updateAnnouncement() {
 }
 
 function clearAnnouncement() {
+    if(!confirm("Are you sure you want to clear the announcement?")) { return; }
     document.getElementsByName("announcement")[0].value = "";
-    save_();
 }
 
 function clearTvAnnouncement() {
+    if(!confirm("Are you sure you want to clear the TV announcement?")) { return; }
     document.getElementsByName("tvAnnouncement")[0].value = "";
-    save_();
 }
 var announcement = document.getElementsByName("announcement")[0].value;
 var tvAnnouncement = document.getElementsByName("tvAnnouncement")[0].value;
@@ -48,3 +48,10 @@ async function save_() {
 
     window.location.href = "/admin";
 }
+
+function auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight) + "px";
+  }
+
+document.querySelectorAll("textarea").forEach((e) => auto_grow(e));

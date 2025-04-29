@@ -39,7 +39,8 @@ html, body {
     padding: 10px;
     text-align: center;
     border-radius: 5px;
-    cursor:pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
+    cursor: pointer; /*changes pointer on "add bus" and "add new admin" as they were just arrows before this line was added. Not sure why it was different, could be fixed in a better way somewhere else.*/
+    align-content: center;
 } 
 
 table {
@@ -318,8 +319,8 @@ thead > tr:first-child {
     padding: 10px;
     border-radius: 5px;
     color: white;
-    background-color: #327fa8;
-    border: 5px solid #05a1f5;
+    background-color: var(--space-cadet);
+    box-shadow: 0px 1px 10px 0px var(--lighter-blue);
     top: 0;
     transform: translateY(-100%);
     animation: 0.3s ease-in 0s normal forwards;
@@ -341,6 +342,7 @@ thead > tr:first-child {
 select[name="minutes"] {
     padding: 12px; /* Increase padding */
     font-size: 16px; /* Increase font size */
+    border: none;
     border-bottom: solid var(--crimson);
     border-radius: 5px;
     background-color: var(--giants-orange );

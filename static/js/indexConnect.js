@@ -71,16 +71,18 @@ function toggleCredits() {
 
 var lastUpdateAnnouncement;
 function announcementAlert(announcement) {
-    if(announcement !== oldAnnouncement) {
+    if(announcement !== oldAnnouncement && announcement !== "") {
         localStorage.setItem("lastAnnouncement", announcement);
         if(lastUpdateAnnouncement !== announcement)document.querySelector(".announcement-div").animate(
             [{ backgroundColor: 'var(--lighter-blue)' }, { backgroundColor: 'var(--space-cadet)' }],
             { duration: 200, iterations: 11, direction: 'alternate' }
           );
           lastUpdateAnnouncement = announcement;
-    } else {
+    } else if(announcement !== "") {
         const ribbon = document.getElementById("announcementRibbon");
         ribbon.parentElement.removeChild(ribbon);
+    } else {
+        localStorage.setItem("lastAnnouncement", announcement);
     }
 }
 
@@ -406,3 +408,10 @@ if("mediaSession" in navigator &&
 }
 
 if(window.chrome) document.getElementById("extensionButton").style.display = "block";
+
+if ('Notification' in window) {
+    if(localStorage.getItem("lastPermission") !== Notification.permission) {
+        if(Notification.permission === "granted") enablePushNotifications(initialData.vapidPublicKey)
+    }
+    localStorage.setItem("lastPermission", Notification.permission);
+}
