@@ -22,7 +22,7 @@ div {
  
 table, tr, td, th {
    font-family: Verdana, sans-serif;
-   padding: 15px;
+   padding: 10px;
    text-align: center;
    font-size: 20px;
 }
@@ -31,7 +31,7 @@ table, tr, td, th {
 tr, td {
    border-radius: 15px;
    background-color: #f7b90c;
-   width: 50px;
+   width: auto;
 }
 
 .numbering {
