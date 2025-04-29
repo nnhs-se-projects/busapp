@@ -2,11 +2,13 @@ body {
    background-color: #363434;
    margin: 0;
    font-family: Verdana, sans-serif;
+   rotate: 90deg;
 }
  
  
 div {
    margin-bottom: 15px;
+   width: auto 100%;
 }
  
  
@@ -89,7 +91,7 @@ input {
    font-family: Verdana, sans-serif;
    font-size: 20px;
    border: transparent;
-   width: 100%;
+   width: auto;
    background-color: transparent;
 }
 
@@ -97,7 +99,7 @@ input.rowA, input.rowB {
    font-size: 15px;
    color: black;
    border-radius: 5px;
-   width: 100%;
+   width: auto;
    padding: 5px;
 }
 
