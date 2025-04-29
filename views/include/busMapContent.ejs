@@ -1,0 +1,49 @@
+<div class="buttons">
+    <a id="button back-button" onclick="saveMap()" href="/">Back to Homepage</a>
+    <a id="button back-button" onclick="saveMap()" href="/busMapLots">Lots</a>
+    <a id="info" href="#popup"><i class="fas fa-info-circle"></i></a>
+    <div class="popup" id="popup">
+        <div class="popup-content"><a href="#" id="popup">&#10005;</a><br><br>
+            The layout of the map is from the perspective of the sidewalk: buses at the <b>RIGHT</b> of the 
+            <b>CURRENT WAVE</b> are the first to leave while buses at the <b>LEFT</b> of the <b>NEXT WAVE</b>T
+            are closest to entering the current wave.
+            <br><br>
+            The <span style="color: #e43939">RED</span> 
+            cells are buses that you have pinned. The <span style="color: #1cbfff">BLUE BORDER</span> 
+            cells are the projected positions of pinned buses in the next wave once the current wave leaves.
+        </div>
+    </div>
+</div>
+
+
+<body>
+
+<div>
+
+<table style="width:100%" id="next-wave">
+    <th colspan="100%">&#10229; Next Wave
+        <tr style="height: 100px">
+            <% for (let i = 0; i < data.nextWave.length; i++) { %>
+                <td class="next-wave"><%= data.nextWave[i].busNumber %></td>
+            <% } %>
+        </tr>
+    </th>
+</table>
+   
+</div>
+
+
+<div>
+
+<table style="width:100%" id="current-wave">
+    <th colspan="100%">Current Wave &#10230;
+        <tr style="height: 100px">
+            <% for (let i = 0; i < data.currentWave.length; i++) { %>
+                <td class="current-wave"><%= data.currentWave[i].busNumber %></td>
+            <% } %>
+        </tr>
+    </th>
+</table>
+   
+</div>
+</body>
