@@ -9,15 +9,7 @@ let rowBList = [];
 rowAList.length = 14;
 rowBList.length = 14;
 
-// function updateBusList() {
-//     for (let i = 0; i < rowA.length; i++) {
-//         const busA = rowA[i].textContent.trim();
-//         rowAList[i] = parseInt(busA);
 
-//         const busB = rowB[i].textContent.trim();
-//         rowBList[i] = parseInt(busB);
-//     }
-// }
 
 function setLots() {
     for (let i = 0; i < rowA.length; i++) {
