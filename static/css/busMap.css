@@ -103,6 +103,17 @@ input.rowA, input.rowB {
    padding: 5px;
 }
 
+input.submit {
+   background-color: #00e961;
+   cursor: pointer;
+   color: azure;
+   font-size: 20px;
+   border-radius: 10px;
+   padding: 5px;
+   margin: auto;
+   height: 100%;
+}
+
 .popup {
    display: none;
    position: fixed;

@@ -28,10 +28,11 @@ function setLots() {
 async function save(elem) {
 
     const bus = elem.parentElement.parentElement.querySelector("input").value;
+
     await fetch("/updateBusMap", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ rowA: rowAList, rowB: rowBList })
+        body: JSON.stringify({ bus: bus })
     });
 
     updateBusMap();
