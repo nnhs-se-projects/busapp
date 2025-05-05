@@ -9,12 +9,12 @@
         <th colspan="100%">Bus Lots
             <tr style="height: 100px">
                 <% for (let i = 0; i < 14; i++) { %>
-                    <td class="rowA"><%=data.rowA%></td>
+                    <td class="rowA"><%=data.rowA[i]%></td>
                 <% } %>
             </tr>
             <tr style="height: 100px">
                 <% for (let i = 0; i < 14; i++) { %>
-                    <td class="rowB"></td>
+                    <td class="rowB"><%=data.rowB[i]%></td>
                 <% } %>
             </tr>
             <tr style="height: 100px; background-color: transparent">
