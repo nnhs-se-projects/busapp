@@ -14,6 +14,7 @@ const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
 const Admin = require("./model/admin");
+const Lot = require("./model/lot");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -31,6 +32,7 @@ webpush.setVapidDetails(
 );
 
 const bodyParser = require('body-parser');
+const { log } = require("console");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
@@ -488,7 +490,55 @@ router.post("/clearAnnouncement", async (req, res) => {
     await Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 });
 
+router.get("/busMap", async (req, res) => {
+    let currentWave = await Bus.find({status: "Loading"});
+    let nextWave = await Bus.find({status: "Next Wave"});
 
+    // sort the current wave by order
+    currentWave = currentWave.sort((a, b) => b.order - a.order);
+    nextWave = nextWave.sort((a, b) => a.order - b.order);
+    
+    let data = {
+        currentWave: currentWave,
+        nextWave: nextWave,
+        rowA: await Lot.findOne({}).rowA,
+        rowB: await Lot.findOne({}).rowB,
+    };
+
+    res.render("busMap", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMap.ejs")),
+    });
+});
+
+router.get("/busMapLots", async (req, res) => {
+
+    let data = {
+        rowA: await Lot.findOne({}).rowA,
+        rowB: await Lot.findOne({}).rowB,
+    }
+
+    res.render("busMapLots", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMapLots.ejs")),
+    });
+});
+
+router.get("/busMapAdmin", async (req, res) => {
+    if(!(await checkLogin(req, res))) { return; }
+
+    await Lot.findOneAndUpdate({}, {rowA: req.body.rowA, rowB: req.body.rowB}, {upsert: true});
+
+    let data = {
+        rowA: await Lot.findOne({}).rowA,
+        rowB: await Lot.findOne({}).rowB,
+    }
+
+    res.render("busMapAdmin", {
+        data: data,
+        render: fs.readFileSync(path.resolve(__dirname, "../views/busMapAdmin.ejs")),
+    });
+});
 
 // this is stupid but in order to get the actual timer to server.js and not just the initial value we need this
 function getTimer() { return timer; }

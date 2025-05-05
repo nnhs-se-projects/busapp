@@ -1,7 +1,11 @@
 {
   "name": "Bus App",
   "description": "NNHS Bus App browser extension",
+<<<<<<< HEAD
   "version": "1.3",
+=======
+  "version": "1.4",
+>>>>>>> 590fb84cfb17db08b03216c10e022ef5d7ddc535
   "manifest_version": 3,
   "action": {
     "default_popup": "pins.html",
