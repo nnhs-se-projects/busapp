@@ -40,7 +40,8 @@ function pinnedBusHighlight() {
         if (pins.includes(parseInt(bus))) {
             currentWave[i].style.backgroundColor = "#e43939";
             currentWave[i].style.animation = "glowCurrent 1s ease-in-out infinite alternate";
-        } if (nextHighlight.includes(currentWave.length - i - 1)) {
+        }
+        if (nextHighlight.includes(currentWave.length - i - 1)) {
             currentWave[i].style.borderWidth = "5px";
             currentWave[i].style.borderStyle = "solid";
             currentWave[i].style.borderColor = "#1cbfff";

@@ -1,6 +1,6 @@
 <div class="buttons">
-    <a id="button back-button" onclick="saveMap()" href="/">Back to Homepage</a>
-    <a id="button back-button" onclick="saveMap()" href="/busMap">Waves</a>
+    <a id="button back-button" href="/">Back to Homepage</a>
+    <a id="button back-button" href="/busMap">Waves</a>
 </div>
 
 <div>
@@ -9,7 +9,7 @@
         <th colspan="100%">Bus Lots
             <tr style="height: 100px">
                 <% for (let i = 0; i < 14; i++) { %>
-                    <td class="rowA"></td>
+                    <td class="rowA"><%=data.rowA%></td>
                 <% } %>
             </tr>
             <tr style="height: 100px">

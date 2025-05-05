@@ -24,7 +24,10 @@
     <th colspan="100%">&#10229; Next Wave
         <tr style="height: 100px">
             <% for (let i = 0; i < data.nextWave.length; i++) { %>
-                <td class="next-wave"><%= data.nextWave[i].busNumber %></td>
+                <td class="next-wave">
+                    <%= data.nextWave[i].busNumber %>
+                    <% if (data.nextWave[i].busChange) { %> ➔ <%= data.nextWave[i].busChange %><% } %>
+                </td>
             <% } %>
         </tr>
     </th>
@@ -39,7 +42,10 @@
     <th colspan="100%">Current Wave &#10230;
         <tr style="height: 100px">
             <% for (let i = 0; i < data.currentWave.length; i++) { %>
-                <td class="current-wave"><%= data.currentWave[i].busNumber %></td>
+                <td class="current-wave">
+                    <%= data.currentWave[i].busNumber %>
+                    <% if (data.currentWave[i].busChange) { %> ➔ <%= data.currentWave[i].busChange %><% } %>
+                </td>
             <% } %>
         </tr>
     </th>

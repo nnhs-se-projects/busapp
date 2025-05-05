@@ -26,6 +26,14 @@ const schema = new mongoose.Schema({
         type: [Date],
         required: false,
     },
+    lotRow: {
+        type: String,
+        required: false,
+    },
+    lotNumber: {
+        type: Number,
+        required: false,
+    },
 });
 const Bus = mongoose.model("Bus", schema);
 module.exports = Bus;

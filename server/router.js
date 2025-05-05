@@ -14,7 +14,6 @@ const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
 const Admin = require("./model/admin");
-const Lot = require("./model/lot");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -501,8 +500,6 @@ router.get("/busMap", async (req, res) => {
     let data = {
         currentWave: currentWave,
         nextWave: nextWave,
-        rowA: await Lot.findOne({}).rowA,
-        rowB: await Lot.findOne({}).rowB,
     };
 
     res.render("busMap", {
@@ -512,10 +509,12 @@ router.get("/busMap", async (req, res) => {
 });
 
 router.get("/busMapLots", async (req, res) => {
+    let rowA = await Bus.find({lotRow: "A"});
+    let rowB = await Bus.find({lotRow: "B"});
 
     let data = {
-        rowA: await Lot.findOne({}).rowA,
-        rowB: await Lot.findOne({}).rowB,
+        rowA: rowA,
+        rowB: rowB,
     }
 
     res.render("busMapLots", {
@@ -526,12 +525,10 @@ router.get("/busMapLots", async (req, res) => {
 
 router.get("/busMapAdmin", async (req, res) => {
     if(!(await checkLogin(req, res))) { return; }
-
-    await Lot.findOneAndUpdate({}, {rowA: req.body.rowA, rowB: req.body.rowB}, {upsert: true});
+    
 
     let data = {
-        rowA: await Lot.findOne({}).rowA,
-        rowB: await Lot.findOne({}).rowB,
+        buses: await getBuses(),
     }
 
     res.render("busMapAdmin", {

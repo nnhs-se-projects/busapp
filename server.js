@@ -13,7 +13,6 @@ const Bus = require("./server/model/bus.js");
 const Wave = require("./server/model/wave.js");
 const Weather = require("./server/model/weather.js");
 const Announcement = require("./server/model/announcement.js");
-const Lot = require("./server/model/lot.js");
 const { getBuses } = require("./server/DBHandler.js");
 
 const app = express();
@@ -45,7 +44,6 @@ io.of("/admin").on("connection", async (socket) => {
             loading: await Bus.find({status: "Loading"}).sort("order"),
             isLocked: wave.locked, 
             leavingAt: wave.leavingAt,
-            lot: await Lot.find({}),
         };
         
         // console.log("updateMain called")
@@ -59,7 +57,6 @@ io.of("/admin").on("connection", async (socket) => {
             announcement: announce.announcement,
             tvAnnouncement: announce.tvAnnouncement,
             timer: getTimer(),
-            lot: data.lot,
         }
         
         io.of("/admin").emit("update", data);
