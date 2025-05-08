@@ -509,8 +509,8 @@ router.get("/busMap", async (req, res) => {
 });
 
 router.get("/busMapLots", async (req, res) => {
-    let rowA = await Bus.find({lotRow: "A"});
-    let rowB = await Bus.find({lotRow: "B"});
+    let rowA = req.body.rowA;
+    let rowB = req.body.rowB;
 
     let data = {
         rowA: rowA,
@@ -528,7 +528,8 @@ router.get("/busMapAdmin", async (req, res) => {
     
 
     let data = {
-        buses: await getBuses(),
+        rowA: req.body.rowA,
+        rowB: req.body.rowB,
     }
 
     res.render("busMapAdmin", {

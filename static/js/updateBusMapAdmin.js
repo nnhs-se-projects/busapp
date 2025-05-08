@@ -1,20 +1,26 @@
 "use strict";
 
-const rowA = document.getElementsByClassName("rowA");
-const rowB = document.getElementsByClassName("rowB");
+const rowAContent = document.getElementsByClassName("rowA");
+const rowBContent = document.getElementsByClassName("rowB");
+
+let rowA = [];
+let rowB = [];
 
 
 async function save() {
 
-    for (let i = 0; i < rowA.length; i++) {
-        const num = rowA[i].children[0].value;
-        
+    for (let i = 0; i < rowAContent.length; i++) {
+        const numA = rowAContent[i].children[0].value;
+        const numB = rowBContent[i].children[0].value;
+
+        rowA[i] = numA;
+        rowB[i] = numB;
     }
 
-    await fetch("/updateBusMap", {
+    await fetch("/busMapAdmin", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bus: bus })
+        body: JSON.stringify({ rowA: rowA, rowB: rowB })
     });
 
     updateBusMap();
