@@ -17,7 +17,7 @@ Additionally, admins are granted the ability to add or remove other admins from 
 
 Adding an admin requires the email address of the admin to be added. Enter the new address and press the plus next to their name to add them. In the event that an admin must be removed, it is as simple as pressing the button next to their name. Remember to press the save button at the top of the page after making any changes (unless the change in unintentional, in which case the discard button can be utilized).
 
-###### !The below information may be slightly outdated, but may be useful never-the-less!
+!The below information may be slightly outdated, but may be useful never-the-less!
 Administrator Handbook: https://docs.google.com/document/d/1MaySGjV3I7LIaNLHDQCaPODoN7ZUI3aYht6oijkWy_4/edit?usp=sharing
 
 Admin Video Tutorial on Grey Out Buses, Wave System, and Editing and Viewing Announcements: https://drive.google.com/file/d/1okofo47q2vuZsaQ01qOejM5qpYVgVvP4/view
