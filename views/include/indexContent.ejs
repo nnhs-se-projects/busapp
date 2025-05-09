@@ -1,7 +1,7 @@
 <% if(data.announcement) { %>
-  <div class="announcement-div d-flex justify-content-center container-fluid mt-1">
+  <div class="announcement-div">
     <div class="ribbon" id="announcementRibbon">New!</div>
-    <div class="row text-center align-items-center justify-content-center" style="width: 100%">
+    <div style="width: 100%">
         <!-- <i class="fa-solid fa-bullhorn"></i> -->
         <h2 class="section-header">Announcement</h2>
         <!-- <hr> -->
@@ -9,22 +9,12 @@
     </div>
   </div>
 <% } %>
-<div class="content-container nav-item container-fluid text-center mt-1 has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
-  <div class="row justify-content-center dropdown-center">
+<div class="has-tooltip" tooltip-text="<i class='fa-regular fa-circle-xmark' onclick='this.parentElement.style.display=`none`' style='float: right; margin: 5px; cursor: pointer'></i>Pinned buses show up here">
+  <div>
     <h2 class="section-header">Pinned Buses</h2>
-    <button class="dropdown-toggle has-tooltip" type="button" data-bs-display="dynamic" data-bs-toggle="dropdown" data-bs-offset="0, 5" aria-expanded="false" style="color: white" tooltip-text="Pin a bus to get started!">
-    <i class="fa-solid fa-thumbtack"></i> 
-    </button>
-    <ul class="dropdown-menu">
-      <% for(let i = 0; i < data.buses.length; i++) { %> 
-          <li class = "bus-row p-1 text-center">
-              <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> ➔ <%= data.buses[i].change %></span><% } %></button>
-          </li>
-      <% } %> 
-    </ul>
   </div>
-  <div class="row justify-content-center">
-    <table class="pinned-bus-table text-center">
+  <div>
+    <table class="pinned-bus-table">
       <thead>
           <th style="width: 5ch">Bus #</th>
           <th style="width: 9ch">Time</th>
@@ -35,14 +25,24 @@
   </div>
 </div>
 
-<div class="content-container nav-item container-fluid text-center mt-1">
-  <div class="row justify-content-center dropdown-center">
+<div>
+  <div>
   <h2 class="section-header">Now Loading<span id="timer"></span></h2>
+  <button class="has-tooltip" type="button"style="color: white" tooltip-text="Pin a bus to get started!">
+  <i class="fa-solid fa-thumbtack"></i> 
+  </button>
+  <ul class="dropdown-menu">
+    <% for(let i = 0; i < data.buses.length; i++) { %> 
+        <li class = "bus-row">
+            <button class="pin-button" onclick="pinBus(this)" style="color: white"><%= data.buses[i].number %> <% if (data.buses[i].change) { %> ➔ <%= data.buses[i].change %></span><% } %></button>
+        </li>
+    <% } %> 
+  </ul>
   <% const loading = data.buses.filter(e => e.status === "Loading").sort((a, b) => +a.order - +b.order); 
   if(loading.length === 0) { %> 
     <span style="padding-bottom: 15px">No buses currently loading.</span>
   <% } else { %>
-    <table class="pinned-bus-table text-center">
+    <table class="pinned-bus-table">
       <thead>
           <th style="width: 5ch">Bus #</th>
           <th style="width: 9ch">Time</th>

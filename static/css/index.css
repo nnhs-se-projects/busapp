@@ -12,7 +12,6 @@
     --lighter-blue: hsl(250, 31%, 40%);
     --night: #141415ff;
     --gray: #ebebeb
-    /* --bs-navbar-brand-color: var(--dark-cyan) !important; */
 }
 
 body {
@@ -29,91 +28,45 @@ body {
     overflow-x: hidden; /* ribbon on the announcement causes horizontal overflow, prevent that */
 }
 
-.row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.container-fluid {
-    padding-left: 0;
-    padding-right: 0;
-    max-width: max(80vh, 40vw);
-}
-
 .status-col {
     transition: background-position 0.5s linear;
     background-size: 210%;
 }
 
-.navbar-div {
-    width: calc(100% - 10px);
+nav {
     background-color: var(--space-cadet);
-    border-radius: 5px;
-    color: white;
-    box-shadow: 0px 1px 10px 0px var(--space-cadet);
-    margin-top: 0px !important;
-}
-
-.navbar-toggler, .nav-link {
-    box-shadow: inset 0px -3px 0px 0px var(--crimson);
-    line-height: 1.5em; 
-}
-
-.navbar-text, .navbar-toggler {
-    background-color: var(--giants-orange);
-    border-radius: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 5px;
-    color: white;
+    position: sticky;
+    top: 0px;
+    display: flex;
 }
 
 .navbar-text {
-    max-width: calc(100% - 120px); 
-    display: inline-block; 
-    text-overflow: ellipsis; 
-    overflow: hidden; 
-    white-space: nowrap;
+    display: inline-block;
+}
+.navbar-dropdown {
 }
 
 #notif-button > i {
-    width: 1.5em;
-    line-height: 1.5em;
     cursor: inherit;
 } #notif-button { cursor: inherit; }
 
-.navbar-brand:hover, .navbar-toggler:hover, .nav-link:hover {
-    transform: translateY(2px);
-    box-shadow: unset;
+.nav-button, .navbar-toggler {
+    justify-self: end;
 }
 
-.navbar > .container-fluid {
-    padding-left: calc(var(--bs-gutter-x) * .5);
-    padding-right: calc(var(--bs-gutter-x) * .5);
-}
 
-.nav-item a {
-    border-radius: 5px;
-    background-color: var(--giants-orange);
-    margin: 5px;
-}
-
-button:not(.navbar-toggler) {
-    border-radius: 5px;
+button, .navbar-toggler {
     background-color: var(--giants-orange);
     border: none;
-    padding: 20px;
-    width: 80%;
-    border-bottom: solid var(--crimson); 
-}
-
-button:active{
-    transform: translateY(1px);
+    /* padding: 10px; */
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
 }
 
 .dropdown-toggle {
     max-width: 30%;
-    padding: 5px !important;
+    padding: 5px;
     margin-bottom: 5px;
 }
 
@@ -202,25 +155,12 @@ td, .busContainer > p {
 }
 
 .section-header {
-    background-color: var(--giants-orange); 
     width: 100%; 
     border-top-left-radius: 5px; 
     border-top-right-radius: 5px;
     padding: 0px;
     padding-bottom: 0.2em;
     padding-top: 0.2em;
-}
-
-.busContainer > p {
-    margin-left: calc(var(--bs-gutter-x) / 2);
-    margin-right: calc(var(--bs-gutter-x) / 2);
-}
-
-.busContainer {
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
 }
 
 #IOSnotifpopup > div, #whatsNewPopup > div {
@@ -255,16 +195,6 @@ a {
     color: var(--giants-orange);
     cursor: pointer;
 }
-
-.button2 {
-    background-color: #008CBA; 
-    color: #ffffff;
-}
-
-.button2:hover {
-    background-color: #003749;
-    color: rgb(255, 255, 255);
-} */
 
 .android-button {
     font-family: 'Montserrat', sans-serif;
@@ -359,7 +289,7 @@ a {
     flex-direction: column;
 }
 #networkBlocker:is(.shown){
-    height: 100% !important;
+    height: 100%;
     transition: height 0.5s;
 }
 

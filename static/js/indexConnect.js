@@ -383,7 +383,7 @@ async function forceUpdatePage() {
 }
 
 
-
+// @Lucas-V-L are these needed here? I just wanted to check if they were necessary for notifications
 updatePins();
 updateNotifButton();
 navigator.serviceWorker?.register('/serviceWorker.js', { scope: '/' });
@@ -414,4 +414,15 @@ if ('Notification' in window) {
         if(Notification.permission === "granted") enablePushNotifications(initialData.vapidPublicKey)
     }
     localStorage.setItem("lastPermission", Notification.permission);
+}
+
+
+function expandNavbar() {
+    var dropdown = document.getElementsByClassName("navbar-dropdown")[0];
+    console.log("poop");
+    if (dropdown.style.display == "none") {
+        dropdown.style.display = "flex";
+    } else {
+        dropdown.style.display = "none";
+    }
 }
