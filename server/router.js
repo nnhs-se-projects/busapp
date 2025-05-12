@@ -14,6 +14,7 @@ const Weather = require("./model/weather");
 const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
 const Admin = require("./model/admin");
+const Lot = require("./model/lot");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -528,14 +529,26 @@ router.get("/busMapAdmin", async (req, res) => {
     
 
     let data = {
-        rowA: req.body.rowA,
-        rowB: req.body.rowB,
+        rowA: Lot.findOne({rowA}),
+        rowB: Lot.findOne({rowB}),
     }
 
     res.render("busMapAdmin", {
         data: data,
         render: fs.readFileSync(path.resolve(__dirname, "../views/busMapAdmin.ejs")),
     });
+});
+
+router.post("/busMapAdmin", async (req, res) => {
+    // Check if user is logged in and is an admin
+    if(!(await checkLogin(req, res))) { return; }
+
+    let rowA = req.body.rowA;
+    let rowB = req.body.rowB;
+
+    await Lot.findOneAndUpdate({}, {rowA: rowA, rowB: rowB}, {upsert: true});
+
+    res.redirect("/busMapAdmin");
 });
 
 // this is stupid but in order to get the actual timer to server.js and not just the initial value we need this

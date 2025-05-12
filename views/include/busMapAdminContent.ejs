@@ -14,14 +14,14 @@
         <tr style="height: 100px">
             <% for (let i = 0; i < 14; i++) { %>
                 <td class="rowA">
-                    <input type="number" inputmode="number" placeholder="bus #" value="">
+                    <input type="number" inputmode="number" placeholder="bus #" value="<%=data.rowA[i]%>">
                 </td>
             <% } %>
         </tr>
         <tr style="height: 100px">
-            <% for (let i = 14; i < 28; i++) { %>
+            <% for (let i = 0; i < 14; i++) { %>
                 <td class="rowB">
-                    <input type="number" inputmode="number" placeholder="bus #" value="">
+                    <input type="number" inputmode="number" placeholder="bus #" value="<%=data.rowB[i]%>">
                 </td>
             <% } %>
         </tr>
