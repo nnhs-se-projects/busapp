@@ -2,9 +2,7 @@
 The Bus App is a web application that allows admins in charge of bus communication to post information regarding the status of buses for pickup after school. Students can access this information from their phone remotely. The purpose of the app is to make communication easier which makes it easier for admins, makes students less likely to miss their bus or bus changes and allows students to do things after school without fear of missing their bus. 
 
 ## Intended Experience
-To access the Bus App, all users should enter the website url (https://busapp.nnhsse.org/) into a browser. For convenience, it is recommended that users save this website to their phone’s homepage. 
-
-This website can be saved to be used like a regular mobile application on Android and IOS devices. If using Google Chrome, users should click the three dots next to the URL bar and select 'add to homepage'. On Safari, users should click the 'send' icon, scroll down and select 'add to homescreen'. 
+To access the Bus App, all users should enter the website url (https://busapp.nnhsse.org/) into a browser. It is HIGHLY recommended that users save this website to their phone’s homepage to make use of all of the Bus App's features including notifications. On Android and IOS devices. If using Google Chrome, users should click the three dots next to the URL bar and select 'add to homepage'. On Safari, users should click the 'send' icon, scroll down and select 'add to homescreen'. 
 
 The below are the intended experiences for both admins and students:
 
@@ -13,20 +11,22 @@ From the homepage, admins should click the “Login as editor” button in the t
 
 From this page admins are able to edit bus changes, status (Not Here, Next Wave, Loading or Gone) and time. Time will update automatically when status is changed.
 
-From the button labeled "Update Bus List," admins can change the default bus list. Entering a number into the button labeled "Add" and clicking the checkmark will add the bus, though the rest of the bus app will not change immediately. To save their changes, admins should click "Save Changes" to save the changes they've made and to update all active pages, or "Save Without Updating" to save them without updating the pages until the following day. They can also press "Discard Changes" to remove any changes they've made without saving. 
+From the button labeled "Update Bus List," admins can change the default bus list. Entering a number into the button labeled "Add" and clicking the checkmark will add the bus, though the rest of the bus app will not change immediately. To save their changes, admins should click "Save Changes" to save the changes they've made and to update all active pages, or "Save Without Updating" to save them without updating the pages until the following day. They can also press "Discard Changes" to remove any changes they've made without saving. Admins may also reorder buses in a wave, or organize them within the Bus Map for additonal half-day utility and navigation.
 
 Additionally, admins are granted the ability to add or remove other admins from the whitelist, from the page directed to by the "Add New Admin" button. All admins are able to view the current whitelist at any time.
 
 Adding an admin requires the email address of the admin to be added. Enter the new address and press the plus next to their name to add them. In the event that an admin must be removed, it is as simple as pressing the button next to their name. Remember to press the save button at the top of the page after making any changes (unless the change in unintentional, in which case the discard button can be utilized).
 
+!The below information may be slightly outdated, but may be useful never-the-less!
+
 Administrator Handbook: https://docs.google.com/document/d/1MaySGjV3I7LIaNLHDQCaPODoN7ZUI3aYht6oijkWy_4/edit?usp=sharing
 
-Admin Video Tutorial on Grey Out Busses, Wave System, and Editing and Viewing Announcements: https://drive.google.com/file/d/1okofo47q2vuZsaQ01qOejM5qpYVgVvP4/view
+Admin Video Tutorial on Grey Out Buses, Wave System, and Editing and Viewing Announcements: https://drive.google.com/file/d/1okofo47q2vuZsaQ01qOejM5qpYVgVvP4/view
 
 Video Tutorial primarily targeted towards future development teams: https://drive.google.com/file/d/1ulnChPS5pEHX3aqH_wu1c70YdODRildk/view?usp=sharing 
 
 #### Student Experience 
-On the home page, students have access to all the information they need. The page consists of  a bus table displaying Bus Number, Bus Change, Status and Time. Additionally, a panel displaying the weather is visible in the top right. 
+On the home page, students have access to all the information they need. The page consists of a bus table displaying Bus Number, Bus Change, Status and Time. Additionally, a panel displaying the weather is visible in the top left, in addition to a responsive page background coordinated with the weather. 
 
 Students should first check for a bus change when opening the app and then periodically check the status of their bus to make sure they catch it. Information updated by admins is live so students will not have to refresh to view new information.
 
@@ -46,8 +46,10 @@ Follow these steps to setup the Bus App project
 To run the Bus App on local host, run `npm run start` using a terminal currently in the home directory of the project. This starts the server. After you see the message `Server is running on port 5182` you’ve started the server successfully. Now go to `http://localhost:5182/` to start development.
 
 ### On Dev Server
-To run the Bus App on the development server, you need to ask Mr. Schmit to host the server, and after he gives you confirmation that it is up and running, it's exactly the same as the production server, but with a different domain name. Go to 'https://busappdev.nnhsse.org/' to start development. One thing to note is that the development server does not update until the server is rebuilt, so make sure everything you want to test is in a finished state.
-
+To run the Bus App on the development server, you need to ask Mr. Schmit to host the server, and after he gives you confirmation that it is up and running, it's exactly the same as the production server, but with a different domain name. Go to 'https://busappdev.nnhsse.org/' to start development. One thing to note is that the development server does not update until the server is rebuilt, so make sure everything you want to test is in a finished state. Another recent addition is a built in debug console enabled through a local .env file when
+```
+Dev = true
+```
 
 #### Debugging
 To debug the Bus App on your development system, run `npm run dev` using a terminal currently in the home directory of the project. Then choose the "Start Debugging" menu item in the "Run" menu. You can now set breakpoints in the javascript files.
@@ -128,10 +130,6 @@ The Bus App uses a variety of technologies. Below is some information on how to 
 
 ##### Express
 As mentioned above, Express is the key technology we use to run a server. Please check the official documentation: https://expressjs.com/
-
-
-##### Bootstrap
-Bootstrap is a UI framework that helps to abstract vanilla CSS into modifiable and customizable premade classes. https://getbootstrap.com/docs/5.3/components/accordion/
 
 ##### Ejs
 Ejs is a form of html that allows javascript to be run during the creation of the html. This allows for tables to be created much more easily. Please see the official documentation: https://ejs.co/

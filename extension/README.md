@@ -2,7 +2,11 @@
 
 This is a simple extension that just contains an iframe that shows the /extension page on the Bus App. There is some Javascript to resize the iframe to the content, but that is all this extension does.
 
+<<<<<<< HEAD
 The extension is published to Firefox Add-Ons [here](https://addons.mozilla.org/en-US/firefox/addon/nnhs-bus-app/) and to the Chrome Web Store [here]().
+=======
+The extension is published to Firefox Add-Ons [here](https://addons.mozilla.org/en-US/firefox/addon/nnhs-bus-app/) and to the Chrome Web Store [here](https://chromewebstore.google.com/detail/bus-app/cgceeklcikhpejkbldnppbbnnjibokok).
+>>>>>>> 590fb84cfb17db08b03216c10e022ef5d7ddc535
 
 Ask Mr. Schmit for access to the accounts to update the addons if you need to.
 
