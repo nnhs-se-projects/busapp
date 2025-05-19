@@ -495,8 +495,8 @@ router.get("/busMap", async (req, res) => {
     let nextWave = await Bus.find({status: "Next Wave"});
 
     // sort the current wave by order
-    currentWave = currentWave.sort((a, b) => b.order - a.order);
-    nextWave = nextWave.sort((a, b) => a.order - b.order);
+    currentWave.sort((a, b) => b.order - a.order);
+    nextWave.sort((a, b) => a.order - b.order);
     
     let data = {
         currentWave: currentWave,
@@ -527,10 +527,25 @@ router.get("/busMapLots", async (req, res) => {
 router.get("/busMapAdmin", async (req, res) => {
     if(!(await checkLogin(req, res))) { return; }
     
+    let rowA = [];
+    let rowB = [];
+
+    await Bus.find({}).then((buses) => {
+        buses.forEach((bus) => {
+            if(bus.lotRow === "A") {
+                rowA.push(bus);
+            } else if(bus.lotRow === "B") {
+                rowB.push(bus);
+            }
+        });
+    });
+
+    rowA.sort((a, b) => a.lotNumber - b.lotNumber);
+    rowB.sort((a, b) => a.lotNumber - b.lotNumber);
 
     let data = {
-        rowA: Lot.findOne({rowA}),
-        rowB: Lot.findOne({rowB}),
+        rowA: rowA,
+        rowB: rowB,
     }
 
     res.render("busMapAdmin", {
@@ -543,10 +558,11 @@ router.post("/busMapAdmin", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    let rowA = req.body.rowA;
-    let rowB = req.body.rowB;
+    const bus = req.body.bus;
+    const lotNumber = req.body.lotNumber;
+    const lotRow = req.body.row;
 
-    await Lot.findOneAndUpdate({}, {rowA: rowA, rowB: rowB}, {upsert: true});
+    await Bus.updateOne({busNumber: bus}, {lotRow: lotRow, lotNumber: lotNumber});
 
     res.redirect("/busMapAdmin");
 });

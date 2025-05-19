@@ -1,6 +1,5 @@
 <div class="buttons">
-    <a id="button back-button" onclick="save()" href="/admin">Save and Return</a>
-    <button id="button back-button" onclick="save()">Save</button>
+    <a id="button back-button" href="/admin">Return</a>
 </div>
     
 <body>
@@ -14,14 +13,16 @@
         <tr style="height: 100px">
             <% for (let i = 0; i < 14; i++) { %>
                 <td class="rowA">
-                    <input type="number" inputmode="number" placeholder="bus #" value="<%=data.rowA[i]%>">
+                    <input id="<%=i%>" type="number" inputmode="number" placeholder="bus #" value="<%=data.rowB[i]%>">
+                    <input type="submit" onclick="save(this, 'A')" value="Save">
                 </td>
             <% } %>
         </tr>
         <tr style="height: 100px">
             <% for (let i = 0; i < 14; i++) { %>
                 <td class="rowB">
-                    <input type="number" inputmode="number" placeholder="bus #" value="<%=data.rowB[i]%>">
+                    <input id="<%=i%>" type="number" inputmode="number" placeholder="bus #" value="<%=data.rowA[i]%>">
+                    <input type="submit" onclick="save(this, 'B')" value="Save">
                 </td>
             <% } %>
         </tr>
