@@ -33,6 +33,7 @@ webpush.setVapidDetails(
 
 const bodyParser = require('body-parser');
 const { log } = require("console");
+const { JSONCookie } = require("cookie-parser");
 router.use(bodyParser.urlencoded({ extended: true }));
 
 Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
@@ -510,8 +511,17 @@ router.get("/busMap", async (req, res) => {
 });
 
 router.get("/busMapLots", async (req, res) => {
-    let rowA = req.body.rowA;
-    let rowB = req.body.rowB;
+    let rowA = [];
+    let rowB = [];
+    await Bus.find({}).then((buses) => {
+        buses.forEach((bus) => {
+            if(bus.lotRow === "A") {
+                rowA.push(bus);
+            } else if(bus.lotRow === "B") {
+                rowB.push(bus);
+            }
+        });
+    });
 
     let data = {
         rowA: rowA,
