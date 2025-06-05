@@ -11,7 +11,7 @@ From the homepage, admins should click the “Login as editor” button in the t
 
 From this page admins are able to edit bus changes, status (Not Here, Next Wave, Loading or Gone) and time. Time will update automatically when status is changed.
 
-From the button labeled "Update Bus List," admins can change the default bus list. Entering a number into the button labeled "Add" and clicking the checkmark will add the bus, though the rest of the bus app will not change immediately. To save their changes, admins should click "Save Changes" to save the changes they've made and to update all active pages, or "Save Without Updating" to save them without updating the pages until the following day. They can also press "Discard Changes" to remove any changes they've made without saving. Admins may also reorder buses in a wave, or organize them within the Bus Map for additonal half-day utility and navigation.
+From the button labeled "Update Bus List," admins can change the default bus list. Entering a number into the button labeled "Add" and clicking the checkmark will add the bus, though the rest of the bus app will not change immediately. To save their changes, admins should click "Save Changes" to save the changes they've made and to update all active pages, or "Save Without Updating" to save them without updating the pages until the following day. They can also press "Discard Changes" to remove any changes they've made without saving. Admins may also reorder buses in a wave, or organize them within the Bus Map for additional half-day utility and navigation.
 
 Additionally, admins are granted the ability to add or remove other admins from the whitelist, from the page directed to by the "Add New Admin" button. All admins are able to view the current whitelist at any time.
 
@@ -172,12 +172,12 @@ Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
 ```
 
-this is how you import amongo schema. and using mongo methods on the imported schema allows you interact with the objects in the collection
+this is how you import a mongo schema. and using mongo methods on the imported schema allows you interact with the objects in the collection
 
 ```
 (await Announcement.findOne({})).announcement
 ```
 
-you can get information about the collection by calling the findOne function. inside the currently empty curly braces you can include filter intructions. 
+you can get information about the collection by calling the findOne function. inside the currently empty curly braces you can include filter instructions. 
 
-NOTE: IT IS VERY IMPORTANT TO INCLUDE A PARENTHESES AROUND THE AWAIT ALL THE WAY UNTIL THE PERIOD. IF YOU DONT, EVERYTHING BREAKS.
+NOTE: IT IS VERY IMPORTANT TO INCLUDE A PARENTHESES AROUND THE AWAIT ALL THE WAY UNTIL THE PERIOD. IF YOU DON'T, EVERYTHING BREAKS.
