@@ -112,6 +112,7 @@ async function reset(button) {
 }
 
 async function resetAllBusses(button) {
+  if(!confirm("Are you sure you want to reset all buses?")) return;
   await fetchWithAlert("/resetAllBusses", "POST", {}, {});
   update();
 }
