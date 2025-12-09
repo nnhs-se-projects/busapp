@@ -6,6 +6,7 @@
         <a class="button" href="/">Homepage</a>
         <a class="button" href="/makeAnnouncement">Announcements</a>
         <a class="button" href="/busMapAdmin">Bus Map</a>
+        <button class="button" onclick="resetAllBusses()">Reset All Buses</button>
     </div>
     <script>
         function addAdmin() {
@@ -123,7 +124,6 @@
 </table>
 
 <div style="align-items: center; display: flex; justify-content: center; column-gap: 5px; margin-bottom: 25px;">
-    <button class="button" onclick="resetAllBusses()">Reset All Buses</button>
     <select name="minutes" id="timerDurationSelector" onchange="updateTimer()">
         <% var options = []; %>
         <% for(var i = 0.5; i <= 3; i+=0.5) { %>
