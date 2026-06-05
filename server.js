@@ -1,11 +1,9 @@
 "use strict";
 
 const express = require("express");
-const {router, getTimer} = require("./server/router.js");
 const path = require("path");
 const {createServer} = require("http");
 const {Server} = require("socket.io");
-const startWeather = require("./server/weatherController.js");
 const session = require("express-session");
 const dotenv = require("dotenv");
 const connectDB = require("./server/database/connection.js");
@@ -20,8 +18,11 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+let router;
+let getTimer;
+let startWeather;
+
 dotenv.config({ path: ".env" });
-connectDB();
 
 const PORT = process.env.PORT || 5182;
 
@@ -80,69 +81,81 @@ app.use(session({
 })); // Allows use of req.session
 app.use(express.json());
 
-app.use("/", router); // Imports routes from server/router.js
-
 app.use("/css", express.static(path.resolve(__dirname, "static/css")));
 app.use("/js", express.static(path.resolve(__dirname, "static/js")));
 app.use("/img", express.static(path.resolve(__dirname, "static/img")));
 app.use('/html', express.static(path.resolve(__dirname, "static/html")));
 
-// custom 404 page - must come after all other instances of "app.use"
-app.all('*', (req, res) => {
-    res.status(404).render('404', {url: req.url});
-});  
+async function bootstrap() {
+    await connectDB();
 
-app.use((error, req, res, next) => {
-    if (res.headersSent) {
-        return next(error);
-    }
+    ({router, getTimer} = require("./server/router.js"));
+    startWeather = require("./server/weatherController.js");
 
-    const mongoErrorNames = new Set([
-        "MongooseServerSelectionError",
-        "MongoServerSelectionError",
-        "MongoNetworkError",
-        "MongoNetworkTimeoutError",
-        "DisconnectedError",
-        "MongooseError",
-    ]);
-    const errorText = `${error?.name || ""} ${error?.message || ""}`;
-    const databaseUnavailable = [...mongoErrorNames].some((name) => errorText.includes(name));
-    console.log("request failed", error);
+    app.use("/", router); // Imports routes from server/router.js
 
-    if (databaseUnavailable) {
-        res.status(503).send("Database temporarily unavailable. Please try again later.");
-        return;
-    }
+    // custom 404 page - must come after all other instances of "app.use"
+    app.all('*', (req, res) => {
+        res.status(404).render('404', {url: req.url});
+    });  
 
-    res.status(500).send("Internal server error");
-});
-
-startWeather(io);
-
-var now = new Date();
-var milliSecondsUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 0, 0, 0).getTime() - now.getTime();
-if (milliSecondsUntilMidnight < 0) {
-    milliSecondsUntilMidnight += 24 * 60 * 60 * 1000; // it's after 6am, try 6am tomorrow.
-}
-console.log("delay: " + milliSecondsUntilMidnight);
-var busResetInterval = setInterval(resetBusChanges, milliSecondsUntilMidnight); // every 24 hours
-var firstRun = true;
-
-httpServer.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
-
-async function resetBusChanges() {
-    try {
-        if(firstRun) {
-            firstRun = false;
-            clearInterval(busResetInterval); // clear the initial interval
-            busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
+    app.use((error, req, res, next) => {
+        if (res.headersSent) {
+            return next(error);
         }
 
-        await Bus.updateMany({}, { $set: { status: "", order: 0, busChange: 0 } }); 
-        await Wave.updateMany({}, { $set: { locked: false } })
+        const mongoErrorNames = new Set([
+            "MongooseServerSelectionError",
+            "MongoServerSelectionError",
+            "MongoNetworkError",
+            "MongoNetworkTimeoutError",
+            "DisconnectedError",
+            "MongooseError",
+        ]);
+        const errorText = `${error?.name || ""} ${error?.message || ""}`;
+        const databaseUnavailable = [...mongoErrorNames].some((name) => errorText.includes(name));
+        console.log("request failed", error);
 
-        console.log("reset bus changes: " + new Date().toLocaleString());
-    } catch (error) {
-        console.log("failed to reset bus changes", error.message);
+        if (databaseUnavailable) {
+            res.status(503).send("Database temporarily unavailable. Please try again later.");
+            return;
+        }
+
+        res.status(500).send("Internal server error");
+    });
+
+    startWeather(io);
+
+    var now = new Date();
+    var milliSecondsUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 6, 0, 0, 0).getTime() - now.getTime();
+    if (milliSecondsUntilMidnight < 0) {
+        milliSecondsUntilMidnight += 24 * 60 * 60 * 1000; // it's after 6am, try 6am tomorrow.
+    }
+    console.log("delay: " + milliSecondsUntilMidnight);
+    var busResetInterval = setInterval(resetBusChanges, milliSecondsUntilMidnight); // every 24 hours
+    var firstRun = true;
+
+    httpServer.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
+
+    async function resetBusChanges() {
+        try {
+            if(firstRun) {
+                firstRun = false;
+                clearInterval(busResetInterval); // clear the initial interval
+                busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
+            }
+
+            await Bus.updateMany({}, { $set: { status: "", order: 0, busChange: 0 } }); 
+            await Wave.updateMany({}, { $set: { locked: false } })
+
+            console.log("reset bus changes: " + new Date().toLocaleString());
+        } catch (error) {
+            console.log("failed to reset bus changes", error.message);
+        }
     }
 }
+
+bootstrap().catch((error) => {
+    console.log("server bootstrap failed", error);
+    process.exit(1);
+});
