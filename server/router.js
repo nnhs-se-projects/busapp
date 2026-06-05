@@ -204,14 +204,6 @@ router.get("/manifest.json", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../data/manifest.json"))
 });
 
-router.get('/help',(req, res)=>{
-    res.render('help');
-});
-
-
-
-
-
 /* 
     ADMIN AUTHENTICATED ROUTES GO HERE!
     PUT `if(!(await checkLogin(req, res))) { return; }` AT THE BEGINNING OF EVERY ENDPOINT
