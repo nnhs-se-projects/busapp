@@ -12,7 +12,7 @@ async function writeWeather(weather) {
 
 }
 
-// Code to update weather automcatically every 5 minutes
+// Code to update weather automatically every 5 minutes
 async function getWeather(io) {
     try {
         // If for some reason Naperville North's coordinates change a significant amount, becoming 
@@ -25,8 +25,6 @@ async function getWeather(io) {
     } catch (error) {
         console.log('failed to fetch data from weather.gov', error);
     }
-
-
 }
 
 module.exports = function startWeather(io) {

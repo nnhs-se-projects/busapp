@@ -39,6 +39,21 @@ Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
 let timer = 30;
 
+const asyncRoute = (handler) => (req, res, next) => {
+    Promise.resolve(handler(req, res, next)).catch(next);
+};
+
+for (const method of ["get", "post", "put", "delete", "all"]) {
+    const original = router[method].bind(router);
+    router[method] = (path, ...handlers) => original(path, ...handlers.map((handler) => {
+        if (typeof handler === "function" && handler.constructor && handler.constructor.name === "AsyncFunction") {
+            return asyncRoute(handler);
+        }
+
+        return handler;
+    }));
+}
+
 // Homepage. This is where students will view bus information from. 
 router.get("/", async (req, res) => {
     // Reads from data file and displays data
@@ -107,9 +122,9 @@ router.post("/auth/v1/google", async (req, res) => {
 
 
 // only works if the server is in dev mode, throws an error to crash the server and be automatically restarted
-router.get("/restartServer", async (req, res) => {
+router.get("/restartServer", (req, res) => {
     if(process.env.DEV === "true") {
-        throw new Error("restarting...");
+        process.nextTick(() => { throw new Error("restarting..."); });
     }
     else {res.sendStatus(404)}
 })
