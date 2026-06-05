@@ -9,6 +9,7 @@ const startWeather = require("./server/weatherController.js");
 const session = require("express-session");
 const dotenv = require("dotenv");
 const connectDB = require("./server/database/connection.js");
+const mongoose = require("mongoose");
 const Bus = require("./server/model/bus.js");
 const Wave = require("./server/model/wave.js");
 const Weather = require("./server/model/weather.js");
@@ -35,32 +36,36 @@ io.of("/").on("connection", (socket) => {
 //admin socket
 io.of("/admin").on("connection", async (socket) => {
     socket.on("updateMain", async (command) => {
+        try {
+            const wave = await Wave.findOne({});
 
-        const wave = await Wave.findOne({});
+            let data ={
+                allBuses: await getBuses(),
+                nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
+                loading: await Bus.find({status: "Loading"}).sort("order"),
+                isLocked: wave.locked, 
+                leavingAt: wave.leavingAt,
+            };
+            
+            // console.log("updateMain called")
+            const announce = (await Announcement.findOne({}));
 
-        let data ={
-            allBuses: await getBuses(),
-            nextWave: await Bus.find({status: "Next Wave"}).sort("order"),
-            loading: await Bus.find({status: "Loading"}).sort("order"),
-            isLocked: wave.locked, 
-            leavingAt: wave.leavingAt,
-        };
-        
-        // console.log("updateMain called")
-        const announce = (await Announcement.findOne({}));
-
-        let indexData = {
-            buses: data.allBuses,
-            isLocked: wave.locked,
-            leavingAt: wave.leavingAt,
-            weather: await Weather.findOne({}),
-            announcement: announce.announcement,
-            tvAnnouncement: announce.tvAnnouncement,
-            timer: getTimer()
+            let indexData = {
+                buses: data.allBuses,
+                isLocked: wave.locked,
+                leavingAt: wave.leavingAt,
+                weather: await Weather.findOne({}),
+                announcement: announce.announcement,
+                tvAnnouncement: announce.tvAnnouncement,
+                timer: getTimer()
+            }
+            
+            io.of("/admin").emit("update", data);
+            io.of("/").emit("update", indexData);
+        } catch (error) {
+            console.log("failed to update admin data", error.message);
+            socket.emit("updateError", "Database temporarily unavailable");
         }
-        
-        io.of("/admin").emit("update", data);
-        io.of("/").emit("update", indexData);        
     });
     socket.on("debug", (data) => {
         // console.log(`debug(admin): ${data}`);
@@ -87,6 +92,32 @@ app.all('*', (req, res) => {
     res.status(404).render('404', {url: req.url});
 });  
 
+app.use((error, req, res, next) => {
+    if (res.headersSent) {
+        return next(error);
+    }
+
+    const mongoErrorNames = new Set([
+        "MongooseServerSelectionError",
+        "MongoServerSelectionError",
+        "MongoNetworkError",
+        "MongoNetworkTimeoutError",
+        "DisconnectedError",
+        "MongooseError",
+    ]);
+    const errorText = `${error?.name || ""} ${error?.message || ""}`;
+    const databaseUnavailable = mongoose.connection.readyState !== 1 || [...mongoErrorNames].some((name) => errorText.includes(name));
+
+    console.log("request failed", error);
+
+    if (databaseUnavailable) {
+        res.status(503).send("Database temporarily unavailable. Please try again later.");
+        return;
+    }
+
+    res.status(500).send("Internal server error");
+});
+
 startWeather(io);
 
 var now = new Date();
@@ -101,14 +132,18 @@ var firstRun = true;
 httpServer.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
 
 async function resetBusChanges() {
-    if(firstRun) {
-        firstRun = false;
-        clearInterval(busResetInterval); // clear the initial interval
-        busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
+    try {
+        if(firstRun) {
+            firstRun = false;
+            clearInterval(busResetInterval); // clear the initial interval
+            busResetInterval = setInterval(resetBusChanges, 24 * 60 * 60 * 1000); // every 24 hours
+        }
+
+        await Bus.updateMany({}, { $set: { status: "", order: 0, busChange: 0 } }); 
+        await Wave.updateMany({}, { $set: { locked: false } })
+
+        console.log("reset bus changes: " + new Date().toLocaleString());
+    } catch (error) {
+        console.log("failed to reset bus changes", error.message);
     }
-
-    await Bus.updateMany({}, { $set: { status: "", order: 0, busChange: 0 } }); 
-    await Wave.updateMany({}, { $set: { locked: false } })
-
-    console.log("reset bus changes: " + new Date().toLocaleString());
 }

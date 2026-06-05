@@ -2,14 +2,23 @@
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
-    try {
-    const con = await mongoose.connect(process.env.MONGO_URI, {
+    mongoose.connection.on("connected", () => {
+        console.log(`MongoDB connected : ${mongoose.connection.host}`);
     });
 
-    console.log(`MongoDB connected : ${con.connection.host}`);
+    mongoose.connection.on("disconnected", () => {
+        console.log("MongoDB disconnected; continuing in degraded mode until it reconnects.");
+    });
+
+    mongoose.connection.on("error", (err) => {
+        console.log("MongoDB connection error:", err.message);
+    });
+
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+        });
     } catch (err) {
-        console.log(err);
-        process.exit(1);
+        console.log("MongoDB initial connection failed; starting without a live database.", err.message);
     }
 };
 
