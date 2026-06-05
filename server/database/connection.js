@@ -15,7 +15,10 @@ const connectDB = async () => {
     });
 
     try {
+        mongoose.set("bufferCommands", false);
         await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 5000,
         });
     } catch (err) {
         console.log("MongoDB initial connection failed; starting without a live database.", err.message);
