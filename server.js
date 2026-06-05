@@ -106,8 +106,7 @@ app.use((error, req, res, next) => {
         "MongooseError",
     ]);
     const errorText = `${error?.name || ""} ${error?.message || ""}`;
-    const databaseUnavailable = mongoose.connection.readyState !== 1 || [...mongoErrorNames].some((name) => errorText.includes(name));
-
+    const databaseUnavailable = [...mongoErrorNames].some((name) => errorText.includes(name));
     console.log("request failed", error);
 
     if (databaseUnavailable) {
