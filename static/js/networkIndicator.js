@@ -2,7 +2,7 @@
 var lastStatus = "connected";
 
 // sets the look of the indicator based on a supplied status 
-async function setIndicatorStatus(stat) {
+function showIndicatorStatus(stat) {
     const indicator = document.getElementById("networkIndicator");
     const blocker = document.getElementById("networkBlocker");
     const content = document.getElementById("content");
@@ -19,10 +19,16 @@ async function setIndicatorStatus(stat) {
         indicator.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
         blocker.classList.add("shown");
     }
-    if((stat === "slow" || stat === "connected") && lastStatus === "offline") {
+}
+
+async function setIndicatorStatus(stat) {
+    const previousStatus = lastStatus;
+    // record the new status first: forceUpdatePage may rerender the indicator using it
+    lastStatus = stat;
+    showIndicatorStatus(stat);
+    if((stat === "slow" || stat === "connected") && previousStatus === "offline") {
         await forceUpdatePage();
     }
-    lastStatus = stat;
 }
 
 

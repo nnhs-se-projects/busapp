@@ -15,6 +15,7 @@ const Wave = require("./model/wave");
 const Subscription = require("./model/subscription");
 const Admin = require("./model/admin");
 const Lot = require("./model/lot");
+const { broadcastUpdate, getAdminState } = require("./broadcast");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -38,6 +39,20 @@ router.use(bodyParser.urlencoded({ extended: true }));
 Announcement.findOneAndUpdate({}, {announcement: ""}, {upsert: true});
 Announcement.findOneAndUpdate({}, {tvAnnouncement: ""}, {upsert: true});
 let timer = 30;
+
+// Commands that read the bus/wave state and then write it run one at a time, so two admins
+// (or a double tap) can't interleave between the read and the write.
+let stateLock = Promise.resolve();
+function withStateLock(fn) {
+    const result = stateLock.then(fn);
+    stateLock = result.catch(() => {});
+    return result;
+}
+
+// sent when a command was based on a screen that no longer matches the server
+function rejectStale(res, message) {
+    res.status(409).send(message);
+}
 
 const asyncRoute = (handler) => (req, res, next) => {
     Promise.resolve(handler(req, res, next)).catch(next);
@@ -227,21 +242,20 @@ router.get("/admin", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    let data = {
-        allBuses: await getBuses(),
-        nextWave: await Bus.find({status: "Next Wave"}),
-        loading: await Bus.find({status: "Loading"}).sort("order"),
-        isLocked: false, 
-        leavingAt: new Date(),
-        timer: timer,
-        weather: await Weather.findOne({})
-    };
-    data.isLocked = (await Wave.findOne({})).locked;
-    data.leavingAt = (await Wave.findOne({})).leavingAt;
+    let data = await getAdminState();
+    data.weather = await Weather.findOne({});
     res.render("admin", {
         data: data,
         render: fs.readFileSync(path.resolve(__dirname, "../views/include/adminContent.ejs")),
     });
+});
+
+// current admin state, used by admin pages to resync after reconnecting or regaining focus
+router.get("/adminState", async (req, res) => {
+    if(!(await checkLogin(req, res))) { return; }
+
+    res.set("Cache-Control", "no-store");
+    res.json(await getAdminState());
 });
 
 router.get("/updateBusList", async (req, res) => {
@@ -266,6 +280,7 @@ router.post("/updateBusList", async (req, res) => {
     else if(!(await Bus.findOne({ busNumber: bus }))) await (new Bus({ busNumber: bus, busChange: 0, status: "normal", time: new Date(),})).save();
     
     res.status(201).end();
+    broadcastUpdate();
 });
 
 router.get("/makeAnnouncement", async (req, res) => {
@@ -296,22 +311,32 @@ router.post("/updateBusChange", async (req, res) => {
     let time = req.body.time;
     await Bus.findOneAndUpdate({busNumber: busNumber}, {busChange: busChange, time: time});
     res.send("success");
+    broadcastUpdate();
 });
 
 router.post("/updateOrder", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    const busOne = req.body.busOne;
-    const busTwo = req.body.busTwo;
-    const orderOne = (await Bus.findOne({busNumber: busOne})).order;
+    const busOne = Number(req.body.busOne);
+    const busTwo = Number(req.body.busTwo);
 
-    if (await Bus.findOneAndUpdate({busNumber: busOne}, {order: (await Bus.findOne({busNumber: busTwo})).order}) &&
-        await Bus.findOneAndUpdate({busNumber: busTwo}, {order: orderOne})) {
+    await withStateLock(async () => {
+        // only swap if busTwo is still directly in front of busOne in the current wave
+        const loading = (await Bus.find({status: "Loading"}).sort("order")).map((bus) => bus.busNumber);
+        const index = loading.indexOf(busOne);
+        if (index < 1 || loading[index - 1] !== busTwo) {
+            rejectStale(res, "The current wave changed since your screen last updated, so the buses were not swapped. Your screen has been refreshed; please try again.");
+            return;
+        }
+
+        const orderOne = (await Bus.findOne({busNumber: busOne})).order;
+        const orderTwo = (await Bus.findOne({busNumber: busTwo})).order;
+        await Bus.findOneAndUpdate({busNumber: busOne}, {order: orderTwo});
+        await Bus.findOneAndUpdate({busNumber: busTwo}, {order: orderOne});
         res.send("success");
-    } else {
-        res.sendStatus(500);
-    }
+    });
+    broadcastUpdate();
 })
 
 router.post("/updateBusStatus", async (req, res) => {
@@ -322,6 +347,32 @@ router.post("/updateBusStatus", async (req, res) => {
     let busStatus = req.body.status;
     let time = req.body.time;
 
+    await withStateLock(async () => {
+        const current = await Bus.findOne({busNumber: busNumber});
+        const currentStatus = current.status === "normal" ? "" : current.status;
+
+        // already in the requested state (double tap, or another admin did it first)
+        if(currentStatus === busStatus) {
+            res.send("success");
+            return;
+        }
+
+        // "Add Current" is only offered while the wave is unlocked and "Add Next" only while it is locked;
+        // if the lock state changed since the screen was drawn, the admin meant something else
+        const isLocked = (await Wave.findOne({})).locked;
+        if((busStatus === "Loading" && isLocked) ||
+           (busStatus === "Next Wave" && !isLocked)) {
+            rejectStale(res, `The current wave was ${isLocked ? "locked" : "unlocked"} since your screen last updated, so bus ${busNumber} was not added. Your screen has been refreshed; please try again.`);
+            return;
+        }
+
+        await applyBusStatus(busNumber, busStatus, time);
+        res.send("success");
+    });
+    broadcastUpdate();
+});
+
+async function applyBusStatus(busNumber, busStatus, time) {
     // if we are removing the bus from the wave
     if(busStatus === "" && (await Bus.findOne({busNumber: busNumber})).status === "Loading") {
         var bus = await Bus.findOne({busNumber: busNumber})
@@ -346,14 +397,32 @@ router.post("/updateBusStatus", async (req, res) => {
     } else order = -1;
 
     await Bus.findOneAndUpdate({busNumber: busNumber}, {status: busStatus, time: time, order: order});
-    
-    res.send("success");
-});
+}
 
 router.post("/sendWave", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
+    await withStateLock(async () => {
+        // the admin sends the buses they saw in the current wave; if that no longer matches
+        // (the wave was already sent by someone else, or this is a double tap), don't send again
+        const expected = req.body.expectedLoading;
+        if(Array.isArray(expected)) {
+            const actual = (await Bus.find({status: "Loading"})).map((bus) => bus.busNumber).sort((a, b) => a - b);
+            const seen = expected.map(Number).sort((a, b) => a - b);
+            if(actual.length !== seen.length || actual.some((n, i) => n !== seen[i])) {
+                rejectStale(res, "The current wave changed since your screen last updated (it may already have been sent), so the wave was not sent. Your screen has been refreshed; please check it before sending again.");
+                return;
+            }
+        }
+
+        await sendWave();
+        res.send("success");
+    });
+    broadcastUpdate();
+});
+
+async function sendWave() {
     // find the wave
     if( !(null === await Wave.findOne({locked: true})) ) { 
         // find the buses and iterate over them
@@ -377,20 +446,32 @@ router.post("/sendWave", async (req, res) => {
     await Bus.updateMany({ status: "Loading" }, { $set: { status: "Gone" } });
     await Bus.updateMany({ status: "Next Wave" }, { $set: { status: "Loading" } });
     await Wave.findOneAndUpdate({}, { locked: false }, { upsert: true });
-
-    res.send("success");
-});
+}
 
 router.post("/lockWave", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    await Wave.findOneAndUpdate({}, { locked: !(await Wave.findOne({})).locked }, { upsert: true });
+    await withStateLock(async () => {
+        const wasLocked = (await Wave.findOne({})).locked;
+        // the client says which state it wants, so a stale screen can't flip the lock the wrong way;
+        // fall back to toggling for requests that don't say
+        const locked = typeof req.body.locked === "boolean" ? req.body.locked : !wasLocked;
+        if(locked !== wasLocked) {
+            await lockWave(locked);
+        }
+        res.send("success");
+    });
+    broadcastUpdate();
+});
+
+async function lockWave(locked) {
+    await Wave.findOneAndUpdate({}, { locked: locked }, { upsert: true });
     const leavingAt = new Date();
     leavingAt.setSeconds(leavingAt.getSeconds() + timer);
     await Wave.findOneAndUpdate({}, { leavingAt: leavingAt }, { upsert: true });
 
-    if( !(null === await Wave.findOne({locked: true})) ) { 
+    if(locked) { 
         // find the buses and iterate over them
         (await Bus.find({status: "Loading"})).forEach(async (bus) => {
             // get every subscription for that bus and iterate over them
@@ -408,9 +489,7 @@ router.post("/lockWave", async (req, res) => {
             });
         });
     };
-
-    res.send("success");
-});
+}
 
 router.post("/setTimer", async (req, res) => {
     // Check if user is logged in and is an admin
@@ -422,6 +501,7 @@ router.post("/setTimer", async (req, res) => {
     }
     timer = tmpTimer;
     res.send("success");
+    broadcastUpdate();
 });
 
 router.get("/leavingAt", async (req, res) => {
@@ -433,9 +513,12 @@ router.post("/resetAllBusses", async (req, res) => {
     // Check if user is logged in and is an admin
     if(!(await checkLogin(req, res))) { return; }
 
-    await Bus.updateMany({}, { $set: { status: "", order: 0 } }); 
-    await Wave.updateMany({}, { $set: { locked: false } });
+    await withStateLock(async () => {
+        await Bus.updateMany({}, { $set: { status: "", order: 0 } }); 
+        await Wave.updateMany({}, { $set: { locked: false } });
+    });
     res.send("success");
+    broadcastUpdate();
 
 });
 
@@ -487,6 +570,7 @@ router.post("/submitAnnouncement", async (req, res) => {    //overwrites the ann
     }
 
     await Announcement.findOneAndUpdate({}, {announcement: req.body.announcement, tvAnnouncement: req.body.tvAnnouncement}, {upsert: true});
+    broadcastUpdate();
 
     res.redirect("/admin");
 });

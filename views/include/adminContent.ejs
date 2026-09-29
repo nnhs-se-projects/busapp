@@ -26,12 +26,12 @@
         <tr colspan="5">
             <th colspan="2"><i class="fa fa-star fa-fw"></i> Current Wave</th>
             <% if (data.isLocked === true) { %>
-                <th><button class="table-button" onclick="lockWave()">Unlock Wave</button></th>
+                <th><button class="table-button" onclick="lockWave(false)">Unlock Wave</button></th>
             <% } %>
             <% if (data.isLocked === false) { %>
-                <th><button class="table-button" onclick="lockWave()">Lock Wave</button></th>
+                <th><button class="table-button" onclick="lockWave(true)">Lock Wave</button></th>
             <% } %>
-            <th><button class="table-button" onclick="sendWave()" href="/admin">Send Wave</button></th>
+            <th><button class="table-button" onclick="sendWave()">Send Wave</button></th>
         </tr>
         <tr>
             <th>Bus Number</th>
