@@ -16,6 +16,7 @@ const Subscription = require("./model/subscription");
 const Admin = require("./model/admin");
 const Lot = require("./model/lot");
 const { broadcastUpdate, getAdminState } = require("./broadcast");
+const { recordStatusChange } = require("./arrivalLog");
 
 const CLIENT_ID = "319647294384-m93pfm59lb2i07t532t09ed5165let11.apps.googleusercontent.com"
 const oAuth2 = new OAuth2Client(CLIENT_ID);
@@ -367,6 +368,7 @@ router.post("/updateBusStatus", async (req, res) => {
         }
 
         await applyBusStatus(busNumber, busStatus, time);
+        await recordStatusChange(current, currentStatus, busStatus);
         res.send("success");
     });
     broadcastUpdate();
