@@ -2,10 +2,33 @@
 var adminSocket = window.io("/admin");
 var countDownDate = new Date();
 var updatingCount = 0;
-
-var TIMER = (document.getElementById("timerDurationSelector")).value;
+// version of the state currently on screen; older snapshots are ignored
+var renderedVersion = +document.getElementById("getRender").getAttribute("version") || 0;
+// set while a wave-level command is in flight so a double tap can't send it twice
+var waveCommandInFlight = false;
 
 adminSocket.on("update", (data) => {
+  renderState(data);
+});
+
+adminSocket.on("updateError", (message) => {
+  console.error("Server failed to send an update:", message);
+});
+
+// fires on the first connection and on every reconnect; updates broadcast while this page
+// was disconnected (e.g. the phone was asleep) are lost, so fetch the current state
+adminSocket.on("connect", () => {
+  forceUpdatePage();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") forceUpdatePage();
+});
+
+function renderState(data) {
+  if (data.version < renderedVersion) return;
+  renderedVersion = data.version;
+
   // convert from time strings to dates to allow conversion to local time
   data.allBuses.forEach((bus) => {
     if (bus.time != "") bus.time = new Date(bus.time);
@@ -20,23 +43,41 @@ adminSocket.on("update", (data) => {
   
   document.getElementById("content").innerHTML = html;
 
-  // update the timer input to match the actual value
-  var timerValue = document.getElementById("timerDurationSelector");
-  if (timerValue !== null) {
-    timerValue.value = TIMER;
-  }
-
-  setIndicatorStatus(lastStatus);
-});
-
-function update() {
-  adminSocket.emit("updateMain", {
-    type: "update",
-  });
+  // the indicator is part of the rerendered content, restore its look
+  showIndicatorStatus(lastStatus);
 }
 
-async function lockWave() {
-  await fetchWithAlert("/lockWave", "POST", {}, {});
+// fetches the current state over HTTP; used after our own commands (so they show up even if
+// the socket is down) and to resync after reconnecting. networkIndicator.js also calls this.
+async function forceUpdatePage() {
+  try {
+    const response = await fetch("/adminState", { cache: "no-store" });
+    if (!response.ok || !response.headers.get("Content-Type")?.includes("application/json")) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    renderState(await response.json());
+  } catch (error) {
+    console.error("Failed to refresh admin state:", error);
+  }
+}
+
+function update() {
+  return forceUpdatePage();
+}
+
+// numbers of the buses shown in the current wave on this screen
+function shownCurrentWave() {
+  return Array.from(document.querySelectorAll("#currentWaveTBody .numberInput"), (input) => Number(input.value));
+}
+
+async function lockWave(locked) {
+  if (waveCommandInFlight) return;
+  waveCommandInFlight = true;
+  try {
+    await fetchWithAlert("/lockWave", "POST", {"Content-Type": "application/json"}, { locked: locked });
+  } finally {
+    waveCommandInFlight = false;
+  }
   update();
 }
 
@@ -59,7 +100,6 @@ async function updateTimer() {
     alert(`Response status: ${res.status}`);
   }
 
-  TIMER = timerValue.value;
   update();
 }
 
@@ -87,10 +127,18 @@ async function updateStatus(button, status) {
 }
 
 async function sendWave() {
+  if (waveCommandInFlight) return;
+  // capture what the admin is looking at before the confirm dialog, which an update could change
+  const expectedLoading = shownCurrentWave();
   if (!confirm("Are you sure you want to send a wave?")) {
     return;
   }
-  await fetchWithAlert("/sendWave", "POST", {}, {});
+  waveCommandInFlight = true;
+  try {
+    await fetchWithAlert("/sendWave", "POST", {"Content-Type": "application/json"}, { expectedLoading: expectedLoading });
+  } finally {
+    waveCommandInFlight = false;
+  }
   update();
 }
 
@@ -209,7 +257,11 @@ async function fetchWithAlert(
       headers: header,
       body: JSON.stringify(data),
     });
-    if(await response.text() !== "success") {
+    const text = await response.text();
+    if (response.status === 409) {
+      // the command was based on an out-of-date screen and the server refused it
+      alert(text);
+    } else if (text !== "success") {
       throw(new Error("Non-success response recieved. You were most likely logged out and need to log back in."));
     }
   } catch (error) {
