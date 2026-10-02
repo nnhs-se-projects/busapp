@@ -380,14 +380,6 @@ async function applyBusStatus(busNumber, busStatus, time) {
         var bus = await Bus.findOne({busNumber: busNumber})
         await Bus.updateMany({order: { $gt: bus.order }, status: bus.status}, {$inc: { order: -1 }});
     } 
-    // if we are adding the bus to the wave
-    else if (busStatus === "Loading") {
-        // update the bus times for prediction
-        if((await Bus.findOne({busNumber: busNumber})).busTimes.length > 5) {
-            await Bus.findOneAndUpdate({busNumber: busNumber}, {$pop: {busTimes: -1}});
-        }
-        await Bus.findOneAndUpdate({busNumber: busNumber}, {$push: { busTimes: time }});
-    }
     
     let order;
     if(busStatus === "Loading" || busStatus === "Next Wave") { 
