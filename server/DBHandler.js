@@ -10,7 +10,7 @@ async function getBuses() {
     const busList = [];
     buses.forEach((bus) => {
         // push data to buslist
-        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, busTimes: bus.busTimes, order: bus.order});
+        busList.push({number: bus.busNumber, change: bus.busChange, time: bus.time, status: bus.status, order: bus.order});
     });
     // if change is 0, make it an empty string
     busList.forEach((bus) => {
